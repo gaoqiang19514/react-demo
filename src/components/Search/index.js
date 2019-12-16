@@ -9,13 +9,22 @@ export default class Search extends Component {
     onSubmit: PropTypes.func
   };
 
+  componentDidMount() {
+    if (this.ref) {
+      this.ref.focus();
+    }
+  }
+
   render() {
     const { searchText, onChange, onFocus, onCancel, onSubmit } = this.props;
 
     return (
-      <form onSubmit={onSubmit}>
+      <form action="" onSubmit={onSubmit}>
         <input
-          type="text"
+          type="search"
+          ref={ref => {
+            this.ref = ref;
+          }}
           value={searchText}
           onChange={onChange}
           onFocus={onFocus}
