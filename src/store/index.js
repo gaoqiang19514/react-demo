@@ -11,10 +11,9 @@ if (window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__) {
 const middlewares = [];
 const enhancers = [applyMiddleware(...middlewares)];
 
-export default function configureStore(initialState = {}) {
+export default function configureStore() {
   const store = createStore(
     rootReducer,
-    initialState,
     composeEnhancers(...enhancers)
   );
 

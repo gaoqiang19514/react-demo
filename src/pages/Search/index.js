@@ -1,9 +1,10 @@
 import React, { Component } from "react";
+import { connect } from "react-redux";
 
-import Search from "../../components/Search";
+import SearchComp from "../../components/Search";
 import history from "../../service";
 
-export default class App extends Component {
+class Search extends Component {
   constructor(props) {
     super(props);
 
@@ -32,14 +33,14 @@ export default class App extends Component {
       this.setState({ searchResultDataList: [1, 2, 3, 4, 5, 6] });
     }, 2000);
   }
-
+  
   render() {
     const { searchText, searchResultDataList } = this.state;
 
     return (
       <div>
         <div>
-          <Search
+          <SearchComp
             searchText={searchText}
             onChange={this.handleChnage}
             onCancel={this.handleCancel}
@@ -60,3 +61,12 @@ export default class App extends Component {
     );
   }
 }
+
+const mapStateToprops = (state) => {
+  console.log(state)
+  return {
+    ...state
+  }
+}
+
+export default connect(mapStateToprops)(Search);
