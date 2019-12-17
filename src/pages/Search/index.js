@@ -18,6 +18,17 @@ const Loading = styled.div`
   font-size: 20px;
   text-align: center;
 `;
+const Header = styled.div`
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 50px;
+  background: #ccc;
+`;
+const Main = styled.div`
+  padding-top: 50px;
+`;
 
 class Search extends Component {
   constructor(props) {
@@ -88,13 +99,15 @@ class Search extends Component {
     return (
       <div>
         <div>
-          <SearchComp
-            searchText={searchText}
-            onChange={this.handleChnage}
-            onCancel={this.handleCancel}
-            onSubmit={this.handleSubmit}
-          />
-          <div>
+          <Header>
+            <SearchComp
+              searchText={searchText}
+              onChange={this.handleChnage}
+              onCancel={this.handleCancel}
+              onSubmit={this.handleSubmit}
+            />
+          </Header>
+          <Main>
             {!items.length && !!searchText.length && <div>搜索无结果</div>}
             <List>
               {items.map(item => {
@@ -106,7 +119,7 @@ class Search extends Component {
               })}
             </List>
             {isFetching && <Loading>loading...</Loading>}
-          </div>
+          </Main>
         </div>
       </div>
     );
