@@ -5,7 +5,6 @@ export default class Search extends Component {
   static propTypes = {
     searchText: PropTypes.string,
     onChange: PropTypes.func,
-    onFocus: PropTypes.func,
     onSubmit: PropTypes.func
   };
 
@@ -16,7 +15,7 @@ export default class Search extends Component {
   }
 
   render() {
-    const { searchText, onChange, onFocus, onCancel, onSubmit } = this.props;
+    const { searchText, onChange, onCancel, onSubmit } = this.props;
 
     return (
       <form action="" onSubmit={onSubmit}>
@@ -27,7 +26,6 @@ export default class Search extends Component {
           }}
           value={searchText}
           onChange={onChange}
-          onFocus={onFocus}
           placeholder="搜索"
         />
         <button type="button" onClick={onCancel}>
