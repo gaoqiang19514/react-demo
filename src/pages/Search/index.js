@@ -1,13 +1,15 @@
 import React, { Component } from "react";
 import { connect } from "react-redux";
+import { Link } from "react-router-dom";
 import styled from "styled-components";
 
 import SearchComp from "../../components/Search";
 import history from "../../service";
-import { featchStarted, resetSearch } from "../../actions";
+import { featchStarted, resetSearch, setScrollTop } from "../../actions";
 
-const Ul = styled.ul`
-  li {
+const List = styled.div`
+  a {
+    display: block;
     padding: 30px;
   }
 `;
@@ -32,11 +34,17 @@ class Search extends Component {
   }
 
   componentDidMount() {
+    const { scrollTop } = this.props;
+    if (scrollTop) {
+      document.documentElement.scrollTop = scrollTop;
+    }
+
     window.addEventListener("scroll", this.handleScroll);
   }
 
   componentWillUnmount() {
     window.removeEventListener("scroll", this.handleScroll);
+    this.props.onSetScrollTop(document.documentElement.scrollTop || 0);
   }
 
   handleScroll() {
@@ -88,11 +96,15 @@ class Search extends Component {
           />
           <div>
             {!items.length && !!searchText.length && <div>搜索无结果</div>}
-            <Ul>
+            <List>
               {items.map(item => {
-                return <li key={item}>{item}</li>;
+                return (
+                  <Link key={item} to="/detail">
+                    {item}
+                  </Link>
+                );
               })}
-            </Ul>
+            </List>
             {isFetching && <Loading>loading...</Loading>}
           </div>
         </div>
@@ -114,6 +126,9 @@ const mapDispatchToProps = dispatch => {
     },
     onReset: () => {
       dispatch(resetSearch());
+    },
+    onSetScrollTop: scrollTop => {
+      dispatch(setScrollTop(scrollTop));
     }
   };
 };

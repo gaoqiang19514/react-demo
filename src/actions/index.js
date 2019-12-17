@@ -2,6 +2,7 @@ const FETCH_REQUEST = "FETCH_REQUEST";
 const FETCH_SUCCESS = "FETCH_SUCCESS";
 const FETCH_FAILURE = "FETCH_FAILURE";
 const SEARCH_RESET = "SEARCH_RESET";
+const SET_SCROLL_TOP = "SET_SCROLL_TOP";
 
 let start = 0;
 
@@ -46,5 +47,15 @@ export const featchStarted = params => {
 export const resetSearch = () => {
   return {
     type: SEARCH_RESET
+  };
+};
+
+// 设置scrollTop
+export const setScrollTop = scrollTop => {
+  return {
+    type: SET_SCROLL_TOP,
+    payload: {
+      scrollTop
+    }
   };
 };

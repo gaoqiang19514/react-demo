@@ -26,5 +26,6 @@
 - [x] 触发条件
     document.documentElement.offsetHeight <= (window.innerHeight + document.documentElement.scrollTop)
 - [x] 请求中时，阻止后续的滚动触发
-- [ ] 记录滚动条高度
+- [x] 记录滚动条高度
     添加详情页
+    记录当前页面的高度 每次离开组件之前记录
