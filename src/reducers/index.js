@@ -1,4 +1,5 @@
 const initialState = {
+  searchText: "", //  搜索关键字
   items: [], //  用来存放搜索结果
   isFetching: false, //  加载状态
   error: null, //  错误信息
@@ -13,7 +14,8 @@ export default (state = initialState, action) => {
     return {
       ...state,
       error: null,
-      isFetching: true
+      isFetching: true,
+      searchText: action.payload.searchText
     };
   }
 
@@ -29,8 +31,17 @@ export default (state = initialState, action) => {
   // 请求失败
   if (action.type === "FETCH_FAILURE") {
     return {
+      ...state,
       isFetching: false,
       error: action.payload.error
+    };
+  }
+
+  // 设置searchText
+  if (action.type === "SET_SEARCH_TEXT") {
+    return {
+      ...state,
+      searchText: action.payload.searchText
     };
   }
 
@@ -55,6 +66,17 @@ export default (state = initialState, action) => {
     return {
       ...state,
       scrollTop: action.payload.scrollTop
+    };
+  }
+
+  // 重置 不包括index
+  if (action.type === "SEARCH_RESET") {
+    return {
+      ...state,
+      searchText: "",
+      items: [],
+      currPage: 0,
+      scrollTop: 0
     };
   }
 
