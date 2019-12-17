@@ -1,14 +1,27 @@
 import React, { Component } from "react";
 import { connect } from "react-redux";
+import styled from "styled-components";
 
 import SearchComp from "../../components/Search";
 import history from "../../service";
 import { featchStarted, resetSearch } from "../../actions";
 
+const Ul = styled.ul`
+  li {
+    padding: 30px;
+  }
+`;
+const Loading = styled.div`
+  padding: 30px;
+  font-size: 20px;
+  text-align: center;
+`;
+
 class Search extends Component {
   constructor(props) {
     super(props);
 
+    this.handleScroll = this.handleScroll.bind(this);
     this.handleChnage = this.handleChnage.bind(this);
     this.handleCancel = this.handleCancel.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
@@ -16,6 +29,31 @@ class Search extends Component {
     this.state = {
       searchText: props.searchText
     };
+  }
+
+  componentDidMount() {
+    window.addEventListener("scroll", this.handleScroll);
+  }
+
+  componentWillUnmount() {
+    window.removeEventListener("scroll", this.handleScroll);
+  }
+
+  handleScroll() {
+    const { isFetching } = this.props;
+    if (isFetching) {
+      return;
+    }
+    if (
+      document.documentElement.offsetHeight <=
+      window.innerHeight + document.documentElement.scrollTop
+    ) {
+      const { currPage } = this.props;
+      this.props.onFetch({
+        searchText: this.state.searchText,
+        currPage: currPage + 1
+      });
+    }
   }
 
   handleChnage(e) {
@@ -31,12 +69,12 @@ class Search extends Component {
   handleSubmit(e) {
     e.preventDefault();
     // 在这里发起搜索 获取结果 然后渲染到搜索的弹层里面
-
-    this.props.onFetch(this.state.searchText);
+    this.props.onReset();
+    this.props.onFetch({ searchText: this.state.searchText, currPage: 1 });
   }
 
   render() {
-    const { items } = this.props;
+    const { items, isFetching } = this.props;
     const { searchText } = this.state;
 
     return (
@@ -50,11 +88,12 @@ class Search extends Component {
           />
           <div>
             {!items.length && !!searchText.length && <div>搜索无结果</div>}
-            <ul>
+            <Ul>
               {items.map(item => {
                 return <li key={item}>{item}</li>;
               })}
-            </ul>
+            </Ul>
+            {isFetching && <Loading>loading...</Loading>}
           </div>
         </div>
       </div>
@@ -70,8 +109,8 @@ const mapStateToprops = state => {
 
 const mapDispatchToProps = dispatch => {
   return {
-    onFetch: searchText => {
-      dispatch(featchStarted(searchText));
+    onFetch: params => {
+      dispatch(featchStarted(params));
     },
     onReset: () => {
       dispatch(resetSearch());

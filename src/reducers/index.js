@@ -24,6 +24,7 @@ export default (state = initialState, action) => {
     return {
       ...state,
       isFetching: false,
+      currPage: action.payload.currPage,
       items: [...state.items, ...action.payload.dataList]
     };
   }
