@@ -77,7 +77,8 @@ export default (state = initialState, action) => {
       searchText: "",
       items: [],
       currPage: 0,
-      scrollTop: 0
+      scrollTop: 0,
+      isFetching: false
     };
   }
 
