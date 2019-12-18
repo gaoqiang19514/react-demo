@@ -5,7 +5,8 @@ const initialState = {
   error: null, //  错误信息
   index: 0, //  当前视图
   currPage: 0, //  当前页面
-  scrollTop: 0 //  滚动条高度
+  scrollTop: 0, //  滚动条高度
+  currentId: null //  处理竞态问题
 };
 
 export default (state = initialState, action) => {
@@ -15,6 +16,7 @@ export default (state = initialState, action) => {
       ...state,
       error: null,
       isFetching: true,
+      currentId: action.payload.id,
       searchText: action.payload.searchText
     };
   }

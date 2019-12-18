@@ -1,4 +1,5 @@
 import axios from "axios";
+import uuid from "uuid";
 
 const FETCH_REQUEST = "FETCH_REQUEST";
 const FETCH_SUCCESS = "FETCH_SUCCESS";
@@ -20,18 +21,27 @@ const createCount = () => {
 // 发起查询
 export const featchStarted = params => {
   return (dispatch, getState) => {
+    const id = uuid();
     dispatch({
       type: FETCH_REQUEST,
-      payload: { searchText: params.searchText }
+      payload: { searchText: params.searchText, id }
     });
     // 怎么在这里丢弃请求呢？
     // 1. 请求还未响应，但是用户切换了路由等操作，导致组件以及销毁
     // 2. 用户发起了一个新的请求
     axios
       .get("/user/12345", {
-        cancelToken: params.cancelToken
+        cancelToken: params.cancelToken,
+        params: {
+          searchText: params.searchText
+        }
       })
       .then(res => {
+        const { currentId } = getState();
+        if (id !== currentId) {
+          return;
+        }
+
         dispatch({
           type: FETCH_SUCCESS,
           payload: {

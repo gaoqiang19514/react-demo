@@ -2,7 +2,8 @@ import React, { Component } from "react";
 import { connect } from "react-redux";
 import { Link } from "react-router-dom";
 import styled from "styled-components";
-import axios from "axios";
+import { CancelToken } from "axios";
+import { throttle } from "lodash";
 
 import SearchComp from "../../components/Search";
 import history from "../../service";
@@ -50,7 +51,7 @@ class Search extends Component {
     if (scrollTop) {
       document.documentElement.scrollTop = scrollTop;
     }
-    window.addEventListener("scroll", this.handleScroll);
+    window.addEventListener("scroll", throttle(this.handleScroll, 300));
   }
 
   componentWillUnmount() {
@@ -61,7 +62,7 @@ class Search extends Component {
     if (this.props.history.location.pathname !== "/detail") {
       this.props.onReset();
     }
-    
+
     // 组件销毁时取消未完成的异步请求
     if (this.source) {
       this.source.cancel("Operation canceled by the user.");
@@ -78,7 +79,6 @@ class Search extends Component {
       window.innerHeight + document.documentElement.scrollTop
     ) {
       const { currPage } = this.props;
-      var CancelToken = axios.CancelToken;
       this.source = CancelToken.source();
 
       this.props.onFetch({
@@ -90,7 +90,15 @@ class Search extends Component {
   }
 
   handleChnage(e) {
-    this.setState({ searchText: e.target.value });
+    this.setState({ searchText: e.target.value }, () => {
+      this.props.onReset();
+      this.source = CancelToken.source();
+      this.props.onFetch({
+        searchText: this.state.searchText,
+        currPage: 1,
+        cancelToken: this.source.token
+      });
+    });
   }
 
   handleCancel() {
@@ -103,7 +111,6 @@ class Search extends Component {
     e.preventDefault();
     // 在这里发起搜索 获取结果 然后渲染到搜索的弹层里面
     this.props.onReset();
-    var CancelToken = axios.CancelToken;
     this.source = CancelToken.source();
     this.props.onFetch({
       searchText: this.state.searchText,
