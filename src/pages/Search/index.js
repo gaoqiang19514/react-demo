@@ -36,10 +36,11 @@ class Search extends Component {
   constructor(props) {
     super(props);
 
-    this.handleScroll = this.handleScroll.bind(this);
+    this.handleScroll = throttle(this.handleScroll.bind(this), 300);
     this.handleChnage = this.handleChnage.bind(this);
     this.handleCancel = this.handleCancel.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
+    this.handleThrottleChnage = throttle(this.handleThrottleChnage, 500);
 
     this.state = {
       searchText: props.searchText
@@ -51,7 +52,7 @@ class Search extends Component {
     if (scrollTop) {
       document.documentElement.scrollTop = scrollTop;
     }
-    window.addEventListener("scroll", throttle(this.handleScroll, 300));
+    window.addEventListener("scroll", this.handleScroll, 300);
   }
 
   componentWillUnmount() {
@@ -90,14 +91,19 @@ class Search extends Component {
   }
 
   handleChnage(e) {
-    this.setState({ searchText: e.target.value }, () => {
-      this.props.onReset();
-      this.source = CancelToken.source();
-      this.props.onFetch({
-        searchText: this.state.searchText,
-        currPage: 1,
-        cancelToken: this.source.token
-      });
+    const value = e.target.value;
+    this.setState({ searchText: value }, () => {
+      this.handleThrottleChnage(value);
+    });
+  }
+
+  handleThrottleChnage(value) {
+    this.props.onReset();
+    this.source = CancelToken.source();
+    this.props.onFetch({
+      searchText: this.state.searchText,
+      currPage: 1,
+      cancelToken: this.source.token
     });
   }
 
