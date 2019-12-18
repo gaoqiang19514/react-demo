@@ -33,20 +33,20 @@ export const featchStarted = params => {
       .get("/user/12345", {
         cancelToken: params.cancelToken,
         params: {
-          searchText: params.searchText
+          ...params
         }
       })
       .then(res => {
+        const { data } = res
         const { currentId } = getState();
         if (id !== currentId) {
           return;
         }
-
         dispatch({
           type: FETCH_SUCCESS,
           payload: {
             currPage: params.currPage,
-            dataList: createCount()
+            dataList: data.data
           }
         });
       })

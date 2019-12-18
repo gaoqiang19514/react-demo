@@ -145,8 +145,8 @@ class Search extends Component {
             <List>
               {items.map(item => {
                 return (
-                  <Link key={item} to="/detail">
-                    {item}
+                  <Link key={item.id} to="/detail">
+                    {item.text}
                   </Link>
                 );
               })}
