@@ -61,9 +61,9 @@ class Search extends Component {
     if (this.props.history.location.pathname !== "/detail") {
       this.props.onReset();
     }
-
+    
+    // 组件销毁时取消未完成的异步请求
     if (this.source) {
-      console.log("come in");
       this.source.cancel("Operation canceled by the user.");
     }
   }
