@@ -102,7 +102,7 @@ class Search extends Component {
     this.source = CancelToken.source();
     this.props.onFetch({
       searchText: this.state.searchText,
-      currPage: 1,
+      currPage: 0,
       cancelToken: this.source.token
     });
   }
@@ -120,7 +120,7 @@ class Search extends Component {
     this.source = CancelToken.source();
     this.props.onFetch({
       searchText: this.state.searchText,
-      currPage: 1,
+      currPage: 0,
       cancelToken: this.source.token
     });
   }

@@ -1,17 +1,22 @@
 import { Random } from "mockjs";
 import uuid from "uuid";
 
-const createCount = start => {
+/**
+ * 生成指定页面的10条数据
+ * @param {Number} page
+ */
+function createCount(page) {
   const arr = [];
+
   for (let i = 0; i < 10; i++) {
     arr.push({
       id: uuid(),
-      num: Number(start) * 10 + i,
-      text: Random.paragraph(1, 5)
+      num: page * 10 + i,
+      text: Random.paragraph(1)
     });
   }
   return arr;
-};
+}
 
 export default {
   "GET /user/:id": (req, res) => {
@@ -21,7 +26,7 @@ export default {
       res.send({
         code: 0,
         msg: "ok",
-        data: createCount(currPage)
+        data: createCount(Number(currPage))
       });
     }, 2000);
   }
