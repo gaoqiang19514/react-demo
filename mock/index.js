@@ -5,7 +5,7 @@ import uuid from "uuid";
  * 生成指定页面的10条数据
  * @param {Number} page
  */
-function createCount(page) {
+function createData(page) {
   const arr = [];
 
   for (let i = 0; i < 10; i++) {
@@ -26,7 +26,7 @@ export default {
       res.send({
         code: 0,
         msg: "ok",
-        data: createCount(Number(currPage))
+        data: createData(Number(currPage))
       });
     }, 2000);
   }

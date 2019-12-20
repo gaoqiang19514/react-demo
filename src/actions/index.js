@@ -7,17 +7,6 @@ const FETCH_FAILURE = "FETCH_FAILURE";
 const SEARCH_RESET = "SEARCH_RESET";
 const SET_SCROLL_TOP = "SET_SCROLL_TOP";
 
-let start = 0;
-
-const createCount = () => {
-  const arr = [];
-  for (let i = 0; i < 10; i++) {
-    start = start + 1;
-    arr.push(start);
-  }
-  return arr;
-};
-
 // 发起查询
 export const featchStarted = params => {
   return (dispatch, getState) => {

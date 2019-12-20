@@ -40,7 +40,7 @@ class Search extends Component {
     this.handleChnage = this.handleChnage.bind(this);
     this.handleCancel = this.handleCancel.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
-    this.handleThrottleChnage = throttle(this.handleThrottleChnage, 500);
+    this.handleThrottleChange = throttle(this.handleThrottleChange, 500);
 
     this.state = {
       searchText: props.searchText
@@ -58,7 +58,7 @@ class Search extends Component {
   componentWillUnmount() {
     window.removeEventListener("scroll", this.handleScroll);
     this.props.onSetScrollTop(document.documentElement.scrollTop || 0);
-
+    
     // 在这里判断，如果不是去详情页，需要重置redux
     if (this.props.history.location.pathname !== "/detail") {
       this.props.onReset();
@@ -75,13 +75,18 @@ class Search extends Component {
     if (isFetching) {
       return;
     }
+    debugger
+    console.log(
+      document.documentElement.offsetHeight,
+      window.innerHeight + document.documentElement.scrollTop
+    );
     if (
       document.documentElement.offsetHeight <=
       window.innerHeight + document.documentElement.scrollTop
     ) {
       const { currPage } = this.props;
       this.source = CancelToken.source();
-
+      console.log("发起请求");
       this.props.onFetch({
         searchText: this.state.searchText,
         currPage: currPage + 1,
@@ -93,11 +98,11 @@ class Search extends Component {
   handleChnage(e) {
     const value = e.target.value;
     this.setState({ searchText: value }, () => {
-      this.handleThrottleChnage(value);
+      this.handleThrottleChange(value);
     });
   }
 
-  handleThrottleChnage(value) {
+  handleThrottleChange(value) {
     this.props.onReset();
     this.source = CancelToken.source();
     this.props.onFetch({
