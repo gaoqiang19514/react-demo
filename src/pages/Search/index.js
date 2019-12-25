@@ -52,7 +52,7 @@ class Search extends Component {
     if (scrollTop) {
       document.documentElement.scrollTop = scrollTop;
     }
-    window.addEventListener("scroll", this.handleScroll, 300);
+    window.addEventListener("scroll", this.handleScroll);
   }
 
   componentWillUnmount() {
