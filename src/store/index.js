@@ -42,3 +42,6 @@ const configureStore = preloadedState => {
 };
 
 export default configureStore;
+
+// 案例
+// https://redux-saga-in-chinese.js.org/docs/ExternalResources.html
