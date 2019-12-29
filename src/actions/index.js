@@ -17,10 +17,9 @@ export function decrement() {
   };
 }
 
-export function fetchStarted(data) {
+export function fetchStarted() {
   return {
     type: FETCH_STARTED,
-    payload: data
   };
 }
 

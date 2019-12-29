@@ -15,3 +15,18 @@ function* fetchStarted() {
 export default function* rootSaga() {
   yield takeEvery(FETCH_STARTED, fetchStarted);
 }
+
+// while(true)用法
+
+// take       监听action的派发
+// takeEvery
+
+// while (true) {
+//   const action = yield take(patternOrChannel)
+//   yield fork(saga, ...args.concat(action))
+// }
+
+// put        派发action
+
+// fork       异步发起请求
+// call       同步发起请求
