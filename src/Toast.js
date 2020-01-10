@@ -63,19 +63,41 @@ class Toast extends Component {
     );
   }
 }
-
-function createInstance() {
-  // 创建div插入dom
+const createInstance = () => {
   const div = document.createElement("div");
   document.body.appendChild(div);
-  const instance = ReactDOM.render(<Toast />, div);
-
-  return msg => {
-    instance.show(msg);
-    setTimeout(() => {
-      instance.hide();
-    }, 1000);
+  const toast = ReactDOM.render(<Toast />, div);
+  return {
+    show(msg) {
+      toast.show(msg);
+    },
+    hide() {
+      toast.hide(() => {
+        this.destory();
+      });
+    },
+    destory() {
+      if (div) {
+        ReactDOM.unmountComponentAtNode(div);
+        document.body.removeChild(div);
+        instance = null;
+      }
+    }
   };
-}
+};
 
-export default createInstance();
+let instance = null;
+let timer = null;
+export default (msg, interval = 1000) => {
+  clearTimeout(timer);
+  if (instance) {
+    instance.destory();
+  }
+  if (!instance) {
+    instance = createInstance();
+  }
+  instance.show(msg);
+  timer = setTimeout(() => {
+    instance.hide();
+  }, interval);
+};
