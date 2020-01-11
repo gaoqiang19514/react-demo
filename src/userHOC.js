@@ -15,7 +15,7 @@ function getUserinfo() {
   });
 }
 
-const userHOC = Part =>
+const HOC = Wapper =>
   class User extends Component {
     state = {
       userInfo: []
@@ -32,8 +32,10 @@ const userHOC = Part =>
     }
 
     render() {
-      return <Part {...this.props} userInfo={this.state.userInfo} />;
+      return (
+        <Wapper {...this.props} userInfo={this.state.userInfo} />
+      );
     }
   };
 
-export default userHOC;
+export default HOC;
