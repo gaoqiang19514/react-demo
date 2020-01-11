@@ -1,15 +1,15 @@
 import React from "react";
 
 import User from "./User";
-import userHOC from "./userHOC";
+import withUser from "./withUser";
 
 import Search from "./Search";
-import searchHOC from "./SearchWrapper";
+import withSearch from "./withSearch";
 
-const UserWrapper = userHOC(User);
+const UserWrapper = withUser(User);
 
-const SearchWrapper = searchHOC(Search);
-const SearchWrapper2 = searchHOC(Search);
+const SearchWrapper = withSearch(Search);
+const SearchWrapper2 = withSearch(Search);
 
 function App() {
   return (

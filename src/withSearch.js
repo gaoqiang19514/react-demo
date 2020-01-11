@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 
-const SearchWrapper = WrapperComponent => {
-  return class Search extends Component {
+function withSearch(WrappedComponent) {
+  return class WrappingComponent extends Component {
     constructor(props) {
       super(props);
 
@@ -23,9 +23,10 @@ const SearchWrapper = WrapperComponent => {
           onChange: this.handleChange
         }
       };
-      return <WrapperComponent {...this.props} {...newProps} />;
+
+      return <WrappedComponent {...this.props} {...newProps} />;
     }
   };
-};
+}
 
-export default SearchWrapper;
+export default withSearch;

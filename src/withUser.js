@@ -15,8 +15,8 @@ function getUserinfo() {
   });
 }
 
-const HOC = Wapper =>
-  class User extends Component {
+function withUser(WrappedComponent) {
+  return class WrappingComponent extends Component {
     state = {
       userInfo: []
     };
@@ -33,9 +33,10 @@ const HOC = Wapper =>
 
     render() {
       return (
-        <Wapper {...this.props} userInfo={this.state.userInfo} />
+        <WrappedComponent {...this.props} userInfo={this.state.userInfo} />
       );
     }
   };
+}
 
-export default HOC;
+export default withUser;
