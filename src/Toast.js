@@ -2,7 +2,13 @@ import React, { Component } from "react";
 import ReactDOM from "react-dom";
 import styled from "styled-components";
 import { CSSTransition } from "react-transition-group";
-
+const Container = styled.div`
+  position: fixed;
+  width: 100%;
+  height: 100%;
+  left: 100%;
+  top: 100%;
+`;
 const Fixed = styled.div`
   position: absolute;
   top: -50%;
@@ -17,42 +23,31 @@ const Box = styled.div`
   color: #fff;
 `;
 
-const Container = styled.div`
-  position: fixed;
-  width: 100%;
-  height: 100%;
-  left: 100%;
-  top: 100%;
-`;
-
 class Toast extends Component {
   state = {
     show: false,
     msg: ""
   };
 
-  show(msg) {
+  open(msg) {
     this.setState({ show: true, msg });
   }
 
-  hide(cb = () => {}) {
-    this.setState({ show: false }, () => {
-      setTimeout(() => cb(), 300);
-    });
+  close() {
+    this.setState({ show: false });
   }
 
   render() {
     const { show, msg } = this.state;
 
-    console.log(show);
     return (
       <Container>
         <Fixed>
           <CSSTransition
             in={show}
             timeout={300}
-            unmountOnExit
             classNames="fade"
+            unmountOnExit
             onEnter={() => {}}
             onExited={() => {}}
           >
@@ -63,41 +58,46 @@ class Toast extends Component {
     );
   }
 }
-const createInstance = () => {
+
+function createInstance() {
   const div = document.createElement("div");
   document.body.appendChild(div);
-  const toast = ReactDOM.render(<Toast />, div);
+  let toast = ReactDOM.render(<Toast />, div);
+
   return {
     show(msg) {
-      toast.show(msg);
+      toast.open(msg);
     },
     hide() {
-      toast.hide(() => {
-        this.destory();
-      });
+      toast.close();
     },
     destory() {
       if (div) {
         ReactDOM.unmountComponentAtNode(div);
         document.body.removeChild(div);
         instance = null;
+        toast = null;
       }
     }
   };
-};
+}
 
 let instance = null;
 let timer = null;
+
 export default (msg, interval = 1000) => {
   clearTimeout(timer);
-  if (instance) {
-    instance.destory();
-  }
+
   if (!instance) {
     instance = createInstance();
   }
+
   instance.show(msg);
   timer = setTimeout(() => {
     instance.hide();
   }, interval);
+
+  return () => {
+    instance.hide();
+  };
 };

@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 
-import toast from "./Toast";
+import Toast from "./Toast";
 
 class App extends Component {
   constructor(props) {
@@ -13,11 +13,11 @@ class App extends Component {
   }
 
   handleClick() {
-    toast("密码错误");
+    Toast("密码错误");
   }
 
   handleClick2() {
-    toast("账号错误");
+    Toast("账号错误");
   }
 
   render() {
