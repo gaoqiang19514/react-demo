@@ -1,0 +1,35 @@
+.tableFixHead {
+    height: 350px;
+    width: 1000px;
+}
+.tableFixHead thead th {
+    position: sticky;
+    top: 0;
+}
+
+.tableFixHead thead th:first-child {
+    left: 0;
+    z-index: 1;
+}
+
+.tableFixHead tbody tr td:first-child {
+    position: sticky;
+    left: 0;
+    background: #eee;
+}
+
+/* Just common table stuff. Really. */
+table {
+    border-collapse: collapse;
+    width: 100%;
+}
+th,
+td {
+    padding: 8px 16px;
+}
+th {
+    background: #eee;
+}
+.box {
+    overflow: auto;
+}
