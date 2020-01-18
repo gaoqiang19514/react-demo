@@ -1,35 +1,33 @@
 import React, { Component } from "react";
 
 import "./App.css";
-import Toast from "./Toast";
+import Layer from "./Layer";
 
 class App extends Component {
   constructor(props) {
     super(props);
 
     this.handleClick = this.handleClick.bind(this);
-    this.handleClick2 = this.handleClick2.bind(this);
 
-    this.state = {};
+    this.state = {
+      showLayer: false
+    };
   }
 
   handleClick() {
-    Toast("密码错误");
-  }
-
-  handleClick2() {
-    Toast("账号错误");
+    this.setState({ showLayer: !this.state.showLayer });
   }
 
   render() {
+    const { showLayer } = this.state;
+
     return (
       <div>
         <button type="button" onClick={this.handleClick}>
-          toast
+          show layer
         </button>
-        <button type="button" onClick={this.handleClick2}>
-          toast2
-        </button>
+
+        <Layer show={showLayer} onClose={this.handleClick} />
       </div>
     );
   }
