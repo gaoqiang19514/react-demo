@@ -53,8 +53,6 @@ class Toast extends Component {
         timeout={TRANSITION_INTERVAL}
         classNames="fade"
         unmountOnExit
-        onEnter={() => {}}
-        onExited={() => {}}
       >
         <Container>
           <Fixed>
@@ -71,25 +69,21 @@ function createInstance(msg) {
   document.body.appendChild(div);
   const toast = ReactDOM.render(<Toast msg={msg} />, div);
 
+  const destory = () => {
+    if (div) {
+      ReactDOM.unmountComponentAtNode(div);
+      document.body.removeChild(div);
+      instance = null;
+    }
+  };
+
   return {
-    hide() {
+    close() {
       toast.hide(() => {
-        setTimeout(() => {
-          if (div) {
-            ReactDOM.unmountComponentAtNode(div);
-            document.body.removeChild(div);
-            instance = null;
-          }
-        }, TRANSITION_INTERVAL);
+        setTimeout(destory, TRANSITION_INTERVAL);
       });
     },
-    destory() {
-      if (div) {
-        ReactDOM.unmountComponentAtNode(div);
-        document.body.removeChild(div);
-        instance = null;
-      }
-    }
+    destory
   };
 }
 
@@ -105,6 +99,6 @@ export default (msg, interval = 1000) => {
 
   instance = createInstance(msg);
   timer = setTimeout(() => {
-    instance.hide(interval);
+    instance.close(interval);
   }, interval);
 };
