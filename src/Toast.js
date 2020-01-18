@@ -2,6 +2,7 @@ import React, { Component } from "react";
 import ReactDOM from "react-dom";
 import styled from "styled-components";
 import { CSSTransition } from "react-transition-group";
+
 const Container = styled.div`
   position: fixed;
   width: 100%;
@@ -23,60 +24,70 @@ const Box = styled.div`
   color: #fff;
 `;
 
-class Toast extends Component {
-  state = {
-    show: false,
-    msg: ""
-  };
+const TRANSITION_INTERVAL = 200;
 
-  open(msg) {
-    this.setState({ show: true, msg });
+class Toast extends Component {
+  constructor(props) {
+    super(props);
+
+    this.state = {
+      show: false
+    };
   }
 
-  close() {
-    this.setState({ show: false });
+  componentDidMount() {
+    this.setState({ show: true });
+  }
+
+  hide(cb = () => {}) {
+    this.setState({ show: false }, cb);
   }
 
   render() {
-    const { show, msg } = this.state;
+    const { msg } = this.props;
+    const { show } = this.state;
 
     return (
-      <Container>
-        <Fixed>
-          <CSSTransition
-            in={show}
-            timeout={300}
-            classNames="fade"
-            unmountOnExit
-            onEnter={() => {}}
-            onExited={() => {}}
-          >
+      <CSSTransition
+        in={show}
+        timeout={TRANSITION_INTERVAL}
+        classNames="fade"
+        unmountOnExit
+        onEnter={() => {}}
+        onExited={() => {}}
+      >
+        <Container>
+          <Fixed>
             <Box>{msg}</Box>
-          </CSSTransition>
-        </Fixed>
-      </Container>
+          </Fixed>
+        </Container>
+      </CSSTransition>
     );
   }
 }
 
-function createInstance() {
+function createInstance(msg) {
   const div = document.createElement("div");
   document.body.appendChild(div);
-  let toast = ReactDOM.render(<Toast />, div);
+  const toast = ReactDOM.render(<Toast msg={msg} />, div);
 
   return {
-    show(msg) {
-      toast.open(msg);
-    },
     hide() {
-      toast.close();
+      toast.hide(() => {
+        setTimeout(() => {
+          if (div) {
+            ReactDOM.unmountComponentAtNode(div);
+            document.body.removeChild(div);
+            instance = null;
+          }
+        }, TRANSITION_INTERVAL);
+      });
     },
     destory() {
       if (div) {
         ReactDOM.unmountComponentAtNode(div);
         document.body.removeChild(div);
         instance = null;
-        toast = null;
       }
     }
   };
@@ -88,16 +99,12 @@ let timer = null;
 export default (msg, interval = 1000) => {
   clearTimeout(timer);
 
-  if (!instance) {
-    instance = createInstance();
+  if (instance) {
+    instance.destory();
   }
 
-  instance.show(msg);
+  instance = createInstance(msg);
   timer = setTimeout(() => {
-    instance.hide();
+    instance.hide(interval);
   }, interval);
-
-  return () => {
-    instance.hide();
-  };
 };
