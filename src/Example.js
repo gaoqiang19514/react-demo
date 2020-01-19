@@ -10,10 +10,12 @@ const Overlay = styled.div`
   left: 0;
   right: 0;
   bottom: 0;
-  background: rgba(0, 0, 0, 0.5);
+  overflow-y: scroll;
 
   .overlay-content {
+    margin: 30px;
     color: #fff;
+    background: rgba(0, 0, 0, 0.5);
   }
 `;
 
@@ -62,8 +64,26 @@ class Example extends Component {
     };
   }
 
+  componentDidUpdate(prevProps, prevState) {
+    console.log("update", this.state.showOverlay, prevState.showOverlay);
+    if (this.state.showOverlay === prevState.showOverlay) {
+      return;
+    }
+
+    if (this.state.showOverlay) {
+      this.preventBodyScroll();
+    } else {
+      document.body.style.overflow = this.overflowCache || "visible";
+    }
+  }
+
   handleClick() {
     this.setState({ showOverlay: !this.state.showOverlay });
+  }
+
+  preventBodyScroll() {
+    this.overflowCache = document.body.style.overflow;
+    document.body.style.overflow = "hidden";
   }
 
   render() {
