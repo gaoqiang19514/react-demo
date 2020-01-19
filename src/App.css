@@ -20,3 +20,39 @@
 .App-link {
   color: #09d3ac;
 }
+
+/* fade */
+.fade-enter {
+  opacity: 0;
+}
+.fade-enter-active {
+  opacity: 1;
+  transition: opacity 300ms;
+}
+.fade-exit {
+  opacity: 1;
+}
+.fade-exit-active {
+  opacity: 0;
+  transition: opacity 300ms;
+}
+
+/* slide-from-right */
+.slide-from-right-enter {
+  opacity: 0;
+  transform: translate3d(20px, 0, 0);
+}
+.slide-from-right-enter-active {
+  opacity: 1;
+  transform: translate3d(0, 0, 0);
+  transition: opacity 300ms, transform 300ms;
+}
+.slide-from-right-exit {
+  opacity: 1;
+  transform: translate3d(0, 0, 0);
+}
+.slide-from-right-exit-active {
+  opacity: 0;
+  transform: translate3d(20px, 0, 0);
+  transition: opacity 300ms, transform 300ms;
+}
