@@ -1,6 +1,6 @@
+import "antd-mobile/dist/antd-mobile.css";
 import React, { Component } from "react";
 import { createForm } from "rc-form";
-import "antd-mobile/dist/antd-mobile.css";
 
 class Example extends Component {
   constructor(props) {
