@@ -11,15 +11,12 @@ class Example extends Component {
 
   handleSubmit() {
     this.props.form.validateFields((error, value) => {
-      console.log(value);
       if (!error) {
-        // console.log("ok", value);
+        console.log("ok", value);
       } else {
-        // console.log("error", error);
+        console.log("error", error);
       }
     });
-
-    // console.log("pass", this.props.form.getFieldsValue(["name", "age"]));
   }
 
   render() {
@@ -30,11 +27,19 @@ class Example extends Component {
         <input
           type="text"
           {...getFieldProps("name", {
-            initialValue: ""
+            initialValue: "",
+            rules: [{ required: true }]
           })}
         />
-        {getFieldDecorator("age", { initialValue: "" })(<input type="text" />)}
+        {getFieldDecorator("age", {
+          initialValue: "",
+          rules: [{ required: true }]
+        })(<input type="text" />)}
 
+        {getFieldDecorator("comment", {
+          initialValue: "",
+          rules: [{ required: true }]
+        })(<textarea />)}
         <button type="button" onClick={this.handleSubmit}>
           submit
         </button>
