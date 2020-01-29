@@ -1,4 +1,3 @@
-import docManage from "./docManage";
-import searchKey from "./searchKey";
+import manage from "./manage";
 
-export { docManage, searchKey };
+export { manage };
