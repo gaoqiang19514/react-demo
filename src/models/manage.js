@@ -1,6 +1,8 @@
+import store from "../store";
+
 export default {
   state: {
-    count: 99
+    count: 0
   },
   reducers: {
     increment: (state, payload) => {
@@ -11,11 +13,13 @@ export default {
     }
   },
   effects: {
-    async asyncIncrement() {
+    async asyncIncrement(payload, rootState) {
+      console.log(store.getState());
       await new Promise(resolve => {
         setTimeout(resolve, 1000);
       });
       this.increment();
+      console.log(store.getState());
     }
   }
 };
