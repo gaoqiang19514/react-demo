@@ -1,16 +1,24 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
+
+function Example() {
+  useEffect(() => {
+    console.log("useEffect");
+
+    return () => {
+      console.log("unmount effect");
+    };
+  }, []);
+
+  return <div>Example</div>;
+}
 
 function App() {
-  const [num, change] = useState(0);
-  const [show, changeShow] = useState(false);
+  const [show, setShow] = useState(false);
 
   return (
     <div className="App">
-      <h1>{num}</h1>
-      {show && <div>hello</div>}
-
-      <button onClick={() => change(num + 1)}>Click me</button>
-      <button onClick={() => changeShow(!show)}>change show</button>
+      {show && <Example />}
+      <button onClick={() => setShow(!show)}>Click me</button>
     </div>
   );
 }
