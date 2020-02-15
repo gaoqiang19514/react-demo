@@ -115,7 +115,30 @@ function formatWktData(wktData) {
   return [];
 }
 
+/**
+ * @description: 字符串转为DOM对象
+ * @param {type}: Dom 字符串
+ * @return: DOM对象
+ */
+function parseDom(arg) {
+  var objE = document.createElement("div");
+
+  objE.innerHTML = arg;
+
+  return objE.childNodes[0];
+}
+
+function createMarker(minemap, options) {
+  const { position, ...arg } = options;
+
+  return new minemap.Marker(parseDom(options.html), {
+    position,
+    ...arg
+  });
+}
+
 export default {
   formatWktData,
+  createMarker,
   multiarr
 };

@@ -3,6 +3,7 @@ import React, { Component } from "react";
 import "./App.css";
 import utils from "./utils";
 import borderLine from "./borderLine";
+import statistics from "./statistics";
 import Map from "./Map";
 
 const borderLineData = borderLine.data.map(item => ({
@@ -19,7 +20,6 @@ export default class App extends Component {
     this.mapLoad = this.mapLoad.bind(this);
   }
 
-  // 自定义数据源
   draw(id, map, data, options) {
     const jsonData = {
       type: "FeatureCollection",
@@ -58,6 +58,7 @@ export default class App extends Component {
     });
   }
 
+  // 绘制边界线
   drawBorderLine(map, data) {
     const options = {
       "line-width": 5,
@@ -79,8 +80,20 @@ export default class App extends Component {
     });
   }
 
+  // 绘制点位
+  addMarkers(map) {
+    const markers = statistics.data.map(item => {
+      return utils.createMarker(window.minemap, {
+        position: item.position,
+        html: `<div class="box">${item.areaName}</div>`
+      });
+    });
+    map.addMarkers(markers);
+  }
+
   mapLoad(map) {
     this.drawBorderLine(map, borderLineData);
+    this.addMarkers(map);
   }
 
   render() {

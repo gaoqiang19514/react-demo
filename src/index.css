@@ -17,3 +17,9 @@ body,
 #root {
   height: 100%;
 }
+
+.box {
+  padding: 10px 20px;
+  border-radius: 3px;
+  background: #fff;
+}
