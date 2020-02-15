@@ -1,7 +1,16 @@
 import React, { Component } from "react";
 
 import "./App.css";
-import Example from "./Example";
+import utils from "./utils";
+import borderLine from "./borderLine";
+import Map from "./Map";
+
+const borderLineData = borderLine.data.map(item => ({
+  key: item.code,
+  title: item.name,
+  polygonList: utils.formatWktData(item.wktPoly),
+  position: utils.formatWktData(item.wktAreaCenter)
+}));
 
 export default class App extends Component {
   constructor(props) {
@@ -11,112 +20,76 @@ export default class App extends Component {
   }
 
   // 自定义数据源
-  addSources(map) {
-    const center = map.getCenter();
+  draw(id, map, data, options) {
     const jsonData = {
       type: "FeatureCollection",
       features: [
         {
           type: "Feature",
           geometry: {
-            type: "Point",
-            coordinates: [center.lng + 0.03, center.lat + 0.02]
-          },
-          properties: {
-            title: "大学",
-            kind: "school"
-          }
-        },
-        {
-          type: "Feature",
-          geometry: {
-            type: "Point",
-            coordinates: [center.lng + 0.01, center.lat - 0.01]
-          },
-          properties: {
-            title: "公园",
-            kind: "park"
-          }
-        },
-        {
-          type: "Feature",
-          geometry: {
-            type: "Point",
-            coordinates: [center.lng - 0.03, center.lat - 0.02]
-          },
-          properties: {
-            title: "医院",
-            kind: "hospital"
+            type: "LineString",
+            coordinates: data
           }
         }
       ]
     };
 
-    map.addSource("pointSource", {
+    map.addSource(id, {
       type: "geojson",
       data: jsonData
     });
-  }
 
-  // 自定义图层
-  addLayers(map) {
     map.addLayer({
-      id: "circleLayer",
-      type: "circle",
-      source: "pointSource",
+      id: id,
+      type: "line",
+      source: id,
       layout: {
-        visibility: "visible"
+        "line-join": "round",
+        "line-cap": "round"
       },
       paint: {
-        "circle-radius": 10,
-        "circle-color": {
-          type: "categorical",
-          property: "kind",
-          stops: [
-            ["school", "#ff0000"],
-            ["park", "#00ff00"],
-            ["hospital", "#0000ff"]
-          ],
-          default: "#ff0000"
-        },
-        "circle-opacity": 0.8
+        "line-width": 6,
+        "line-color": "red",
+        "line-opacity": 1,
+        ...options
       },
       minzoom: 7,
       maxzoom: 17.5
     });
   }
 
+  drawBorderLine(map, data) {
+    const options = {
+      "line-width": 5,
+      "line-color": "yellow",
+      "line-opacity": 1
+    };
+
+    data.forEach(item => {
+      const { key, polygonList } = item;
+      const len = utils.multiarr(polygonList);
+
+      if (len === 2) {
+        this.draw(key, map, polygonList, options);
+      } else if (len === 3) {
+        polygonList.forEach((item, index) => {
+          this.draw(`${key}-${index}`, map, item, options);
+        });
+      }
+    });
+  }
+
   mapLoad(map) {
-    // 好像没什么区别？
-    this.addSources(map);
-    this.addLayers(map);
-
-    setTimeout(() => {
-      map.easeTo({
-        center: [116.46, 39.92],
-        zoom: 8,
-        bearing: 0,
-        pitch: 60,
-        duration: 2000
-      });
-
-      setTimeout(() => {
-        // 上移100像素
-        map.panBy([0, 100]);
-      }, 1200);
-    }, 1000);
+    this.drawBorderLine(map, borderLineData);
   }
 
   render() {
     return (
       <div style={{ width: "100%", height: "100%" }}>
-        <Example
+        <Map
           options={{
-            center: [116.46, 39.92],
-            zoom: 10,
-            pitch: 0,
-            maxZoom: 17,
-            minZoom: 3,
+            center: [114.113702, 22.6208],
+            zoom: 9.5,
             loadCallback: this.mapLoad
           }}
         />
