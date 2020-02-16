@@ -1,13 +1,13 @@
 import React, { Component } from "react";
 
 import "./App.css";
-import Home from "./components/Home";
+import Cluster from "./components/Cluster";
 
 class App extends Component {
   render() {
     return (
       <div style={{ width: "100%", height: "100%" }}>
-        <Home />
+        <Cluster />
       </div>
     );
   }
