@@ -1,8 +1,8 @@
 import React, { Component } from "react";
 
-import utils from "./utils";
-import borderLineData from "./borderLine";
-import statisticsData from "./statistics";
+import utils from "../utils";
+import borderLineData from "../data/borderLine";
+import statisticsData from "../data/statistics";
 import Map from "./Map";
 
 const transformBorderLineData = data => {
@@ -33,22 +33,20 @@ export default class App extends Component {
   }
 
   draw(id, map, data, options) {
-    const jsonData = {
-      type: "FeatureCollection",
-      features: [
-        {
-          type: "Feature",
-          geometry: {
-            type: "LineString",
-            coordinates: data
-          }
-        }
-      ]
-    };
-
     map.addSource(id, {
       type: "geojson",
-      data: jsonData
+      data: {
+        type: "FeatureCollection",
+        features: [
+          {
+            type: "Feature",
+            geometry: {
+              type: "LineString",
+              coordinates: data
+            }
+          }
+        ]
+      }
     });
 
     map.addLayer({
@@ -105,7 +103,6 @@ export default class App extends Component {
 
   // 更新点位
   updateMarker(map) {
-    console.log("updateMarker");
     if (!map) {
       return;
     }
