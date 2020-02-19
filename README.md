@@ -22,3 +22,6 @@
 [">=", "point_count", color[0]],
 ["<", "point_count", outerColors[i - 1][0]]
 ]
+
+
+##  "icon-image": "bank-15"这里是什么作用
