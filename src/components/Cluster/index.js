@@ -3,6 +3,18 @@ import React, { Component } from "react";
 import pointData from "../../data/poi_suzhou.json";
 import Map from "../Map";
 
+function createColorsFilter(i, color, colors) {
+  if (i === 0) {
+    return [">=", "point_count", color[0]];
+  }
+
+  return [
+    "all",
+    [">=", "point_count", color[0]],
+    ["<", "point_count", colors[i - 1][0]]
+  ];
+}
+
 class Cluster extends Component {
   constructor(props) {
     super(props);
@@ -11,7 +23,9 @@ class Cluster extends Component {
   }
 
   addMarker(map) {
-    map.addSource("data-point", {
+    const sourceId = "data-point";
+
+    map.addSource(sourceId, {
       type: "geojson",
       data: pointData,
       cluster: true,
@@ -23,7 +37,7 @@ class Cluster extends Component {
     map.addLayer({
       id: "unclustered-points",
       type: "symbol",
-      source: "data-point",
+      source: sourceId,
       filter: ["!has", "point_count"],
       layout: {
         "icon-image": "bank-15"
@@ -31,7 +45,7 @@ class Cluster extends Component {
     });
 
     //添加聚合图层
-    var outerColors = [
+    const outerColors = [
       [1000, "rgba(253, 156, 115, 0.6)"],
       [100, "rgba(241, 211, 87, 0.6)"],
       [0, "rgba(181, 226, 140, 0.6)"]
@@ -41,23 +55,16 @@ class Cluster extends Component {
       map.addLayer({
         id: "point-outer-cluster-" + i,
         type: "circle",
-        source: "data-point",
+        source: sourceId,
         paint: {
           "circle-color": color[1],
           "circle-radius": 20
         },
-        filter:
-          i === 0
-            ? [">=", "point_count", color[0]]
-            : [
-                "all",
-                [">=", "point_count", color[0]],
-                ["<", "point_count", outerColors[i - 1][0]]
-              ]
+        filter: createColorsFilter(i, color, outerColors)
       });
     });
 
-    var innerColors = [
+    const innerColors = [
       [1000, "rgba(241, 128, 23, 0.6)"],
       [100, "rgba(240, 194, 12, 0.6)"],
       [0, "rgba(110, 204, 57, 0.6)"]
@@ -67,19 +74,12 @@ class Cluster extends Component {
       map.addLayer({
         id: "point-inner-cluster-" + i,
         type: "circle",
-        source: "data-point",
+        source: sourceId,
         paint: {
           "circle-color": color[1],
           "circle-radius": 15
         },
-        filter:
-          i === 0
-            ? [">=", "point_count", color[0]]
-            : [
-                "all",
-                [">=", "point_count", color[0]],
-                ["<", "point_count", innerColors[i - 1][0]]
-              ]
+        filter: createColorsFilter(i, color, innerColors)
       });
     });
 
@@ -87,7 +87,7 @@ class Cluster extends Component {
     map.addLayer({
       id: "cluster-count",
       type: "symbol",
-      source: "data-point",
+      source: sourceId,
       layout: {
         "text-field": "{point_count}",
         "text-size": 10
