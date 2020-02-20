@@ -1,34 +1,10 @@
-import React, { useState, useEffect } from "react";
-import axios from "axios";
+import React, { useState } from "react";
 
-const getDataEffect = (url, setData, setIsFetching, setErr) => {
-  const fetchData = async () => {
-    setIsFetching(true);
-    setErr(false);
-
-    try {
-      const { data } = await axios(url);
-      setData({
-        hits: data.data
-      });
-    } catch (err) {
-      setErr(err);
-    }
-
-    setIsFetching(false);
-  };
-
-  fetchData();
-};
+import useFetchApi from "./CustomHooks";
 
 function Example() {
-  const [data, setData] = useState({ hits: [] });
   const [query, setQuery] = useState("redux");
-  const [isFetching, setIsFetching] = useState(false);
-  const [err, setErr] = useState(false);
-  const [url, setUrl] = useState(`/api/getData?query=${query}`);
-
-  useEffect(() => getDataEffect(url, setData, setIsFetching, setErr), [url]);
+  const { data, isFetching, err, setUrl } = useFetchApi();
 
   return (
     <>
