@@ -1,6 +1,6 @@
 import React from "react";
 
-import Example from "./Example";
+import Example from "./components/Example";
 import WithoutMemo from "./components/WithoutMemo";
 import UseMemoExample from "./components/UseMemoExample";
 
