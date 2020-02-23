@@ -4,7 +4,7 @@ import useFetchApi from "./CustomHooks";
 
 function Example() {
   const [query, setQuery] = useState("redux");
-  const { data, isFetching, err, setUrl } = useFetchApi();
+  const { isFetching, err, hits, setUrl } = useFetchApi();
 
   return (
     <>
@@ -24,7 +24,7 @@ function Example() {
         <div>Loading ...</div>
       ) : (
         <ul>
-          {data.hits.map(item => (
+          {hits.map(item => (
             <li key={item.id}>
               <a href={item.text}>{item.text}</a>
             </li>

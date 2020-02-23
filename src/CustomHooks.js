@@ -1,36 +1,74 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useReducer } from "react";
 import axios from "axios";
 
+const initialState = {
+  isFetching: false,
+  err: false,
+  hits: []
+};
+
+function reducer(state, action) {
+  const { type, payload } = action;
+
+  if (type === "FETCH_REQUEST") {
+    return {
+      ...state,
+      isFetching: true,
+      err: false
+    };
+  }
+
+  if (type === "FETCH_SUCCESS") {
+    return {
+      ...state,
+      isFetching: false,
+      hits: payload
+    };
+  }
+
+  if (type === "FETCH_FAILURE") {
+    return {
+      ...state,
+      isFetching: false,
+      err: payload
+    };
+  }
+
+  return state;
+}
+
 function useFetchApi() {
-  const [data, setData] = useState({ hits: [] });
-  const [isFetching, setIsFetching] = useState(false);
-  const [err, setErr] = useState(false);
+  const [state, dispatch] = useReducer(reducer, initialState);
   const [url, setUrl] = useState(`/api/getData?query=redux`);
 
   useEffect(() => {
-    const fetchData = async () => {
-      setIsFetching(true);
-      setErr(false);
+    let didCancel = false;
 
+    const fetchData = async () => {
+      dispatch({ type: "FETCH_REQUEST" });
       try {
         const { data } = await axios(url);
-        setData({
-          hits: data.data
-        });
+        if (didCancel) {
+          return;
+        }
+        dispatch({ type: "FETCH_SUCCESS", payload: data.data });
       } catch (err) {
-        setErr(err);
+        if (didCancel) {
+          return;
+        }
+        dispatch({ type: "FETCH_FAILURE", payload: err });
       }
-
-      setIsFetching(false);
     };
 
     fetchData();
+
+    return () => {
+      didCancel = true;
+    };
   }, [url]);
 
   return {
-    data,
-    isFetching,
-    err,
+    ...state,
     setUrl
   };
 }
