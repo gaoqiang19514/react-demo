@@ -4,7 +4,7 @@ import useFetchApi from "./CustomHooks";
 
 function Example() {
   const [query, setQuery] = useState("redux");
-  const { isFetching, err, hits, setUrl } = useFetchApi();
+  const { isFetching, err, hits, doFetch } = useFetchApi();
 
   return (
     <>
@@ -15,7 +15,7 @@ function Example() {
       />
       <button
         type="button"
-        onClick={() => setUrl(`/api/getData?query=${query}`)}
+        onClick={() => doFetch(`/api/getData?query=${query}`)}
       >
         search
       </button>

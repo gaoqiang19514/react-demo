@@ -9,7 +9,7 @@ const initialState = {
 
 function reducer(state, action) {
   const { type, payload } = action;
-
+  
   if (type === "FETCH_REQUEST") {
     return {
       ...state,
@@ -67,9 +67,14 @@ function useFetchApi() {
     };
   }, [url]);
 
+  const doFetch = (url) => {
+    // 对url做一些合法性判断
+    setUrl(url)
+  }
+
   return {
     ...state,
-    setUrl
+    doFetch
   };
 }
 
