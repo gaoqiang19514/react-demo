@@ -9,8 +9,8 @@ const treeData = [
     children: [
       {
         id: 2,
-		name: "lina",
-		num: 10,
+        name: "lina",
+        num: 10,
         children: [
           {
             id: 4,
@@ -47,7 +47,53 @@ function test(data) {
 }
 
 const res = test(treeData);
-console.log(res);
+
+const tree = [
+  {
+    level: 1,
+    count: 0,
+    children: [
+      {
+        level: 2,
+        count: 12,
+        children: [{ level: 3, count: 10 }]
+      },
+      {
+        level: 2,
+        count: 1,
+        children: [{ level: 3, count: 10 }]
+      },
+      {
+        level: 2,
+        count: 12,
+        children: [{ level: 3, count: 110 },{ level: 3, count: 90 }]
+      },
+      {
+        level: 2,
+        count: 1,
+        children: [{ level: 3, count: 10 }]
+	  },
+	  {
+        level: 2,
+        count: 1,
+        children: [{ level: 3, count: 0 }]
+      }
+    ]
+  }
+];
+
+function rewriteCount(data) {
+  return data.map(item => {
+    if (item.children) {
+      rewriteCount(item.children);
+      item.count = item.children.reduce((total, item) => total + item.count, 0);
+    }
+    return item;
+  });
+}
+
+const res2 = rewriteCount(tree);
+console.log(res2);
 
 function App() {
   return (
