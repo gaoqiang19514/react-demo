@@ -6,24 +6,9 @@ const { TreeNode } = Tree;
 class Example extends Component {
   state = {
     treeData: [
-      { title: "Expand to load", key: "0" },
-      { title: "Expand to load", key: "1" }
+      { title: "Expand to load 0", key: "0" },
+      { title: "Expand to load 1", key: "1" }
     ]
-  };
-
-  recursionTree = data => {
-    return data.map(item => {
-      if (item.children) {
-        item.children = this.recursionTree(item.children);
-      }
-      return { ...item, title: `${item.title} + 1` };
-    });
-  };
-
-  updateTree = () => {
-    const newTree = this.recursionTree(this.state.treeData);
-    console.log(newTree);
-    this.setState({ treeData: newTree });
   };
 
   onLoadData = treeNode => {
@@ -33,16 +18,14 @@ class Example extends Component {
         return;
       }
       setTimeout(() => {
+        // 通过dataRef可以拿到当前节点在state中的数据引用
         treeNode.props.dataRef.children = [
           { title: "Child Node", key: `${treeNode.props.eventKey}-0` },
           { title: "Child Node", key: `${treeNode.props.eventKey}-1` }
         ];
-        this.setState(
-          {
-            treeData: [...this.state.treeData]
-          },
-          this.updateTree
-        );
+        this.setState({
+          treeData: [...this.state.treeData]
+        });
         resolve();
       }, 1000);
     });
