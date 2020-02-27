@@ -54,30 +54,12 @@ const tree = [
       {
         level: 2,
         count: 12,
-        children: [{ level: 3, count: 10 }]
-      },
-      {
-        level: 2,
-        count: 1,
-        children: [{ level: 3, count: 10 }]
+        children: [{ level: 3, count: 10 }, {level: 3, count: 21}]
       },
       {
         level: 2,
         count: 12,
-        children: [
-          { level: 3, count: 110 },
-          { level: 3, count: 90 }
-        ]
-      },
-      {
-        level: 2,
-        count: 1,
         children: [{ level: 3, count: 10 }]
-      },
-      {
-        level: 2,
-        count: 1,
-        children: [{ level: 3, count: 0 }]
       }
     ]
   }
@@ -85,16 +67,19 @@ const tree = [
 
 function rewriteCount(data) {
   return data.map(item => {
+    const node = { count: item.count, level: item.level };
+
     if (item.children) {
-      rewriteCount(item.children);
-      item.count = item.children.reduce((total, item) => total + item.count, 0);
+      node.children = rewriteCount(item.children);
+      node.count = node.children.reduce((total, item) => total + item.count, 0);
     }
-    return item;
+
+    return node;
   });
 }
 
 const res2 = rewriteCount(tree);
-// console.log(res2);
+console.log(res2);
 
 function App() {
   return (
