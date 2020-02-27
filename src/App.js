@@ -34,15 +34,13 @@ const treeData = [
 function test(data) {
   let arr = [];
   data.forEach(item => {
-    const node = {
-      id: item.id,
-      name: item.name
-    };
     if (item.children) {
-      arr.push(...test(item.children));
+      arr = test(item.children);
     }
-    arr.push(node);
+
+    arr.push({ id: item.id });
   });
+
   return arr;
 }
 
@@ -66,14 +64,17 @@ const tree = [
       {
         level: 2,
         count: 12,
-        children: [{ level: 3, count: 110 },{ level: 3, count: 90 }]
+        children: [
+          { level: 3, count: 110 },
+          { level: 3, count: 90 }
+        ]
       },
       {
         level: 2,
         count: 1,
         children: [{ level: 3, count: 10 }]
-	  },
-	  {
+      },
+      {
         level: 2,
         count: 1,
         children: [{ level: 3, count: 0 }]
@@ -93,7 +94,7 @@ function rewriteCount(data) {
 }
 
 const res2 = rewriteCount(tree);
-console.log(res2);
+// console.log(res2);
 
 function App() {
   return (
