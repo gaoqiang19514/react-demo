@@ -14,7 +14,10 @@ const tree = [
     children: [
       {
         level: 2,
-        children: [{ level: 3 }]
+        children: [{ level: 3 }, { level: 3 }]
+      },
+      {
+        level: 2
       }
     ]
   }
@@ -25,10 +28,13 @@ function recursion(arr) {
   const temp = [];
 
   arr.forEach(item => {
+    const node = { ...item, level: item.level * 10 };
+
     if (item.children) {
-      recursion(item.children);
+      node.children = recursion(item.children);
     }
-    temp.push({ ...item });
+
+    temp.push(node);
   });
 
   return temp;
@@ -49,11 +55,28 @@ function recursion2(arr) {
 // 优化方法
 function recursion3(arr) {
   return arr.map(item => {
+    const node = { ...item, level: item.level * 10 };
+
     if (item.children) {
-      item.children = recursion3(item.children);
+      node.children = recursion3(item.children);
     }
-    return { ...item, level: item.level + 10 };
+
+    return node;
   });
+}
+
+// 收集属性值
+function getData(data) {
+  let res = [];
+  data.forEach(item => {
+    if (item.children) {
+      res = getData(item.children);
+    }
+    if (item.level) {
+      res.push(item.level);
+    }
+  });
+  return res;
 }
 
 // 目的：
@@ -67,3 +90,6 @@ function recursion3(arr) {
 // 目的：
 // 递归复制树结构
 // const res3 = recursion3(tree);
+
+const res = getData(tree);
+console.log(res);
