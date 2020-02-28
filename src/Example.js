@@ -18,9 +18,7 @@ function hasCount(data) {
 
 class Example extends Component {
   state = {
-    treeData: [
-      { title: "Expand to load 1", key: "1", count: 0 }
-    ]
+    treeData: [{ title: "Expand to load 1", key: "1", count: 0 }]
   };
 
   updateTreeByKey = (key, data, oldData) => {
@@ -73,7 +71,7 @@ class Example extends Component {
         }
 
         counter++;
-        console.log("后台返回的数据", newData);
+        // console.log("后台返回的数据", newData);
         this.updateTreeByKey(
           treeNode.props.dataRef.key,
           newData,
@@ -126,7 +124,7 @@ class Example extends Component {
     const newTreeData = cloneDeep(this.state.treeData);
     const superTreeData = this.updteCountNode(newTreeData);
 
-    console.log(this.state.treeData, superTreeData);
+    // console.log(this.state.treeData, superTreeData);
 
     return (
       <Tree loadData={this.onLoadData}>
@@ -136,4 +134,78 @@ class Example extends Component {
   }
 }
 
+const obj = [
+  {
+    name: "tom",
+    age: 30,
+    children: [
+      {
+        name: "lina",
+        age: 20
+      }
+    ]
+  }
+];
+
+function clone(list) {
+  return list.map(item => {
+    console.log("item", item);
+    const node = { ...item };
+    if (node.children) {
+      // 传了个引用进去
+      node.children = clone(node.children);
+    }
+
+    return node;
+  });
+}
+
+// const newObj = clone(obj);
+// obj[0].children[0].age = 10000;
+// console.log(obj[0].children === newObj[0].children);
+// console.log(newObj);
+
+const tom = [{ level: 1, children: [{ level: 2 }] }];
+function copy(list) {
+  return list.map(item => {
+    if (item.children) {
+      item.children = copy(item.children);
+    }
+    // 问题原来出在这里，应为item本身就是一个引用类型，这里将item的引用原封不动拷贝给了cat
+	// 这样需要创建一个新的元素引用
+	// 注意这里只是修改了item的引用，但是item内部的children引用并没有被修改
+    return { ...item };
+  });
+}
+const cat = copy(tom);
+
+// 证明map返回的数组并非tom的引用，而是一个新的引用
+// console.log("tom === cat", tom === cat);
+
+// children被浅拷贝了
+cat[0].children[0] = [];
+console.log(tom);
+
+const go = {
+  level: 1,
+  children: [1]
+};
+
+const go2 = { ...go };
+// console.log("go2", go2);
+go2.children = [99999];
+// console.log("go", go);
+
+const object = {
+  name: "tom",
+  children: [999]
+};
+// 搞清楚下面两种赋值是很有意义的
+// 第二种给object3开辟了新的引用，并且有name和children属性
+// 这时object3的children属性虽然是指向object的children，但是我们修改了object3
+// 的children指向后，就和ojbecjt的children没关系了，因为我们修改了他的指针
+const object3 = { ...object };
+object3.children = []
+console.log('object', object)
+console.log('object3', object3)
 export default Example;
