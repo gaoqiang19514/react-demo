@@ -184,7 +184,7 @@ const cat = copy(tom);
 
 // children被浅拷贝了
 cat[0].children[0] = [];
-console.log(tom);
+// console.log(tom);
 
 const go = {
   level: 1,
@@ -206,6 +206,9 @@ const object = {
 // 的children指向后，就和ojbecjt的children没关系了，因为我们修改了他的指针
 const object3 = { ...object };
 object3.children = []
-console.log('object', object)
-console.log('object3', object3)
+// console.log('object', object)
+// console.log('object3', object3)
+
+
+
 export default Example;

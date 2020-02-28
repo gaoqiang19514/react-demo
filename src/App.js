@@ -1,6 +1,7 @@
 import React from "react";
 
 import Example from "./Example";
+import "./copy_array";
 
 const treeData = [
   {
@@ -54,7 +55,10 @@ const tree = [
       {
         level: 2,
         count: 12,
-        children: [{ level: 3, count: 10 }, {level: 3, count: 21}]
+        children: [
+          { level: 3, count: 10 },
+          { level: 3, count: 21 }
+        ]
       },
       {
         level: 2,
