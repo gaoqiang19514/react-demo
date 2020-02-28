@@ -79,7 +79,6 @@ function rewriteCount(data) {
 }
 
 const res2 = rewriteCount(tree);
-console.log(res2);
 
 function App() {
   return (
