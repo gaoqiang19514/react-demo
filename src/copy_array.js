@@ -42,8 +42,10 @@ let tree = [
 
 const tree3 = [...tree];
 
-// 修改数组tree3的元素（值修改？需要验证！！！！！）
-tree3[0] = null
 // 修改数组tree3元素的children属性（引用修改）
 tree3[0].children = null
+console.log(tree , tree3)
+
+// 修改数组tree3的元素（值修改？需要验证！！！！！）
+tree3[0] = null
 console.log(tree , tree3)
