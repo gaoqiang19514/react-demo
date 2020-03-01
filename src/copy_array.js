@@ -1,3 +1,12 @@
+/**
+ * 打印表达式结果
+ * @param {String} statement
+ */
+function print(statement) {
+  // eslint-disable-next-line no-eval
+  console.log(statement, eval(statement));
+}
+
 // let originArr = [1];
 // let newArr = originArr;
 
@@ -27,12 +36,12 @@
 
 // --------------------------------------------------------
 
-let tree = [
-  {
-    level: 1,
-    children: [{ level: 2 }]
-  }
-];
+// let tree = [
+//   {
+//     level: 1,
+//     children: [{ level: 2 }]
+//   }
+// ];
 
 // let tree2 = tree;
 // 修改tree引用地址指向的数据
@@ -40,12 +49,63 @@ let tree = [
 // tree[0] = null
 // console.log(tree, tree2);
 
-const tree3 = [...tree];
+// const tree3 = [...tree];
 
 // 修改数组tree3元素的children属性（引用修改）
-tree3[0].children = null
-console.log(tree , tree3)
+// tree3[0].children = null
+// console.log(tree , tree3)
 
 // 修改数组tree3的元素（值修改？需要验证！！！！！）
-tree3[0] = null
-console.log(tree , tree3)
+// tree3[0] = null
+// console.log(tree , tree3)
+
+// --------------------------------------------------------
+
+// let tree = [
+//   {
+//     level: 1
+//   }
+// ];
+
+// let tree2 = [...tree];
+// 这里只是给tree2分配了新的引用
+// 但是tree2中的值还是引用，所以tree和tree2中的元素都是引用
+// console.log("tree[0] === tree2[0]", tree[0] === tree2[0]);
+
+// --------------------------------------------------------
+
+let tree = [
+  {
+    level: 1,
+    children: [{ level: 2 }]
+  }
+];
+
+function copy(list) {
+  const arr = [];
+  list.forEach(item => {
+    // 这一步是重点，修改了item的引用
+    const node = { ...item };
+    if (node.children) {
+      node.children = copy(node.children);
+    }
+    arr.push(node);
+  });
+  return arr;
+}
+
+let newTree = copy(tree);
+print("tree");
+print("newTree");
+
+print("tree === newTree");
+// false
+
+print("tree[0] === newTree[0]");
+// false
+
+print("tree[0].children === newTree[0].children");
+// false
+
+print("tree[0].children[0] === newTree[0].children[0]");
+// false
