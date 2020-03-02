@@ -82,14 +82,28 @@ let tree = [
 ];
 
 function copy(list) {
-  const arr = [];
-  list.forEach(item => {
+  return list.map(item => {
     // 这一步是重点，修改了item的引用
+    // 如果没有这一步，那么我们只是在修改引用item里面的值，
+    // 并没有修改到item本身
     const node = { ...item };
     if (node.children) {
       node.children = copy(node.children);
     }
-    arr.push(node);
+    return node;
+  });
+}
+
+function copy2(list) {
+  const arr = [];
+  list.forEach(item => {
+    // 这里的item本身就是一个引用，
+    // 不管我们怎么修改item.children的值，
+    // 也始终是在修改item这个引用中的值
+    if (item.children) {
+      item.children = copy2(item.children);
+    }
+    arr.push(item);
   });
   return arr;
 }
