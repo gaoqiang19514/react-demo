@@ -5,6 +5,7 @@ import WithoutMemo from "./components/WithoutMemo";
 import UseMemoExample from "./components/UseMemoExample";
 
 function Demo(props) {
+  console.log("props", props);
   const [data, setData] = useState([...props.data]);
 
   const handleClick = () => {
@@ -24,13 +25,28 @@ function Demo(props) {
   );
 }
 
-function App() {
-  return (
-    <div className="App">
-      <Demo data={[1, 2, 3]} />
-      <UseMemoExample />
-    </div>
-  );
-}
+export default class App extends React.Component {
+  constructor(props) {
+    super(props);
 
-export default App;
+    this.handleResetClick = this.handleResetClick.bind(this);
+
+    this.state = {
+      data: [1, 2, 3]
+    };
+  }
+
+  handleResetClick() {
+    this.setState({ data: [] });
+  }
+
+  render() {
+    return (
+      <div className="App">
+        <Demo data={this.state.data} />
+        <button onClick={this.handleResetClick}>reset</button>
+        <UseMemoExample />
+      </div>
+    );
+  }
+}
