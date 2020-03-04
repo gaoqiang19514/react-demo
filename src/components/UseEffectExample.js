@@ -42,35 +42,35 @@ function updateTitle(count) {
   document.title = `You clicked ${count} times`;
 }
 
-// useEffect是 componentDidMount, componentDidUpdate, 和 componentWillUnmount三个生命周期钩子的组合
-// - useEffect依赖用空数组就是componentDidMount
-// - useEffect返回函数就是componentWillUnmount
-// - useEffect加依赖就是componentDidUpdate
-function UseEffectExample() {
+// useEffect是 componentDidMount, componentDidUpdate, componentWillUnmount三个生命周期钩子的组合
+// useEffect依赖用空数组就是componentDidMount
+// useEffect返回函数就是componentWillUnmount
+// useEffect加依赖就是componentDidUpdate（初始化会执行，需要加逻辑处理初始化执行的问题）
+function UseEffectExample(props) {
+  // 用来模拟componentDidUpdate
+  const [initFlag, setInitFlag] = useState(true);
   const [count, setCount] = useState(0);
 
-  // 跟在componentDidUpdate判断state变化后更新是一样的
   useEffect(() => {
-    updateTitle(count);
+    if (!initFlag) {
+      console.log("useEffect");
+      updateTitle(count);
+    }
+    setInitFlag(false);
   }, [count]);
 
-  return (
-    <div>
-      <button type="button" onClick={() => setCount(count + 1)}></button>
-    </div>
-  );
-}
-
-export function UseEffectExample2(props) {
   useEffect(() => {
-    console.log("update prpos.count");
-  }, [props.count]);
+    if (!initFlag) {
+      console.log("useEffect");
+    }
+    setInitFlag(false);
+  }, [props.num]);
 
   return (
     <div>
-      <h1>count: {props.count}</h1>
-      <button onClick={props.handleUpdateCountClick} type="button">
-        UseEffectExample2 update props.count
+      <h1>count: {count}</h1>
+      <button type="button" onClick={() => setCount(count + 1)}>
+        increment count
       </button>
     </div>
   );
