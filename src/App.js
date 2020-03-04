@@ -6,26 +6,40 @@ import UseMemoExample from "./components/UseMemoExample";
 import { UseEffectExample2 } from "./components/UseEffectExample";
 
 function Demo(props) {
-  console.log("props", props);
-  const [data, setData] = useState([...props.data]);
+  const [dataBackup, setDataBackup] = useState(props.data);
+  const [data, setData] = useState([]);
+  const [flag, setFlag] = useState(false);
 
-  const handleClick = () => {
-    data.pop();
-    setData([...data]);
+  const loadMore = () => {
+    const temp = dataBackup.pop();
+    if (temp) {
+      setDataBackup(dataBackup);
+      setData([...data, temp]);
+    }
   };
 
   useEffect(() => {
-    setData([...props.data]);
+    loadMore();
+  }, [dataBackup]);
+
+  useEffect(() => {
+    if (flag) {
+      console.log("useEffect", props.data);
+      setData([]);
+      setDataBackup(props.data);
+    }
+    setFlag(true);
   }, [props.data]);
+  console.log("data", data);
 
   return (
     <div>
       <ul>
-        {data.map(item => (
-          <li key={item}>{item}</li>
-        ))}
+        {data.map(item => {
+          return <li key={item}>{item}</li>;
+        })}
       </ul>
-      <button onClick={handleClick}>remove</button>
+      {!!dataBackup.length && <button onClick={loadMore}>loadMore</button>}
     </div>
   );
 }
@@ -59,14 +73,14 @@ export default class App extends React.Component {
   render() {
     return (
       <div className="App">
-        {/* <Demo data={this.state.data} /> */}
-        {/* <button onClick={this.handleResetClick}>reset</button> */}
-        {/* <button onClick={this.handleAddClick}>add</button> */}
+        <Demo data={this.state.data} />
+        <button onClick={this.handleResetClick}>reset</button>
+        <button onClick={this.handleAddClick}>add</button>
         {/* <UseMemoExample /> */}
-        <UseEffectExample2
+        {/* <UseEffectExample2
           count={this.state.count}
           handleUpdateCountClick={this.handleUpdateCountClick}
-        />
+        /> */}
       </div>
     );
   }
