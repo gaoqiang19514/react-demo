@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 
 import Example from "./components/Example";
 import WithoutMemo from "./components/WithoutMemo";
@@ -13,6 +13,10 @@ function Demo(props) {
     setData([...data]);
   };
 
+  useEffect(() => {
+    setData([...props.data]);
+  }, [props.data]);
+
   return (
     <div>
       <ul>
@@ -20,7 +24,7 @@ function Demo(props) {
           <li key={item}>{item}</li>
         ))}
       </ul>
-      <button onClick={handleClick}>Dome</button>
+      <button onClick={handleClick}>remove</button>
     </div>
   );
 }
@@ -29,7 +33,8 @@ export default class App extends React.Component {
   constructor(props) {
     super(props);
 
-    this.handleResetClick = this.handleResetClick.bind(this);
+	this.handleResetClick = this.handleResetClick.bind(this);
+	this.handleAddClick = this.handleAddClick.bind(this)
 
     this.state = {
       data: [1, 2, 3]
@@ -40,12 +45,17 @@ export default class App extends React.Component {
     this.setState({ data: [] });
   }
 
+  handleAddClick() {
+    this.setState({ data: [1, 2, 3, 4, 5, 6] });
+  }
+
   render() {
     return (
       <div className="App">
         <Demo data={this.state.data} />
         <button onClick={this.handleResetClick}>reset</button>
-        <UseMemoExample />
+        <button onClick={this.handleAddClick}>add</button>
+        {/* <UseMemoExample /> */}
       </div>
     );
   }
