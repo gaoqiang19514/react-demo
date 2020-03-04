@@ -61,5 +61,19 @@ function UseEffectExample() {
   );
 }
 
-export default UseEffectExample;
+export function UseEffectExample2(props) {
+  useEffect(() => {
+    console.log("update prpos.count");
+  }, [props.count]);
 
+  return (
+    <div>
+      <h1>count: {props.count}</h1>
+      <button onClick={props.handleUpdateCountClick} type="button">
+        UseEffectExample2 update props.count
+      </button>
+    </div>
+  );
+}
+
+export default UseEffectExample;
