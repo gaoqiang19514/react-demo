@@ -1,7 +1,8 @@
 import React from "react";
 
 import Example from "./Example";
-import "./copy_array";
+import Example2 from "./Example2";
+// import "./copy_array";
 
 const treeData = [
   {
@@ -87,7 +88,7 @@ const res2 = rewriteCount(tree);
 function App() {
   return (
     <div>
-      <Example />
+      <Example2 />
     </div>
   );
 }
