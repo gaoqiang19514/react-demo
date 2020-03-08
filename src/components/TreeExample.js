@@ -1,6 +1,7 @@
 import React, { Component } from "react";
 import { Tree } from "antd";
 import { cloneDeep } from "lodash";
+import axios from "axios";
 
 const { TreeNode } = Tree;
 
@@ -112,4 +113,60 @@ class Example extends Component {
   }
 }
 
-export default Example;
+class TreeExample extends Component {
+  constructor(props) {
+    super(props);
+
+    this.onLoadData = this.onLoadData.bind(this);
+
+    this.state = {
+      treeData: [{ title: "Expand to load 1", key: "1" }]
+    };
+  }
+
+  onLoadData(treeNode) {
+    return new Promise((resolve, reject) => {
+      if (treeNode.props.children) {
+        resolve();
+        return;
+      }
+
+      // 正常相应和异常（服务器错误，返回格式错误，超时）都应该调用resolve
+      axios
+        .get("/getUsers", {
+          timeout: 5000
+        })
+        .then(res => {
+          console.log("res", res);
+          resolve();
+        })
+        .catch(err => {
+          console.error("err", err);
+          resolve();
+        });
+    });
+  }
+
+  renderTreeNodes(data) {
+    return data.map(item => {
+      if (item.children) {
+        return (
+          <TreeNode key={item.key} title={item.title} dataRef={item}>
+            {this.renderTreeNodes(item.children)}
+          </TreeNode>
+        );
+      }
+      return <TreeNode key={item.key} title={item.title} dataRef={item} />;
+    });
+  }
+
+  render() {
+    return (
+      <Tree loadData={this.onLoadData}>
+        {this.renderTreeNodes(this.state.treeData)}
+      </Tree>
+    );
+  }
+}
+
+export default TreeExample;
