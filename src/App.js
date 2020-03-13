@@ -4,6 +4,7 @@ import Example from "./components/Example";
 import WithoutMemo from "./components/WithoutMemo";
 import UseMemoExample from "./components/UseMemoExample";
 import UseEffectExample from "./components/UseEffectExample";
+import Dropdown from "./components/Dropdown";
 
 export default class App extends React.Component {
   constructor(props) {
@@ -34,7 +35,7 @@ export default class App extends React.Component {
   render() {
     return (
       <div className="App">
-        <UseEffectExample num={1} />
+        <Dropdown />
       </div>
     );
   }
