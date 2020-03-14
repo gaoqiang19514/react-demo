@@ -197,9 +197,17 @@ export default class TableExample extends Component {
         <Table
           tableLayout="auto"
           //   设置容器的高度 让内容在这个高度中纵向滚动
-          scroll={{ x: 1400, y: 400 }}
+          scroll={{ x: 2400, y: 400 }}
           columns={columns}
           dataSource={dataSource}
+          onRow={() => {
+            return {
+              onClick: event => {
+                //   在这里对行点击触发的目的做判断和执行
+                console.log("event", event.target);
+              }
+            };
+          }}
         />
       </div>
     );
