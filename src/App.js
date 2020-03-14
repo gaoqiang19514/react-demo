@@ -5,6 +5,7 @@ import WithoutMemo from "./components/WithoutMemo";
 import UseMemoExample from "./components/UseMemoExample";
 import UseEffectExample from "./components/UseEffectExample";
 import Dropdown from "./components/Dropdown";
+import TestHookProps from "./components/TestHookProps";
 
 export default class App extends React.Component {
   constructor(props) {
@@ -15,6 +16,7 @@ export default class App extends React.Component {
     this.handleUpdateCountClick = this.handleUpdateCountClick.bind(this);
 
     this.state = {
+      title: "",
       count: 0,
       data: [1, 2, 3]
     };
@@ -32,10 +34,17 @@ export default class App extends React.Component {
     this.setState({ count: this.state.count + 1 });
   }
 
+  handleChangeTitleClick = () => {
+    this.setState({
+      title: "TestHookProps"
+    });
+  };
+
   render() {
     return (
       <div className="App">
-        <Dropdown />
+        <TestHookProps title={this.state.title} />
+        <button onClick={this.handleChangeTitleClick}>change title</button>
       </div>
     );
   }

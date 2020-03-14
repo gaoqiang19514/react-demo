@@ -29,7 +29,7 @@ function Dropdown() {
 
     getCharacters();
 
-    return function() {
+    return function unmount() {
       isUnmount = true;
     };
   }, []);
