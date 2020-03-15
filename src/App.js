@@ -1,25 +1,26 @@
-import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import React from "react";
+import { BrowserRouter, Route } from "react-router-dom";
+import Loadable from "react-loadable";
+
+function Loading() {
+  return <div>loading...</div>;
+}
+
+const Home = Loadable({
+  loader: () => import(/* webpackChunkName: "Home" */ "./pages/Home"),
+  loading: Loading
+});
+const About = Loadable({
+  loader: () => import(/* webpackChunkName: "About" */ "./pages/About"),
+  loading: Loading
+});
 
 function App() {
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <BrowserRouter>
+      <Route path="/home" component={Home} />
+      <Route path="/about" component={About} />
+    </BrowserRouter>
   );
 }
 
