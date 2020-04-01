@@ -2,7 +2,7 @@ import React from "react";
 import axios from "axios";
 
 async function send(formData) {
-  const { data } = await axios.post("/upload?token=123", { file: formData });
+  const { data } = await axios.post("/upload?token=123", formData);
   console.log("data", data);
 }
 
@@ -14,6 +14,7 @@ function upload(file) {
   }
 
   formData.append("file", file);
+
   send(formData);
 }
 

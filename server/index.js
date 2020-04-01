@@ -1,5 +1,5 @@
+const formidable = require("formidable");
 const express = require("express");
-
 const app = express();
 
 app.use("/static", express.static("./server/public"));
@@ -24,7 +24,16 @@ app.get(
 );
 
 app.post("/upload", (req, res) => {
-  res.send("upload success!");
+  const form = new formidable.IncomingForm();
+  form.uploadDir = "./upload";
+  form.keepExtensions = true;
+
+  form.parse(req, (err, fields, files) => {
+    if (err) {
+      console.log(err);
+    }
+    res.end("文件上传成功");
+  });
 });
 
 app.listen(3000, () => {
