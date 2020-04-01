@@ -23,6 +23,10 @@ app.get(
   }
 );
 
+app.post("/upload", (req, res) => {
+  res.send("upload success!");
+});
+
 app.listen(3000, () => {
   console.log("server running port on 3000");
 });
