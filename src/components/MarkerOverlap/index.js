@@ -2,6 +2,9 @@ import React, { Component } from "react";
 
 import Map from "../Map";
 
+const layerId = "layerId";
+const sourceId = "sourceId";
+
 class MarkerOverlap extends Component {
   addSources = (map, sourceId) => {
     const center = map.getCenter();
@@ -51,9 +54,9 @@ class MarkerOverlap extends Component {
     });
   };
 
-  addLayers = (map, sourceId) => {
+  addLayers = (map, layerId, sourceId) => {
     map.addLayer({
-      id: "lineLayer",
+      id: layerId,
       type: "circle",
       source: sourceId,
       layout: {
@@ -78,10 +81,10 @@ class MarkerOverlap extends Component {
 
   handleMarkerClick = (e) => {
     const features = this.map.queryRenderedFeatures(e.point, {
-      layers: ["lineLayer"],
+      layers: [layerId],
     });
 
-    console.log(features);
+    console.log('features', features);
   };
 
   initEvents = (map) => {
@@ -91,9 +94,8 @@ class MarkerOverlap extends Component {
   loadCallback = (map) => {
     this.map = map;
 
-    const sourceId = "sourceId";
     this.addSources(map, sourceId);
-    this.addLayers(map, sourceId);
+    this.addLayers(map, layerId, sourceId);
     this.initEvents(map);
   };
 
