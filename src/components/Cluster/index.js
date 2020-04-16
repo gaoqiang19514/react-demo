@@ -1,6 +1,7 @@
 import React, { Component } from "react";
 
-import pointData from "../../data/poi_suzhou.json";
+import park from "../../assets/images/park.png";
+import pointData from "../../data/poi_suzhou_min.json";
 import Map from "../Map";
 
 function createColorsFilter(i, color, colors) {
@@ -33,15 +34,21 @@ class Cluster extends Component {
       clusterRadius: 50,
     });
 
-    //添加非聚合图层
-    map.addLayer({
-      id: "unclustered-points",
-      type: "symbol",
-      source: sourceId,
-      filter: ["!has", "point_count"],
-      layout: {
-        "icon-image": "bank-15",
-      },
+    map.loadImage(park, function (error, image) {
+      if (error) throw error;
+
+      map.addImage("park", image);
+
+      //添加非聚合图层
+      map.addLayer({
+        id: "unclustered-points",
+        type: "symbol",
+        source: sourceId,
+        filter: ["!has", "point_count"],
+        layout: {
+          "icon-image": "park",
+        },
+      });
     });
 
     //添加聚合图层
@@ -101,16 +108,23 @@ class Cluster extends Component {
 
   initEvents(map) {
     const keys = [
-      "point-outer-cluster-0",
       "point-outer-cluster-1",
+      "point-outer-cluster-2",
       "point-outer-cluster-2",
     ];
 
     map.on("click", (e) => {
-      const features = map.queryRenderedFeatures(e.point, { layers: keys });
-      const feature = features.length > 0 ? features[0] : null;
+      // 聚合图层点位
+      //   var features = map.queryRenderedFeatures(e.point, {
+      //     layers: keys,
+      //   });
 
-      console.log("feature", feature);
+      //   非聚合图层点位
+      var unclusteredFeatures = map.queryRenderedFeatures(e.point, {
+        layers: ["unclustered-points"],
+      });
+
+      console.log("unclusteredFeatures", unclusteredFeatures);
     });
   }
 
