@@ -1,0 +1,30 @@
+ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.nine-grid {
+  box-sizing: border-box;
+  width: 600px;
+  height: 450px;
+  padding: 5px;
+  background: #666;
+}
+
+.list {
+  display: flex;
+  flex-wrap: wrap;
+  height: 100%;
+}
+
+.item {
+  display: flex;
+  width: 33.33%;
+}
+
+.item-inner {
+  width: 100%;
+  margin: 5px;
+  background: #ccc;
+}
