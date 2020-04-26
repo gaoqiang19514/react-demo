@@ -1,11 +1,31 @@
 import React, { Component } from "react";
 
+import "./style.css";
 import Map from "../Map";
 
 const layerId = "layerId";
 const sourceId = "sourceId";
 
+function Test() {
+  return <div>test</div>;
+}
+
 class MarkerOverlap extends Component {
+  state = {
+    pos: {
+      left: 0,
+      top: 0,
+    },
+    markerList: [],
+  };
+
+  componentDidMount() {
+    this.popup = new window.minemap.Popup({
+      closeButton: false,
+      closeOnClick: false,
+    });
+  }
+
   addSources = (map, sourceId) => {
     const center = map.getCenter();
 
@@ -19,6 +39,7 @@ class MarkerOverlap extends Component {
             coordinates: [center.lng, center.lat],
           },
           properties: {
+            id: 1,
             title: "大学",
             kind: "school",
           },
@@ -30,6 +51,7 @@ class MarkerOverlap extends Component {
             coordinates: [center.lng + 0.00001, center.lat + 0.00001],
           },
           properties: {
+            id: 2,
             title: "公园",
             kind: "park",
           },
@@ -41,6 +63,7 @@ class MarkerOverlap extends Component {
             coordinates: [center.lng - 0.1, center.lat - 0.1],
           },
           properties: {
+            id: 3,
             title: "医院",
             kind: "hospital",
           },
@@ -84,7 +107,38 @@ class MarkerOverlap extends Component {
       layers: [layerId],
     });
 
-    console.log('features', features);
+    if (!features.length) {
+      this.popup.remove();
+      return;
+    }
+
+    if (features && features.length) {
+      this.showMarkerList(e.point, features);
+    }
+  };
+
+  handleClick = (arg) => {
+    console.log("handleClick", arg);
+  };
+
+  showMarkerList = (point, list) => {
+    const center = this.map.unproject(point);
+
+    const createListDOMContent = (list, cb) => {
+      const ul = window.document.createElement("ul");
+
+      list.forEach((item) => {
+        const li = window.document.createElement("li");
+        li.innerHTML = "Hello, world!";
+        li.onclick = () => cb(item);
+        ul.appendChild(li);
+      });
+      return ul;
+    };
+
+    const DOMContent = createListDOMContent(list, this.handleClick);
+
+    this.popup.setLngLat(center).setDOMContent(DOMContent).addTo(this.map);
   };
 
   initEvents = (map) => {
