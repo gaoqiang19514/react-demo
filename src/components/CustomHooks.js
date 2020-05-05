@@ -4,17 +4,17 @@ import axios from "axios";
 const initialState = {
   isFetching: false,
   err: false,
-  hits: []
+  hits: [],
 };
 
 function reducer(state, action) {
   const { type, payload } = action;
-  
+
   if (type === "FETCH_REQUEST") {
     return {
       ...state,
       isFetching: true,
-      err: false
+      err: false,
     };
   }
 
@@ -22,7 +22,7 @@ function reducer(state, action) {
     return {
       ...state,
       isFetching: false,
-      hits: payload
+      hits: [...payload, ...state.hits],
     };
   }
 
@@ -30,7 +30,7 @@ function reducer(state, action) {
     return {
       ...state,
       isFetching: false,
-      err: payload
+      err: payload,
     };
   }
 
@@ -69,12 +69,12 @@ function useFetchApi() {
 
   const doFetch = (url) => {
     // 对url做一些合法性判断
-    setUrl(url)
-  }
+    setUrl(url);
+  };
 
   return {
     ...state,
-    doFetch
+    doFetch,
   };
 }
 
