@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 
 import useFetchApi from "./CustomHooks";
+import useInput from "./useInput";
 
 function ResultView({ err, isFetching, hits }) {
   if (err) {
@@ -24,6 +25,20 @@ function ResultView({ err, isFetching, hits }) {
   }
 }
 
+function CountExample() {
+  const { count, increment, decrement } = useInput();
+
+  return (
+    <div>
+      {count}
+      <div>
+        <button onClick={increment}>increment</button>
+        <button onClick={decrement}>decrement</button>
+      </div>
+    </div>
+  );
+}
+
 function Example() {
   const [query, setQuery] = useState("redux");
   const { isFetching, err, hits, doFetch } = useFetchApi();
@@ -42,6 +57,7 @@ function Example() {
         search
       </button>
       <ResultView err={err} isFetching={isFetching} hits={hits} />
+      <CountExample />
     </>
   );
 }

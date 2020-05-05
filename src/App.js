@@ -15,32 +15,32 @@ const products = [
     id: 3,
     name: "C-微软 Surface Pro 7 二合一平板电脑笔记本",
     price: 6988.0,
-    stock: 12
+    stock: 12,
   },
   {
     id: 4,
     name: "D-尼康（Nikon）D3500 单反相机",
     price: 3199.0,
-    stock: 9
+    stock: 9,
   },
   {
     id: 5,
     name: "E-Apple MacBook Air 13.3",
     price: 7199.0,
-    stock: 99
+    stock: 99,
   },
   {
     id: 6,
     name: "F-小米Air 13.3英寸全金属超轻薄",
     price: 5969.0,
-    stock: 86
+    stock: 86,
   },
   {
     id: 7,
     name: "G-华为 HUAWEI Mate 30 Pro ",
     price: 5399.0,
-    stock: 12
-  }
+    stock: 12,
+  },
 ];
 
 export default class App extends React.Component {
@@ -54,7 +54,7 @@ export default class App extends React.Component {
     this.state = {
       title: "",
       count: 0,
-      data: [1, 2, 3]
+      data: [1, 2, 3],
     };
   }
 
@@ -72,7 +72,7 @@ export default class App extends React.Component {
 
   handleChangeTitleClick = () => {
     this.setState({
-      title: "TestHookProps"
+      title: "TestHookProps",
     });
   };
 
@@ -81,7 +81,8 @@ export default class App extends React.Component {
       <div className="App">
         {/* <TestHookProps title={this.state.title} /> */}
         {/* <button onClick={this.handleChangeTitleClick}>change title</button> */}
-        <Sort products={products} />
+        {/* <Sort products={products} /> */}
+		<Example />
       </div>
     );
   }
