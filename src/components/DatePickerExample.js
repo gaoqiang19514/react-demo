@@ -4,42 +4,56 @@ import { DatePicker } from "antd";
 
 const propTypes = {};
 
+const DIFF = 60;
+
 class DatePickerExample extends Component {
   state = {
     startValue: null,
-    endValue: null
+    endValue: null,
   };
 
   onChange = (field, value) => {
     this.setState({
-      [field]: value
+      [field]: value,
     });
   };
 
-  onStartChange = value => {
+  onStartChange = (value) => {
     this.onChange("startValue", value);
   };
 
-  onEndChange = value => {
+  onEndChange = (value) => {
     this.onChange("endValue", value);
   };
 
-  disabledStartDate = currDate => {
+  disabledStartDate = (currDate) => {
     const { endValue } = this.state;
+
     if (!currDate || !endValue) {
       return false;
     }
-    return currDate.valueOf() > endValue.valueOf();
+
+    // 如果结束时间与开始时间的时间差 > N 则禁用
+    return (
+      endValue.diff(currDate, "days") > DIFF ||
+      currDate.diff(endValue, "days") > DIFF ||
+      currDate.valueOf() > endValue.valueOf()
+    );
   };
 
-  disabledEndDate = currDate => {
+  disabledEndDate = (currDate) => {
     const { startValue } = this.state;
+
     if (!currDate || !startValue) {
       return false;
     }
 
-    // 传入时间小于开始时间的禁用
-    return currDate.valueOf() < startValue.valueOf();
+    // 如果结束时间与开始时间的时间差 > N 则禁用
+    return (
+      currDate.diff(startValue, "days") > DIFF ||
+      startValue.diff(currDate, "days") > DIFF ||
+      currDate.valueOf() <= startValue.valueOf()
+    );
   };
 
   render() {
