@@ -1,4 +1,5 @@
 import React from "react";
+import styled from "styled-components";
 
 import TreeExample from "./components/TreeExample";
 import ListViewExample from "./components/ListViewExample";
@@ -7,12 +8,16 @@ import FormExample from "./components/FormExample";
 import TreeSelectExample from "./components/TreeSelectExample";
 import DatePickerExample from "./components/DatePickerExample";
 
+const PageContainer = styled.div`
+	margin: 30px;
+`
+
 function App() {
   return (
-    <div>
+    <PageContainer>
       <h2>禁用部分时间</h2>
       <DatePickerExample />
-      <h2>TreeSelectExample</h2>
+      {/* <h2>TreeSelectExample</h2>
       <TreeSelectExample />
       <h2>FormExample</h2>
       <FormExample />
@@ -21,8 +26,8 @@ function App() {
       <h2>ListViewExample</h2>
       <ListViewExample />
       <h2>TreeExample</h2>
-      <TreeExample />
-    </div>
+      <TreeExample /> */}
+    </PageContainer>
   );
 }
 

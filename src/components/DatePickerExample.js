@@ -1,10 +1,7 @@
 import React, { Component } from "react";
-import PropTypes from "prop-types";
 import { DatePicker } from "antd";
 
-const propTypes = {};
-
-const DIFF = 60;
+const DIFF = 10;
 
 class DatePickerExample extends Component {
   state = {
@@ -50,8 +47,8 @@ class DatePickerExample extends Component {
 
     // 如果结束时间与开始时间的时间差 > N 则禁用
     return (
-      currDate.diff(startValue, "days") > DIFF ||
       startValue.diff(currDate, "days") > DIFF ||
+      currDate.diff(startValue, "days") > DIFF ||
       currDate.valueOf() <= startValue.valueOf()
     );
   };
@@ -75,7 +72,5 @@ class DatePickerExample extends Component {
     );
   }
 }
-
-DatePickerExample.propTypes = propTypes;
 
 export default DatePickerExample;
