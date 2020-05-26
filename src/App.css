@@ -20,3 +20,11 @@
 .App-link {
   color: #09d3ac;
 }
+
+.box {
+  width: 1078px;
+  height: 758px;
+  background: #0c2040;
+  /* clip-path: polygon(49% 0, 63% 80px, 100% 80px, 100% 100%, 0 100%, 0 0); */
+  clip-path: polygon(41% 80px, 47% 0, 100% 0, 100% 100%, 0 100%, 0 80px);
+}
