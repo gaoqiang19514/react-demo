@@ -5,12 +5,6 @@ const mapStyle = {
   height: "100%",
 };
 
-const defaultProps = {
-  options: {
-    mapInitialized: () => {},
-  },
-};
-
 class Map extends Component {
   componentDidMount() {
     this.setupMap();
@@ -73,7 +67,5 @@ class Map extends Component {
     return <div style={mapStyle} ref={(ref) => (this.mapRef = ref)}></div>;
   }
 }
-
-Map.defaultProps = defaultProps;
 
 export default Map;
