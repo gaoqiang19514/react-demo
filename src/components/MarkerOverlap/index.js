@@ -145,7 +145,7 @@ class MarkerOverlap extends Component {
     map.on("click", this.handleMarkerClick);
   };
 
-  loadCallback = (map) => {
+  mapInitialized = (map) => {
     this.map = map;
 
     this.addSources(map, sourceId);
@@ -162,7 +162,7 @@ class MarkerOverlap extends Component {
           pitch: 0,
           maxZoom: 17,
           minZoom: 3,
-          loadCallback: this.loadCallback,
+          mapInitialized: this.mapInitialized,
         }}
       />
     );

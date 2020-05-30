@@ -2,7 +2,13 @@ import React, { Component } from "react";
 
 const mapStyle = {
   width: "100%",
-  height: "100%"
+  height: "100%",
+};
+
+const defaultProps = {
+  options: {
+    mapInitialized: () => {},
+  },
 };
 
 class Map extends Component {
@@ -13,7 +19,7 @@ class Map extends Component {
     this.map.repaint = true;
 
     if (this.map) {
-      this.map.on("load", this.load.bind(this));
+      this.map.on("load", this.init.bind(this));
     }
   }
 
@@ -52,19 +58,22 @@ class Map extends Component {
       pitch: 0,
       maxZoom: 17,
       minZoom: 3,
-      ...options
+      ...options,
     });
   }
 
-  load() {
-    const { loadCallback = () => {} } = this.props.options;
+  init() {
+    const { options } = this.props;
+    const { mapInitialized } = options;
 
-    loadCallback(this.map);
+    mapInitialized(this.map);
   }
 
   render() {
-    return <div style={mapStyle} ref={ref => (this.mapRef = ref)}></div>;
+    return <div style={mapStyle} ref={(ref) => (this.mapRef = ref)}></div>;
   }
 }
+
+Map.defaultProps = defaultProps;
 
 export default Map;
