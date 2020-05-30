@@ -142,7 +142,7 @@ class Cluster extends Component {
           pitch: 0,
           maxZoom: 17,
           minZoom: 3,
-          loadCallback: this.loadCallback,
+          mapInitialized: this.loadCallback,
         }}
       />
     );
