@@ -3,6 +3,16 @@ import React, { Component } from "react";
 import "./style.css";
 import Map from "../Map";
 
+function createMarkerList() {
+  return `<ul class="list">
+    <li class="item" data-id="1">华南街道1</li>
+    <li class="item" data-id="2">华南街道2</li>
+    <li class="item" data-id="3">华南街道3</li>
+    <li class="item" data-id="4">华南街道4</li>
+    <li class="item" data-id="5">华南街道5</li>
+  </ul>`;
+}
+
 class Popup extends Component {
   constructor(props) {
     super(props);
@@ -17,15 +27,16 @@ class Popup extends Component {
   };
 
   initEvents = () => {
-    this.map.on("click", this.handleClick);
+    this.map.on("click", this.handleMapClick);
+    document.addEventListener("click", this.handleClick);
   };
 
-  handleClick = (e) => {
+  handleMapClick = (e) => {
     const { lngLat } = e;
 
     this.popup = this.addPopupToMap({
       lngLat,
-      content: "Hello World",
+      content: createMarkerList(),
     });
   };
 
@@ -38,6 +49,27 @@ class Popup extends Component {
       .setLngLat(lngLat)
       .setHTML(content)
       .addTo(this.map);
+  };
+
+  handleClick = (e) => {
+    let id = "";
+    const { target } = e;
+
+    if (!target.className || target.className !== "item") {
+      return;
+    }
+
+    id = target.getAttribute("data-id");
+    if (!id) {
+      return;
+    }
+
+    // 获取触发元素上的标识
+    // console.log(id);
+    // 使用id请求数据
+    // const [err, data] = await request(api.getData(id);
+    // 吊起弹层
+    // showLayer()
   };
 
   render() {
