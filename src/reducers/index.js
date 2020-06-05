@@ -1,3 +1,5 @@
+import { SET_INDEX } from "@/actions";
+
 const initialState = {
   searchText: "", //  搜索关键字
   items: [], //  用来存放搜索结果
@@ -6,7 +8,7 @@ const initialState = {
   index: 0, //  当前视图
   currPage: 0, //  当前页面
   scrollTop: 0, //  滚动条高度
-  currentId: null //  处理竞态问题
+  currentId: null, //  处理竞态问题
 };
 
 export default (state = initialState, action) => {
@@ -17,7 +19,7 @@ export default (state = initialState, action) => {
       error: null,
       isFetching: true,
       currentId: action.payload.id,
-      searchText: action.payload.searchText
+      searchText: action.payload.searchText,
     };
   }
 
@@ -27,7 +29,7 @@ export default (state = initialState, action) => {
       ...state,
       isFetching: false,
       currPage: action.payload.currPage,
-      items: [...state.items, ...action.payload.dataList]
+      items: [...state.items, ...action.payload.dataList],
     };
   }
 
@@ -36,7 +38,7 @@ export default (state = initialState, action) => {
     return {
       ...state,
       isFetching: false,
-      error: action.payload.error
+      error: action.payload.error,
     };
   }
 
@@ -44,7 +46,7 @@ export default (state = initialState, action) => {
   if (action.type === "SET_SEARCH_TEXT") {
     return {
       ...state,
-      searchText: action.payload.searchText
+      searchText: action.payload.searchText,
     };
   }
 
@@ -52,7 +54,7 @@ export default (state = initialState, action) => {
   if (action.type === "SET_INDEX") {
     return {
       ...state,
-      index: action.payload.index
+      index: action.payload.index,
     };
   }
 
@@ -60,7 +62,7 @@ export default (state = initialState, action) => {
   if (action.type === "SET_CURR_PAGE") {
     return {
       ...state,
-      currPage: action.payload.currPage
+      currPage: action.payload.currPage,
     };
   }
 
@@ -68,7 +70,7 @@ export default (state = initialState, action) => {
   if (action.type === "SET_SCROLL_TOP") {
     return {
       ...state,
-      scrollTop: action.payload.scrollTop
+      scrollTop: action.payload.scrollTop,
     };
   }
 
@@ -80,7 +82,7 @@ export default (state = initialState, action) => {
       items: [],
       currPage: 0,
       scrollTop: 0,
-      isFetching: false
+      isFetching: false,
     };
   }
 
