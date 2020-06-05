@@ -7,8 +7,7 @@ const propTypes = {
   onSubmit: PropTypes.func,
 };
 
-function Search(props) {
-  const { searchText, onChange, onCancel, onSubmit } = props;
+function Search({ searchText, onChange, onCancel, onSubmit }) {
   const searchRef = useRef();
 
   useEffect(() => {
