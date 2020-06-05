@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useRef } from "react";
 import PropTypes from "prop-types";
 
 const propTypes = {
@@ -7,12 +7,13 @@ const propTypes = {
   onSubmit: PropTypes.func,
 };
 
-function Search() {
-  const { searchText, onChange, onCancel, onSubmit } = this.props;
+function Search(props) {
+  const { searchText, onChange, onCancel, onSubmit } = props;
+  const searchRef = useRef();
 
   useEffect(() => {
-    if (this.ref) {
-      this.ref.focus();
+    if (searchRef.current) {
+      searchRef.current.focus();
     }
   }, []);
 
@@ -20,9 +21,7 @@ function Search() {
     <form action="" onSubmit={onSubmit}>
       <input
         type="search"
-        ref={(ref) => {
-          this.ref = ref;
-        }}
+        ref={searchRef}
         value={searchText}
         onChange={onChange}
         placeholder="搜索"

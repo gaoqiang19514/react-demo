@@ -5,9 +5,9 @@ import styled from "styled-components";
 import { CancelToken } from "axios";
 import { throttle } from "lodash";
 
-import SearchComp from "../../components/Search";
-import history from "../../service";
-import { fetchStarted, resetSearch, setScrollTop } from "../../actions";
+import SearchComp from "@/components/Search";
+import history from "@/services/history";
+import { fetchStarted, resetSearch, setScrollTop } from "@/actions";
 
 const List = styled.div`
   a {

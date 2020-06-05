@@ -1,7 +1,7 @@
 import React from "react";
 import styled from "styled-components";
 
-import history from "../../service";
+import history from "@/services/history";
 
 const SearchInput = styled.div`
   padding: 5px 10px;
