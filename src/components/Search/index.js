@@ -1,37 +1,39 @@
-import React, { Component } from "react";
+import React, { useEffect } from "react";
 import PropTypes from "prop-types";
 
-export default class Search extends Component {
-  static propTypes = {
-    searchText: PropTypes.string,
-    onChange: PropTypes.func,
-    onSubmit: PropTypes.func
-  };
+const propTypes = {
+  searchText: PropTypes.string,
+  onChange: PropTypes.func,
+  onSubmit: PropTypes.func,
+};
 
-  componentDidMount() {
+function Search() {
+  const { searchText, onChange, onCancel, onSubmit } = this.props;
+
+  useEffect(() => {
     if (this.ref) {
       this.ref.focus();
     }
-  }
+  }, []);
 
-  render() {
-    const { searchText, onChange, onCancel, onSubmit } = this.props;
-
-    return (
-      <form action="" onSubmit={onSubmit}>
-        <input
-          type="search"
-          ref={ref => {
-            this.ref = ref;
-          }}
-          value={searchText}
-          onChange={onChange}
-          placeholder="搜索"
-        />
-        <button type="button" onClick={onCancel}>
-          cancel
-        </button>
-      </form>
-    );
-  }
+  return (
+    <form action="" onSubmit={onSubmit}>
+      <input
+        type="search"
+        ref={(ref) => {
+          this.ref = ref;
+        }}
+        value={searchText}
+        onChange={onChange}
+        placeholder="搜索"
+      />
+      <button type="button" onClick={onCancel}>
+        cancel
+      </button>
+    </form>
+  );
 }
+
+Search.propTypes = propTypes;
+
+export default Search;

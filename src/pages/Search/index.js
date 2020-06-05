@@ -7,7 +7,7 @@ import { throttle } from "lodash";
 
 import SearchComp from "../../components/Search";
 import history from "../../service";
-import { featchStarted, resetSearch, setScrollTop } from "../../actions";
+import { fetchStarted, resetSearch, setScrollTop } from "../../actions";
 
 const List = styled.div`
   a {
@@ -37,13 +37,13 @@ class Search extends Component {
     super(props);
 
     this.handleScroll = throttle(this.handleScroll.bind(this), 300);
-    this.handleChnage = this.handleChnage.bind(this);
+    this.handleChange = this.handleChange.bind(this);
     this.handleCancel = this.handleCancel.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
     this.handleThrottleChange = throttle(this.handleThrottleChange, 500);
 
     this.state = {
-      searchText: props.searchText
+      searchText: props.searchText,
     };
   }
 
@@ -58,7 +58,7 @@ class Search extends Component {
   componentWillUnmount() {
     window.removeEventListener("scroll", this.handleScroll);
     this.props.onSetScrollTop(document.documentElement.scrollTop || 0);
-    
+
     // 在这里判断，如果不是去详情页，需要重置redux
     if (this.props.history.location.pathname !== "/detail") {
       this.props.onReset();
@@ -75,7 +75,7 @@ class Search extends Component {
     if (isFetching) {
       return;
     }
-    debugger
+    debugger;
     console.log(
       document.documentElement.offsetHeight,
       window.innerHeight + document.documentElement.scrollTop
@@ -90,12 +90,12 @@ class Search extends Component {
       this.props.onFetch({
         searchText: this.state.searchText,
         currPage: currPage + 1,
-        cancelToken: this.source.token
+        cancelToken: this.source.token,
       });
     }
   }
 
-  handleChnage(e) {
+  handleChange(e) {
     const value = e.target.value;
     this.setState({ searchText: value }, () => {
       this.handleThrottleChange(value);
@@ -108,7 +108,7 @@ class Search extends Component {
     this.props.onFetch({
       searchText: this.state.searchText,
       currPage: 0,
-      cancelToken: this.source.token
+      cancelToken: this.source.token,
     });
   }
 
@@ -126,7 +126,7 @@ class Search extends Component {
     this.props.onFetch({
       searchText: this.state.searchText,
       currPage: 0,
-      cancelToken: this.source.token
+      cancelToken: this.source.token,
     });
   }
 
@@ -140,7 +140,7 @@ class Search extends Component {
           <Header>
             <SearchComp
               searchText={searchText}
-              onChange={this.handleChnage}
+              onChange={this.handleChange}
               onCancel={this.handleCancel}
               onSubmit={this.handleSubmit}
             />
@@ -148,7 +148,7 @@ class Search extends Component {
           <Main>
             {!items.length && !!searchText.length && <div>搜索无结果</div>}
             <List>
-              {items.map(item => {
+              {items.map((item) => {
                 return (
                   <Link key={item.id} to="/detail">
                     {item.text}
@@ -164,23 +164,23 @@ class Search extends Component {
   }
 }
 
-const mapStateToprops = state => {
+const mapStateToprops = (state) => {
   return {
-    ...state
+    ...state,
   };
 };
 
-const mapDispatchToProps = dispatch => {
+const mapDispatchToProps = (dispatch) => {
   return {
-    onFetch: params => {
-      dispatch(featchStarted(params));
+    onFetch: (params) => {
+      dispatch(fetchStarted(params));
     },
     onReset: () => {
       dispatch(resetSearch());
     },
-    onSetScrollTop: scrollTop => {
+    onSetScrollTop: (scrollTop) => {
       dispatch(setScrollTop(scrollTop));
-    }
+    },
   };
 };
 

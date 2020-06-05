@@ -8,7 +8,7 @@ const SEARCH_RESET = "SEARCH_RESET";
 const SET_SCROLL_TOP = "SET_SCROLL_TOP";
 
 // 发起查询
-export const featchStarted = params => {
+export const fetchStarted = params => {
   return (dispatch, getState) => {
     const id = uuid();
     dispatch({
