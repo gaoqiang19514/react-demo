@@ -13,7 +13,7 @@ function SwitchControl({ typeList, onChange }) {
         <input
           type="checkbox"
           checked={checked}
-          onChange={() => onChange(name)}
+          onChange={() => onChange(name, checked)}
         />
         {name}
       </Label>

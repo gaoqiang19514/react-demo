@@ -12,26 +12,49 @@ function App() {
   const [typeList, setTypeList] = React.useState([
     {
       name: "case",
-      checked: false,
+      checked: true,
     },
     {
       name: "problem",
-      checked: false,
+      checked: true,
     },
   ]);
 
-  const { data, error, loading, run } = useRequest(
+  const canRender = (name) => {
+    let flag = false;
+
+    typeList.forEach((item) => {
+      if (item.name === name && item.checked) {
+        flag = true;
+      }
+    });
+
+    return flag;
+  };
+
+  const { error, loading, run } = useRequest(
     {
       url: "/api/getUsername",
       method: "get",
     },
     {
       manual: true,
+      fetchKey: (name) => name,
+      onSuccess: (data, params) => {
+        if (canRender(params[0])) {
+          console.log("render");
+          // 更新UI
+        }
+      },
     }
   );
 
   React.useEffect(() => {
-    run();
+    typeList.map((item) => {
+      if (item.checked) {
+        run(item.name);
+      }
+    });
   }, [typeList]);
 
   const handleClick = (name) => {
@@ -53,7 +76,6 @@ function App() {
   return (
     <Container>
       <SwitchControl typeList={typeList} onChange={handleClick} />
-      <div>{data?.data?.name ?? "none"}</div>
     </Container>
   );
 }
