@@ -1,25 +1,60 @@
-import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import React from "react";
+import { useRequest } from "@umijs/hooks";
+import styled from "styled-components";
+
+import SwitchControl from "./components/SwitchControl";
+
+const Container = styled.div`
+  padding: 20px;
+`;
 
 function App() {
+  const [typeList, setTypeList] = React.useState([
+    {
+      name: "case",
+      checked: false,
+    },
+    {
+      name: "problem",
+      checked: false,
+    },
+  ]);
+
+  const { data, error, loading, run } = useRequest(
+    {
+      url: "/api/getUsername",
+      method: "get",
+    },
+    {
+      manual: true,
+    }
+  );
+
+  React.useEffect(() => {
+    run();
+  }, [typeList]);
+
+  const handleClick = (name) => {
+    const temp = typeList.map((item) => {
+      if (item.name === name) {
+        return {
+          ...item,
+          checked: !item.checked,
+        };
+      }
+      return {
+        ...item,
+      };
+    });
+
+    setTypeList(temp);
+  };
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <Container>
+      <SwitchControl typeList={typeList} onChange={handleClick} />
+      <div>{data?.data?.name ?? "none"}</div>
+    </Container>
   );
 }
 
