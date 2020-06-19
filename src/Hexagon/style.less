@@ -1,0 +1,46 @@
+.hexagon {
+  position: relative;
+  height: 162px;
+  width: 280px;
+  background: url("./dog_default_icon.png") 50% 50% no-repeat;
+  background-size: auto 324px;
+}
+
+.hexagon-left {
+  position: absolute;
+  left: 0;
+  height: 100%;
+  width: 100%;
+  overflow: hidden;
+  transform: rotate(60deg);
+}
+
+.hexagon-left-sub {
+  content: "";
+  position: absolute;
+  background: url("./dog_default_icon.png") 50% 50% no-repeat;
+  background-size: auto 324px;
+  width: 280px;
+  height: 324px;
+  transform: rotate(-60deg) translate(70.737px, -41.236px);
+}
+
+.hexagon-right {
+  position: absolute;
+  left: 0;
+  height: 100%;
+  width: 100%;
+  overflow: hidden;
+  transform: rotate(-60deg);
+}
+
+.hexagon-right-sub {
+  content: "";
+  position: absolute;
+  background: url("./dog_default_icon.png") 50% 50% no-repeat;
+  background-size: auto 324px;
+  width: 280px;
+  height: 324px;
+  transform: rotate(60deg) translate(70.737px, 41.236px);
+  bottom: 0;
+}

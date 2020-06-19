@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="2260px" height="424px" viewBox="0 0 2260 424" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 63 (92445) - https://sketch.com -->
+    <title>犬只介绍背景</title>
+    <desc>Created with Sketch.</desc>
+    <defs>
+        <linearGradient x1="100%" y1="50%" x2="0%" y2="50%" id="linearGradient-1">
+            <stop stop-color="#3B94FF" offset="0%"></stop>
+            <stop stop-color="#3B94FF" stop-opacity="0" offset="100%"></stop>
+        </linearGradient>
+    </defs>
+    <g id="页面1" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="2-3-2线上申办-品种介绍" transform="translate(-699.000000, -308.000000)">
+            <g id="犬只介绍背景" transform="translate(699.000000, 308.000000)">
+                <path d="M1131,28.1547005 L971.7853,120.07735 L971.7853,303.92265 L1131,395.845299 L1290.2147,303.92265 L1290.2147,120.07735 L1131,28.1547005 Z" id="多边形" stroke="#3B94FF" stroke-width="2" fill-opacity="0.2" fill="#3B94FF"></path>
+                <polyline id="路径-53" stroke="#3B94FF" stroke-width="2" points="11 2.84837495 801 2.84837495 970.7853 119.5"></polyline>
+                <polyline id="路径-53备份-2" stroke="#3B94FF" stroke-width="2" transform="translate(1770.892650, 61.174187) scale(-1, 1) translate(-1770.892650, -61.174187) " points="1291 2.84837495 2081 2.84837495 2250.7853 119.5"></polyline>
+                <rect id="矩形" fill="#3B94FF" x="0" y="0" width="20" height="6"></rect>
+                <rect id="矩形备份-2" fill="#3B94FF" x="2240" y="0" width="20" height="6"></rect>
+                <rect id="矩形备份" fill="#3B94FF" x="0" y="418" width="20" height="6"></rect>
+                <rect id="矩形备份-4" fill="#3B94FF" x="2240" y="418" width="20" height="6"></rect>
+                <polyline id="路径-53备份" stroke="#3B94FF" stroke-width="2" transform="translate(490.892650, 362.325813) scale(1, -1) translate(-490.892650, -362.325813) " points="11 304 801 304 970.7853 420.651625"></polyline>
+                <polyline id="路径-53备份-3" stroke="#3B94FF" stroke-width="2" transform="translate(1770.892650, 362.325813) scale(-1, -1) translate(-1770.892650, -362.325813) " points="1291 304 2081 304 2250.7853 420.651625"></polyline>
+                <polyline id="路径-54" stroke="url(#linearGradient-1)" stroke-width="2" opacity="0.400000006" points="644 399 792.816406 399 950 290 950 132 792.816406 23 644 23"></polyline>
+                <polyline id="路径-54备份" stroke="url(#linearGradient-1)" stroke-width="2" opacity="0.400000006" transform="translate(1466.000000, 211.000000) scale(-1, 1) translate(-1466.000000, -211.000000) " points="1313 399 1461.81641 399 1619 290 1619 132 1461.81641 23 1313 23"></polyline>
+            </g>
+        </g>
+    </g>
+</svg>
