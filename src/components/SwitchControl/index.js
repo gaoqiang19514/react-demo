@@ -7,13 +7,13 @@ const Label = styled.label`
 `;
 
 function SwitchControl({ typeList, onChange }) {
-  return typeList.map(({ name, checked }) => {
+  return typeList.map(({ name, path, checked }) => {
     return (
       <Label key={name}>
         <input
           type="checkbox"
           checked={checked}
-          onChange={() => onChange(name, checked)}
+          onChange={() => onChange(name, path, checked)}
         />
         {name}
       </Label>

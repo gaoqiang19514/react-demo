@@ -1,6 +1,7 @@
 import React from "react";
-import { useRequest } from "@umijs/hooks";
+import { useMount, useRequest } from "ahooks";
 import styled from "styled-components";
+import axios from "axios";
 
 import SwitchControl from "./components/SwitchControl";
 
@@ -8,74 +9,60 @@ const Container = styled.div`
   padding: 20px;
 `;
 
+function getData(path) {
+  return axios.get(path);
+}
+
 function App() {
   const [typeList, setTypeList] = React.useState([
     {
       name: "case",
+      path: "/case",
       checked: true,
     },
     {
       name: "problem",
+      path: "/problem",
       checked: true,
     },
   ]);
 
-  const canRender = (name) => {
-    let flag = false;
+  const { run, fetches } = useRequest(getData, {
+    manual: true,
+    fetchKey: (id) => id,
+  });
 
+  useMount(() => {
     typeList.forEach((item) => {
-      if (item.name === name && item.checked) {
-        flag = true;
-      }
-    });
-
-    return flag;
-  };
-
-  const { error, loading, run } = useRequest(
-    {
-      url: "/api/getUsername",
-      method: "get",
-    },
-    {
-      manual: true,
-      fetchKey: (name) => name,
-      onSuccess: (data, params) => {
-        if (canRender(params[0])) {
-          console.log("render");
-          // 更新UI
-        }
-      },
-    }
-  );
-
-  React.useEffect(() => {
-    typeList.map((item) => {
       if (item.checked) {
-        run(item.name);
+        run(item.path);
       }
     });
-  }, [typeList]);
+  });
 
-  const handleClick = (name) => {
-    const temp = typeList.map((item) => {
+  const handleChange = (name, path, checked) => {
+    const newestChecked = !checked;
+    // 1. 更新ui
+    const newestTypeList = typeList.map((item) => {
       if (item.name === name) {
         return {
           ...item,
-          checked: !item.checked,
+          checked: newestChecked,
         };
       }
-      return {
-        ...item,
-      };
+      return { ...item };
     });
+    setTypeList(newestTypeList);
 
-    setTypeList(temp);
+    // 2. 发起请求
+    if (newestChecked) {
+      run(path);
+    }
   };
 
   return (
     <Container>
-      <SwitchControl typeList={typeList} onChange={handleClick} />
+      <SwitchControl typeList={typeList} onChange={handleChange} />
     </Container>
   );
 }
