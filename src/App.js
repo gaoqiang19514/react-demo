@@ -1,8 +1,9 @@
 import React from "react";
 import { Form, Button, Input, Icon, Spin, Select } from "antd";
 import { debounce } from "lodash";
-import SearchInput from "./SearchInput";
-import "antd/dist/antd.css"; // or 'antd/dist/antd.less'
+import "antd/dist/antd.css";
+
+import DynamicField from "./components/DynamicField";
 
 const { Option } = Select;
 
@@ -133,7 +134,8 @@ function App() {
   return (
     <div>
       {/* <SearchInput placeholder="input search text" /> */}
-      <WrappedDemo />
+      {/* <WrappedDemo /> */}
+      <DynamicField />
     </div>
   );
 }
