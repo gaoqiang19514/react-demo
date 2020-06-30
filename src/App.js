@@ -18,14 +18,8 @@ class Demo extends React.Component {
 
     this.state = {
       data: [],
-      value: [],
       fetching: false,
     };
-  }
-
-  componentDidMount() {
-    // To disable submit button at the beginning.
-    // this.props.form.validateFields();
   }
 
   handleSubmit = (e) => {
@@ -57,9 +51,8 @@ class Demo extends React.Component {
       });
   };
 
-  handleChange = (value) => {
+  handleChange = () => {
     this.setState({
-      value,
       data: [],
       fetching: false,
     });
@@ -72,7 +65,7 @@ class Demo extends React.Component {
       getFieldError,
       isFieldTouched,
     } = this.props.form;
-    const { fetching, data, value } = this.state;
+    const { fetching, data } = this.state;
 
     // Only show error after a field is touched.
     const usernameError =
@@ -83,6 +76,7 @@ class Demo extends React.Component {
     return (
       <Form layout="inline" onSubmit={this.handleSubmit}>
         <Form.Item
+          label="Warning"
           validateStatus={usernameError ? "error" : ""}
           help={usernameError || ""}
         >
@@ -96,6 +90,7 @@ class Demo extends React.Component {
           )}
         </Form.Item>
         <Form.Item
+          label="Validating"
           validateStatus={passwordError ? "error" : ""}
           help={passwordError || ""}
         >
