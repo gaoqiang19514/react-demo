@@ -1,9 +1,10 @@
 import React, { Component } from "react";
-import { Form, Input, Select, Spin, Icon, Button } from "antd";
+import { Form, Input, Select, Spin, DatePicker, Icon, Button } from "antd";
 import debounce from "lodash/debounce";
 
 let id = 0;
 const { Option } = Select;
+const { RangePicker } = DatePicker;
 
 class DynamicField extends Component {
   constructor(props) {
@@ -89,33 +90,12 @@ class DynamicField extends Component {
     const { getFieldDecorator, getFieldValue } = this.props.form;
     const { fetching, data } = this.state;
 
-    const formItemLayout = {
-      labelCol: {
-        xs: { span: 24 },
-        sm: { span: 4 },
-      },
-      wrapperCol: {
-        xs: { span: 24 },
-        sm: { span: 20 },
-      },
-    };
-    const formItemLayoutWithOutLabel = {
-      wrapperCol: {
-        xs: { span: 24, offset: 0 },
-        sm: { span: 20, offset: 4 },
-      },
-    };
-
     getFieldDecorator("keys", { initialValue: [] });
 
     const keys = getFieldValue("keys");
     const formItems = keys.map((k, index) => (
-      <div key={k}>
-        <Form.Item
-          {...(index === 0 ? formItemLayout : formItemLayoutWithOutLabel)}
-          label={index === 0 ? "Passengers" : ""}
-          required={false}
-        >
+      <Form.Item wrapperCol={{ span: 24 }} key={k}>
+        <Form.Item style={{ display: "inline-block" }} required={false}>
           {getFieldDecorator(`names[${k}]`, {
             validateTrigger: ["onChange", "onBlur"],
             rules: [
@@ -133,36 +113,28 @@ class DynamicField extends Component {
               filterOption={false}
               onSearch={this.fetchUser}
               onChange={this.handleChange}
-              style={{ width: "100%" }}
+              style={{ width: 350 }}
             >
               {data.map((d) => (
-                <Option key={d.value}>{d.text}</Option>
+                <Option key={d.value}>{d.text}-15014095291-组长</Option>
               ))}
             </Select>
           )}
         </Form.Item>
-        <Form.Item
-          {...(index === 0 ? formItemLayout : formItemLayoutWithOutLabel)}
-          label={index === 0 ? "Passengers" : ""}
-          required={false}
-        >
-          {getFieldDecorator(`names2[${k}]`, {
-            validateTrigger: ["onChange", "onBlur"],
+        <Form.Item style={{ display: "inline-block" }} required={false}>
+          {getFieldDecorator(`dates[${k}]`, {
+            validateTrigger: ["onChange"],
             rules: [
               {
                 required: true,
-                whitespace: true,
                 message: "Please input passenger's name or delete this field.",
               },
             ],
           })(
-            <Input
-              placeholder="passenger name"
-              style={{ width: "60%", marginRight: 8 }}
-            />
+            <RangePicker placeholder="passenger name" style={{ width: 350 }} />
           )}
         </Form.Item>
-        <Form.Item>
+        <Form.Item style={{ display: "inline-block" }}>
           {keys.length > 1 ? (
             <Icon
               className="dynamic-delete-button"
@@ -171,23 +143,39 @@ class DynamicField extends Component {
             />
           ) : null}
         </Form.Item>
-      </div>
+      </Form.Item>
     ));
 
     return (
-      <Form onSubmit={this.handleSubmit}>
-        {formItems}
-        <Form.Item {...formItemLayoutWithOutLabel}>
-          <Button type="dashed" onClick={this.add} style={{ width: "60%" }}>
-            <Icon type="plus" /> Add field
-          </Button>
-        </Form.Item>
-        <Form.Item {...formItemLayoutWithOutLabel}>
-          <Button type="primary" htmlType="submit">
-            Submit
-          </Button>
-        </Form.Item>
-      </Form>
+      <>
+        <Form onSubmit={this.handleSubmit}>
+          {formItems}
+          <Form.Item wrapperCol={{ span: 24 }}>
+            <Button type="dashed" onClick={this.add}>
+              <Icon type="plus" /> 添加排班
+            </Button>
+          </Form.Item>
+        </Form>
+        <Form onSubmit={this.handleSubmit}>
+          <Form.Item style={{ display: "inline-block" }} required={false}>
+            {getFieldDecorator("age", {
+              validateTrigger: ["onChange"],
+              rules: [
+                {
+                  required: true,
+                  message:
+                    "Please input passenger's name or delete this field.",
+                },
+              ],
+            })(<Input placeholder="passenger name" style={{ width: 350 }} />)}
+          </Form.Item>
+          <Form.Item wrapperCol={{ span: 24 }}>
+            <Button type="primary" htmlType="submit">
+              Submit
+            </Button>
+          </Form.Item>
+        </Form>
+      </>
     );
   }
 }
