@@ -32,6 +32,15 @@ class UploadDemo extends React.Component {
           {getFieldDecorator("dragger", {
             rules: [{ required: true, message: "Please select your country!" }],
             valuePropName: "fileList",
+            initialValue: [
+              {
+                uid: "-1",
+                name: "image.png",
+                status: "done",
+                url:
+                  "https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png",
+              },
+            ],
             getValueFromEvent: this.normFile,
           })(
             <Upload.Dragger
