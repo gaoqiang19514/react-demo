@@ -4,6 +4,7 @@ import { debounce } from "lodash";
 import "antd/dist/antd.css";
 
 import DynamicField from "./components/DynamicField";
+import UploadDemo from "./components/UploadDemo";
 
 const { Option } = Select;
 
@@ -135,7 +136,8 @@ function App() {
     <div>
       {/* <SearchInput placeholder="input search text" /> */}
       {/* <WrappedDemo /> */}
-      <DynamicField />
+      {/* <DynamicField /> */}
+      <UploadDemo />
     </div>
   );
 }
