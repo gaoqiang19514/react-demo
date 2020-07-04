@@ -1,6 +1,7 @@
 import React, { Component } from "react";
 import { Form, Input, Select, Spin, DatePicker, Icon, Button } from "antd";
 import debounce from "lodash/debounce";
+import moment from "moment";
 
 let id = 0;
 const { Option } = Select;
@@ -9,6 +10,7 @@ const { RangePicker } = DatePicker;
 class DynamicField extends Component {
   constructor(props) {
     super(props);
+
     this.lastFetchId = 0;
     this.fetchUser = debounce(this.fetchUser, 800);
   }
@@ -16,7 +18,30 @@ class DynamicField extends Component {
   state = {
     data: [],
     fetching: false,
+    names: [],
+    dates: [],
   };
+
+  componentDidMount() {
+    this.setState({
+      names: [
+        [
+          { key: "tom", label: "tom" },
+          { key: "lina", label: "lina" },
+        ],
+        [
+          { key: "tom", label: "tom" },
+          { key: "lina", label: "lina" },
+        ],
+      ],
+      dates: [
+        [moment(), moment()],
+        [moment(), moment()],
+      ],
+    });
+
+    this.state.dates.forEach(this.add);
+  }
 
   fetchUser = (value) => {
     console.log("fetching user", value);
@@ -50,7 +75,7 @@ class DynamicField extends Component {
     // can use data-binding to get
     const keys = form.getFieldValue("keys");
     // We need at least one passenger
-    if (keys.length === 1) {
+    if (keys.length === 0) {
       return;
     }
 
@@ -76,75 +101,79 @@ class DynamicField extends Component {
     e.preventDefault();
     this.props.form.validateFields((err, values) => {
       if (!err) {
-        const { keys, names } = values;
         console.log("Received values of form: ", values);
-        console.log(
-          "Merged values:",
-          keys.map((key) => names[key])
-        );
       }
     });
   };
 
   render() {
     const { getFieldDecorator, getFieldValue } = this.props.form;
-    const { fetching, data } = this.state;
+    const { fetching, data, names, dates } = this.state;
 
     getFieldDecorator("keys", { initialValue: [] });
 
     const keys = getFieldValue("keys");
-    const formItems = keys.map((k, index) => (
-      <Form.Item wrapperCol={{ span: 24 }} key={k}>
-        <Form.Item style={{ display: "inline-block" }} required={false}>
-          {getFieldDecorator(`names[${k}]`, {
-            validateTrigger: ["onChange", "onBlur"],
-            rules: [
-              {
-                required: true,
-                message: "Please input passenger's name or delete this field.",
-              },
-            ],
-          })(
-            <Select
-              mode="multiple"
-              labelInValue
-              placeholder="Select users"
-              notFoundContent={fetching ? <Spin size="small" /> : null}
-              filterOption={false}
-              onSearch={this.fetchUser}
-              onChange={this.handleChange}
-              style={{ width: 350 }}
-            >
-              {data.map((d) => (
-                <Option key={d.value}>{d.text}-15014095291-组长</Option>
-              ))}
-            </Select>
-          )}
+    const formItems = keys.map((k, index) => {
+      return (
+        <Form.Item wrapperCol={{ span: 24 }} key={k}>
+          <Form.Item style={{ display: "inline-block" }} required={false}>
+            {getFieldDecorator(`names[${k}]`, {
+              validateTrigger: ["onChange", "onBlur"],
+              initialValue: names[k],
+              rules: [
+                {
+                  required: true,
+                  message:
+                    "Please input passenger's name or delete this field.",
+                },
+              ],
+            })(
+              <Select
+                mode="multiple"
+                labelInValue
+                placeholder="Select users"
+                notFoundContent={fetching ? <Spin size="small" /> : null}
+                filterOption={false}
+                onSearch={this.fetchUser}
+                onChange={this.handleChange}
+                style={{ width: 350 }}
+              >
+                {data.map((d) => (
+                  <Option key={d.value}>{d.text}</Option>
+                ))}
+              </Select>
+            )}
+          </Form.Item>
+          <Form.Item style={{ display: "inline-block" }} required={false}>
+            {getFieldDecorator(`dates[${k}]`, {
+              validateTrigger: ["onChange"],
+              initialValue: dates[k],
+              rules: [
+                {
+                  required: true,
+                  message:
+                    "Please input passenger's name or delete this field.",
+                },
+              ],
+            })(
+              <RangePicker
+                placeholder="passenger name"
+                style={{ width: 350 }}
+              />
+            )}
+          </Form.Item>
+          <Form.Item style={{ display: "inline-block" }}>
+            {keys.length > 0 ? (
+              <Icon
+                className="dynamic-delete-button"
+                type="minus-circle-o"
+                onClick={() => this.remove(k)}
+              />
+            ) : null}
+          </Form.Item>
         </Form.Item>
-        <Form.Item style={{ display: "inline-block" }} required={false}>
-          {getFieldDecorator(`dates[${k}]`, {
-            validateTrigger: ["onChange"],
-            rules: [
-              {
-                required: true,
-                message: "Please input passenger's name or delete this field.",
-              },
-            ],
-          })(
-            <RangePicker placeholder="passenger name" style={{ width: 350 }} />
-          )}
-        </Form.Item>
-        <Form.Item style={{ display: "inline-block" }}>
-          {keys.length > 1 ? (
-            <Icon
-              className="dynamic-delete-button"
-              type="minus-circle-o"
-              onClick={() => this.remove(k)}
-            />
-          ) : null}
-        </Form.Item>
-      </Form.Item>
-    ));
+      );
+    });
 
     return (
       <>
