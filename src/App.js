@@ -136,8 +136,8 @@ function App() {
     <div>
       {/* <SearchInput placeholder="input search text" /> */}
       {/* <WrappedDemo /> */}
-      <DynamicField />
-      {/* <UploadDemo /> */}
+      {/* <DynamicField /> */}
+      <UploadDemo />
     </div>
   );
 }
