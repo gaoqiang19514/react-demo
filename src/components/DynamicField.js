@@ -23,24 +23,25 @@ class DynamicField extends Component {
   };
 
   componentDidMount() {
-    this.setState({
-      names: [
-        [
-          { key: "tom", label: "tom" },
-          { key: "lina", label: "lina" },
+    this.setState(
+      {
+        names: [
+          [
+            { key: "tom", label: "tom" },
+            { key: "lina", label: "lina" },
+          ],
+          [
+            { key: "tom", label: "tom" },
+            { key: "lina", label: "lina" },
+          ],
         ],
-        [
-          { key: "tom", label: "tom" },
-          { key: "lina", label: "lina" },
+        dates: [
+          [moment(), moment()],
+          [moment(), moment()],
         ],
-      ],
-      dates: [
-        [moment(), moment()],
-        [moment(), moment()],
-      ],
-    });
-
-    this.state.dates.forEach(this.add);
+      },
+      () => this.state.dates.forEach(this.add)
+    );
   }
 
   fetchUser = (value) => {
