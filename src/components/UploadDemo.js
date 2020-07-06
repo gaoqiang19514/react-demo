@@ -17,27 +17,26 @@ class UploadDemo extends React.Component {
   };
 
   componentDidMount() {
-    setTimeout(() => {
-      this.props.form.setFieldsValue({
-        fileList: [
-          {
-            uid: "-1",
-            name: "image.png",
-            status: "done",
-            url:
-              "https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png",
-          },
-          {
-            uid: "-2",
-            name: "文件.rar",
-            status: "done",
-            className: "rtest",
-            url:
-              "http://gxiami.alicdn.com/xiami-desktop/update/%E8%99%BE%E7%B1%B3%E9%9F%B3%E4%B9%90-7.2.7-x64-0919.exe",
-          },
-        ],
-      });
-    }, 1000);
+    // setTimeout(() => {
+    //   this.props.form.setFieldsValue({
+    //     fileList: [
+    //       {
+    //         uid: "-1",
+    //         name: "image.png",
+    //         status: "done",
+    //         url:
+    //           "https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png",
+    //       },
+    //       {
+    //         uid: "-2",
+    //         name: "文件.rar",
+    //         status: "done",
+    //         url:
+    //           "http://gxiami.alicdn.com/xiami-desktop/update/%E8%99%BE%E7%B1%B3%E9%9F%B3%E4%B9%90-7.2.7-x64-0919.rar",
+    //       },
+    //     ],
+    //   });
+    // }, 1000);
   }
 
   handleSubmit = (e) => {
@@ -67,14 +66,27 @@ class UploadDemo extends React.Component {
           {getFieldDecorator("fileList", {
             rules: [{ required: true, message: "Please select your country!" }],
             valuePropName: "fileList",
-            initialValue: [],
+            initialValue: [
+              {
+                uid: "-1",
+                name: "image.png",
+                status: "done",
+                url:
+                  "https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png",
+              },
+              {
+                uid: "-2",
+                name: "文件.rar",
+                status: "done",
+                url:
+                  "http://gxiami.alicdn.com/xiami-desktop/update/%E8%99%BE%E7%B1%B3%E9%9F%B3%E4%B9%90-7.2.7-x64-0919.rar",
+              },
+            ],
             getValueFromEvent: this.normFile,
           })(
             <Upload
               listType="picture-card"
-              onPreview={this.onPreview}
               onDownload={this.onDownload}
-              showUploadList={{ showDownloadIcon: true }}
               action="https://www.mocky.io/v2/5cc8019d300000980a055e76"
             >
               {this.renderBtn()}
@@ -98,6 +110,7 @@ class UploadDemo extends React.Component {
 
   renderBtn = () => {
     const fields = this.props.form.getFieldsValue();
+    debugger;
 
     if (fields.fileList.length < 1) {
       return (
