@@ -1,7 +1,8 @@
 import React, { Component } from "react";
 import { DatePicker } from "antd";
+import moment from "moment";
 
-const DIFF = 10;
+const DIFF = 7;
 
 class DatePickerExample extends Component {
   state = {
@@ -30,12 +31,22 @@ class DatePickerExample extends Component {
       return false;
     }
 
-    // 如果结束时间与开始时间的时间差 > N 则禁用
-    return (
-      endValue.diff(currDate, "days") > DIFF ||
-      currDate.diff(endValue, "days") > DIFF ||
-      currDate.valueOf() > endValue.valueOf()
-    );
+    // 如果currDate大于结束日期，禁用currDate
+    if (currDate.valueOf() > endValue.valueOf()) {
+      return true;
+    }
+
+    // 如果currDate比endValue晚，禁用currDate
+    if (currDate.diff(endValue, "days") > DIFF) {
+      return true;
+    }
+
+    // 如果currDate比endValue晚，禁用currDate
+    if (currDate.diff(endValue, "days") < -DIFF) {
+      return true;
+    }
+
+    return false;
   };
 
   disabledEndDate = (currDate) => {
@@ -45,12 +56,24 @@ class DatePickerExample extends Component {
       return false;
     }
 
-    // 如果结束时间与开始时间的时间差 > N 则禁用
-    return (
-      startValue.diff(currDate, "days") > DIFF ||
-      currDate.diff(startValue, "days") > DIFF ||
-      currDate.valueOf() <= startValue.valueOf()
-    );
+    // 如果currDate小于开始日期，禁用currDate
+    if (currDate.valueOf() < startValue.valueOf()) {
+      return true;
+    }
+
+    // 如果currDate比startValue晚，禁用currDate
+    if (currDate.diff(startValue, "days") > DIFF) {
+      return true;
+    }
+
+    // 如果currDate比startValue早，禁用currDate
+    if (currDate.diff(startValue, "days") < -DIFF) {
+      return true;
+    }
+
+    // 上面两个判断禁用了大于或者小于开始时间的日期
+
+    return false;
   };
 
   render() {
