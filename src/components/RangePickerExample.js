@@ -39,7 +39,7 @@ class DatePickerExample extends Component {
         </div>
         <div>
           <h3>受限日期</h3>
-          <RangePicker disabledDate={this.disabledDate} />
+          <RangePicker showTime={true} disabledDate={this.disabledDate} />
         </div>
       </div>
     );
