@@ -3,46 +3,44 @@ import { DatePicker } from "antd";
 
 const { RangePicker } = DatePicker;
 
-const DIFF = 7;
-
 class DatePickerExample extends Component {
-  state = { dates: [] };
+  state = { range: [] };
 
   disabledDate = (currDate) => {
-    const [startDate, endDate] = this.state.dates;
+    const [minDate, maxDate] = this.state.range;
 
-    if (!currDate || (!startDate && !endDate)) {
+    if (!currDate || (!minDate && !maxDate)) {
       return false;
     }
 
-    if (startDate) {
-      return (
-        startDate.diff(currDate, "days") > DIFF ||
-        currDate.diff(startDate, "days") > DIFF
-      );
+    if (currDate.isBefore(minDate, "day")) {
+      return true;
     }
 
-    if (endDate) {
-      return (
-        endDate.diff(currDate, "days") > DIFF ||
-        currDate.diff(endDate, "days") > DIFF
-      );
+    if (currDate.isAfter(maxDate, "day")) {
+      return true;
     }
 
     return false;
   };
 
-  onCalendarChange = (dates) => {
-    this.setState({ dates: dates || [] });
+  onChange = (date) => {
+    this.setState({ range: date });
   };
 
   render() {
+    const { range } = this.state;
+
     return (
       <div>
-        <RangePicker
-          disabledDate={this.disabledDate}
-          onCalendarChange={this.onCalendarChange}
-        />
+        <div>
+          <h3>日期范围</h3>
+          <RangePicker value={range} onChange={this.onChange} />
+        </div>
+        <div>
+          <h3>受限日期</h3>
+          <RangePicker disabledDate={this.disabledDate} />
+        </div>
       </div>
     );
   }

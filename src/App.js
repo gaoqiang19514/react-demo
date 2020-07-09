@@ -16,10 +16,10 @@ const PageContainer = styled.div`
 function App() {
   return (
     <PageContainer>
-      <h2>禁用日期</h2>
-      <DatePickerExample />
-      {/* <h2>禁用日期和时间</h2> */}
-      {/* <RangePickerExample /> */}
+      {/* <h2>禁用日期</h2> */}
+      {/* <DatePickerExample /> */}
+      <h2>禁用日期和时间</h2>
+      <RangePickerExample />
       {/* <h2>TreeSelectExample</h2>
       <TreeSelectExample />
       <h2>FormExample</h2>
