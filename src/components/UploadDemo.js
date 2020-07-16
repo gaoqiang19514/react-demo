@@ -1,6 +1,8 @@
 import React from "react";
 import { Form, Modal, Upload, Button, Icon } from "antd";
 
+const MAX_FILE_COUNT = 10;
+
 function getBase64(file) {
   return new Promise((resolve, reject) => {
     const reader = new FileReader();
@@ -12,6 +14,7 @@ function getBase64(file) {
 
 class UploadDemo extends React.Component {
   state = {
+    previewTitle: "",
     previewVisible: false,
     previewImage: "",
   };
@@ -49,16 +52,23 @@ class UploadDemo extends React.Component {
   };
 
   normFile = (e) => {
-    console.log("Upload event:", e);
     if (Array.isArray(e)) {
       return e;
     }
+
+    e.fileList = e.fileList.map((file) => {
+      if (file.response) {
+        file.url = file.response.data.filePath;
+      }
+      return file;
+    });
+
     return e && e.fileList;
   };
 
   render() {
     const { getFieldDecorator } = this.props.form;
-    const { previewVisible, previewImage } = this.state;
+    const { previewTitle, previewVisible, previewImage } = this.state;
 
     return (
       <Form onSubmit={this.handleSubmit}>
@@ -85,9 +95,9 @@ class UploadDemo extends React.Component {
             getValueFromEvent: this.normFile,
           })(
             <Upload
-              listType="picture-card"
-              onDownload={this.onDownload}
-              action="https://www.mocky.io/v2/5cc8019d300000980a055e76"
+              onPreview={this.onPreview}
+              showUploadList={{ showDownloadIcon: true, showPreviewIcon: true }}
+              action="/file-upload-service/webapi/v2.0/fileUpload/upload"
             >
               {this.renderBtn()}
             </Upload>
@@ -96,6 +106,7 @@ class UploadDemo extends React.Component {
 
         <Modal
           visible={previewVisible}
+          title={previewTitle}
           footer={null}
           onCancel={this.handleCancel}
         >
@@ -110,9 +121,7 @@ class UploadDemo extends React.Component {
 
   renderBtn = () => {
     const fields = this.props.form.getFieldsValue();
-    debugger;
-
-    if (fields.fileList.length < 1) {
+    if (fields.fileList.length < MAX_FILE_COUNT) {
       return (
         <Button>
           <Icon type="upload" /> Click to Upload
@@ -126,6 +135,8 @@ class UploadDemo extends React.Component {
   handleCancel = () => this.setState({ previewVisible: false });
 
   onPreview = async (file) => {
+    // 如果非图片类型，跳转下载
+
     if (!file.url && !file.preview) {
       file.preview = await getBase64(file.originFileObj);
     }
@@ -133,11 +144,9 @@ class UploadDemo extends React.Component {
     this.setState({
       previewImage: file.url || file.preview,
       previewVisible: true,
+      previewTitle:
+        file.name || file.url.substring(file.url.lastIndexOf("/") + 1),
     });
-  };
-
-  onDownload = (file) => {
-    console.log(file);
   };
 }
 
