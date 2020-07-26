@@ -1,4 +1,5 @@
 import React, { Component } from "react";
+import ReactEcharts from "echarts-for-react";
 
 import downloadIcon from "./logo.svg";
 import Map from "./Map";
@@ -94,13 +95,40 @@ class Example extends Component {
     }
   };
 
-
-
   handleRemoveLabelsClick = () => {
     if (this.labelHandle) {
       this.labelHandle.remove();
     }
   };
+
+  getOption = () => {
+    return {
+      xAxis: {
+        type: "category",
+        data: ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"],
+      },
+      yAxis: {
+        type: "value",
+      },
+      BMapGL: {
+        // 百度地图中心经纬度
+        center: [120.13066322374, 30.240018034923],
+        // 百度地图缩放
+        zoom: 14,
+        // 是否开启拖拽缩放，可以只设置 'scale' 或者 'move'
+        roam: true,
+        // 百度地图的自定义样式，见 http://developer.baidu.com/map/jsdevelop-11.htm
+        mapStyle: {},
+      },
+      series: [
+        {
+          data: [820, 932, 901, 934, 1290, 1330, 1320],
+          type: "line",
+        },
+      ],
+    };
+  };
+
   render() {
     return (
       <div style={mapStyle}>
@@ -118,6 +146,12 @@ class Example extends Component {
           <button type="button" onClick={this.handleRemoveLabelsClick}>
             remove labels
           </button>
+          <ReactEcharts
+            option={this.getOption()}
+            ref={(e) => {
+              this.echarts_react = e;
+            }}
+          />
         </div>
       </div>
     );

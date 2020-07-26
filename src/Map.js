@@ -45,7 +45,7 @@ class Map extends Component {
       this.props.mapLoaded(this);
     });
 
-    this.map.setTrafficOn();
+    // this.map.setTrafficOn();
   }
 
   addMarkers(coordinateList, options = {}) {
