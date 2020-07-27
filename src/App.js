@@ -1,5 +1,4 @@
 import React, { Component } from "react";
-import ReactEcharts from "echarts-for-react";
 
 import downloadIcon from "./logo.svg";
 import Map from "./Map";
@@ -12,6 +11,10 @@ const mapStyle = {
 
 class Example extends Component {
   mapLoaded = (instance) => {
+    if (this.mapInstance) {
+      return;
+    }
+
     this.mapInstance = instance;
 
     this.markerHandle = this.drawMarkers();
@@ -67,12 +70,7 @@ class Example extends Component {
       {
         longitude: 114.085947,
         latitude: 22.547,
-        content: "我是label",
-      },
-      {
-        longitude: 114.185947,
-        latitude: 22.647,
-        content: "我是label2",
+        content: `<div id="chart" style="width: 200px;height:200px;">chart</div>`,
       },
     ]);
   };
@@ -146,12 +144,6 @@ class Example extends Component {
           <button type="button" onClick={this.handleRemoveLabelsClick}>
             remove labels
           </button>
-          <ReactEcharts
-            option={this.getOption()}
-            ref={(e) => {
-              this.echarts_react = e;
-            }}
-          />
         </div>
       </div>
     );
