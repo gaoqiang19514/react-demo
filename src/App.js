@@ -99,6 +99,10 @@ class Example extends Component {
     }
   };
 
+  handleBackLevelClick = () => {
+    this.mapInstance.backLevel();
+  };
+
   getOption = () => {
     return {
       xAxis: {
@@ -143,6 +147,9 @@ class Example extends Component {
           </button>
           <button type="button" onClick={this.handleRemoveLabelsClick}>
             remove labels
+          </button>
+          <button type="button" onClick={this.handleBackLevelClick}>
+            back level
           </button>
         </div>
       </div>
