@@ -1,12 +1,7 @@
 import React, { Component } from "react";
-import echarts from "echarts";
 import axios from "axios";
 
-import {
-  formatWktData,
-  getFirstItemInArray,
-  getLastItemInArray,
-} from "./utils";
+import { formatWktData, getLastItemInArray } from "./utils";
 
 const mapStyle = {
   width: "100%",
@@ -19,6 +14,10 @@ const defaultProps = {
   styleId: "d76554efaf1ac42cd3a95dca0e8e7602",
 };
 
+function createMarker(point, options) {
+  return new window.BMapGL.Marker(point, options);
+}
+
 function createPoint(longitude, latitude) {
   return new window.BMapGL.Point(longitude, latitude);
 }
@@ -27,14 +26,18 @@ function createPolygon(pointList) {
   return new window.BMapGL.Polygon(pointList);
 }
 
+function createLabel(content, options) {
+  return new window.BMapGL.Label(content, options);
+}
+
 class Map extends Component {
   constructor(props) {
     super(props);
 
-    this.setRef = this.setRef.bind(this);
     this.map = null;
     this.isLoaded = false;
     this.currentAreaList = [];
+    this.setRef = this.setRef.bind(this);
   }
 
   componentDidMount() {
@@ -60,8 +63,6 @@ class Map extends Component {
       styleId: this.props.styleId,
     });
 
-    // this.drawCityBoundaryLine();
-
     this.map.addEventListener("tilesloaded", () => {
       if (this.isLoaded) {
         return;
@@ -69,11 +70,10 @@ class Map extends Component {
 
       this.props.mapLoaded(this);
       this.initEvents();
-      this.loadAreaBoundaryLine("4403");
+      // this.loadAreaBoundaryLine("4403");
+
       this.isLoaded = true;
     });
-
-    // this.map.setTrafficOn();
   }
 
   initEvents() {
@@ -122,7 +122,7 @@ class Map extends Component {
       });
     });
 
-    this.map.setViewport(pointArray); //调整视野
+    this.map.setViewport(pointArray);
   }
 
   drawPolygon(arr) {
@@ -147,11 +147,10 @@ class Map extends Component {
   };
 
   handleClick = ({ latlng }) => {
-    // 查找该点属于面列表中的哪一个
     let target = null;
+
     getLastItemInArray(this.currentAreaList).forEach((item) => {
       let [pointList] = formatWktData(item.wktPoly);
-
       pointList = pointList.map((_item) => createPoint(_item[0], _item[1]));
 
       if (
@@ -164,31 +163,23 @@ class Map extends Component {
       }
     });
 
-    // 从上面的结果中得到code
     if (target?.code) {
       this.loadAreaBoundaryLine(target.code);
     }
   };
 
-  addMarkers(coordinateList, options = {}) {
+  addMarker(coordinate, options = {}) {
     const { map } = this;
 
-    const pointList = coordinateList.map(
-      ([longitude, latitude]) => new window.BMapGL.Point(longitude, latitude)
-    );
+    const point = createPoint(coordinate[0], coordinate[1]);
+    const marker = createMarker(point, options);
 
-    const markerList = pointList.map(
-      (point) => new window.BMapGL.Marker(point, options)
-    );
-
-    markerList.forEach((marker) => {
-      map.addOverlay(marker);
-    });
+    map.addOverlay(marker);
 
     return {
-      markerList,
+      marker,
       remove() {
-        markerList.forEach((marker) => map.removeOverlay(marker));
+        map.removeOverlay(marker);
       },
     };
   }
@@ -196,8 +187,8 @@ class Map extends Component {
   addPolyline(coordinateList, options = {}) {
     const { map } = this;
 
-    const pointList = coordinateList.map(
-      ([longitude, latitude]) => new window.BMapGL.Point(longitude, latitude)
+    const pointList = coordinateList.map((item) =>
+      createPoint(item[0], item[1])
     );
 
     const polyline = new window.BMapGL.Polyline(pointList, options);
@@ -212,11 +203,11 @@ class Map extends Component {
     };
   }
 
-  adPolygon(coordinateList, options) {
+  addPolygon(coordinateList, options) {
     const { map } = this;
 
-    const pointList = coordinateList.map(
-      ([longitude, latitude]) => new window.BMapGL.Point(longitude, latitude)
+    const pointList = coordinateList.map((item) =>
+      createMarker(createPoint(item[0], item[1]))
     );
 
     const polygon = new window.BMapGL.Polygon(pointList, options);
@@ -230,68 +221,24 @@ class Map extends Component {
     };
   }
 
-  addLabel(longitude, latitude, content, options) {
+  addLabel(longitude, latitude, content, options, callback) {
     const { map } = this;
 
-    const point = new window.BMapGL.Point(longitude, latitude);
-    const label = new window.BMapGL.Label(content, {
+    const point = createPoint(longitude, latitude);
+    const label = createLabel(content, {
       position: point,
       ...options,
     });
 
+    console.log("label", label);
+
     map.addOverlay(label);
-
-    const myChart = echarts.init(document.getElementById("chart"));
-    // 指定图表的配置项和数据
-    var option = {
-      tooltip: {},
-      xAxis: {
-        data: ["衬衫", "羊毛衫", "雪纺衫", "裤子", "高跟鞋", "袜子"],
-      },
-      yAxis: {},
-      series: [
-        {
-          name: "销量",
-          type: "bar",
-          data: [5, 20, 36, 10, 10, 20],
-        },
-      ],
-    };
-
-    // 使用刚指定的配置项和数据显示图表。
-    myChart.setOption(option);
-
-    setTimeout(() => {
-      myChart.setOption({
-        ...option,
-        series: [
-          {
-            name: "销量",
-            type: "bar",
-            data: [5, 20, 36, 10, 10, 120],
-          },
-        ],
-      });
-    }, 3000);
+    callback && callback();
 
     return {
+      label,
       remove() {
         map.removeOverlay(label);
-      },
-    };
-  }
-
-  addLabels(labelList) {
-    const labelHandleList = labelList.map((item) => {
-      return this.addLabel(item.longitude, item.latitude, item.content, {
-        offset: new window.BMapGL.Size(10, 20),
-      });
-    });
-
-    return {
-      labelHandleList,
-      remove() {
-        labelHandleList.forEach((label) => label.remove());
       },
     };
   }

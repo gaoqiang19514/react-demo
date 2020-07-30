@@ -1,4 +1,5 @@
 import React, { Component } from "react";
+import echarts from "echarts";
 
 import downloadIcon from "./logo.svg";
 import Map from "./Map";
@@ -17,20 +18,20 @@ class Example extends Component {
 
     this.mapInstance = instance;
 
-    this.markerHandle = this.drawMarkers();
+    this.markerHandle = this.drawMarker();
     this.lineHandle = this.drawLine();
     this.polygonHandle = this.drawPolygon();
     this.labelHandle = this.drawLabel();
   };
 
-  drawMarkers = () => {
+  drawMarker = () => {
     // 如果需要制定图标，则给Marker传入图标参数就行了
     const myIcon = new window.BMapGL.Icon(
       downloadIcon,
       new window.BMapGL.Size(30, 30)
     );
 
-    return this.mapInstance.addMarkers([[114.085947, 22.547]], {
+    return this.mapInstance.addMarker([114.085947, 22.547], {
       icon: myIcon,
     });
   };
@@ -50,7 +51,7 @@ class Example extends Component {
   };
 
   drawPolygon = () => {
-    return this.mapInstance.adPolygon(
+    return this.mapInstance.addPolygon(
       [
         [114.085947, 22.547],
         [114.185947, 22.747],
@@ -66,13 +67,33 @@ class Example extends Component {
   };
 
   drawLabel = () => {
-    return this.mapInstance.addLabels([
-      {
-        longitude: 114.085947,
-        latitude: 22.547,
-        content: `<div id="chart" style="width: 200px;height:200px;">chart</div>`,
+    return this.mapInstance.addLabel({
+      longitude: 114.085947,
+      latitude: 22.547,
+      content: `<div id="chart" style="width: 200px;height:200px;">chart</div>`,
+      options: {
+        offset: new window.BMapGL.Size(10, 20),
       },
-    ]);
+      callback: () => {
+        const myChart = echarts.init(document.getElementById("chart"));
+        // 指定图表的配置项和数据
+        var option = {
+          tooltip: {},
+          xAxis: {
+            data: ["衬衫", "羊毛衫", "雪纺衫", "裤子", "高跟鞋", "袜子"],
+          },
+          yAxis: {},
+          series: [
+            {
+              name: "销量",
+              type: "bar",
+              data: [5, 20, 36, 10, 10, 20],
+            },
+          ],
+        };
+        myChart.setOption(option);
+      },
+    });
   };
 
   handleRemoveMarkersClick = () => {
