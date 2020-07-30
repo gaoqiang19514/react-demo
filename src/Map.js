@@ -76,10 +76,6 @@ class Map extends Component {
     });
   }
 
-  initEvents() {
-    this.map.addEventListener("dblclick", this.handleClick);
-  }
-
   loadAreaBoundaryLine(deptCode) {
     axios
       .post("/zfzh-service/webapi/resourceMap/areaChildrenByDeptCode", {
@@ -145,6 +141,10 @@ class Map extends Component {
 
     this.drawAreaBoundaryLine(getLastItemInArray(this.currentAreaList));
   };
+
+  initEvents() {
+    this.map.addEventListener("dblclick", this.handleClick);
+  }
 
   handleClick = ({ latlng }) => {
     let target = null;
