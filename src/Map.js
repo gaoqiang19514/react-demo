@@ -70,7 +70,7 @@ class Map extends Component {
 
       this.props.mapLoaded(this);
       this.initEvents();
-      // this.loadAreaBoundaryLine("4403");
+      this.loadAreaBoundaryLine("4403");
 
       this.isLoaded = true;
     });
@@ -89,8 +89,6 @@ class Map extends Component {
           return;
         }
 
-        this.map.clearOverlays();
-
         this.currentAreaList.push(childrenList);
 
         this.drawAreaBoundaryLine(childrenList);
@@ -100,6 +98,8 @@ class Map extends Component {
 
   drawAreaBoundaryLine(list) {
     let pointArray = [];
+
+    this.map.clearOverlays();
 
     list.forEach((item) => {
       const data = formatWktData(item.wktPoly);
