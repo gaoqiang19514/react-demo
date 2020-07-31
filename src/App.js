@@ -11,6 +11,14 @@ const mapStyle = {
 };
 
 class Example extends Component {
+  constructor(props) {
+    super(props);
+
+    this.state = {
+      searchText: "",
+    };
+  }
+
   mapLoaded = (instance) => {
     if (this.mapInstance) {
       return;
@@ -124,6 +132,21 @@ class Example extends Component {
     this.mapInstance.backLevel();
   };
 
+  handleSearchChange = (e) => {
+    this.setState({ searchText: e.target.value });
+  };
+
+  handleSearchClick = () => {
+    const { searchText } = this.state;
+
+    if (!searchText) {
+      alert("请输入关键字");
+      return;
+    }
+
+    this.mapInstance.searchText(searchText);
+  };
+
   getOption = () => {
     return {
       xAxis: {
@@ -171,6 +194,14 @@ class Example extends Component {
           </button>
           <button type="button" onClick={this.handleBackLevelClick}>
             back level
+          </button>
+          <input
+            type="text"
+            value={this.state.searchText}
+            onChange={this.handleSearchChange}
+          />
+          <button type="button" onClick={this.handleSearchClick}>
+            搜索
           </button>
         </div>
       </div>

@@ -171,6 +171,8 @@ class Map extends Component {
   addMarker(coordinate, options = {}) {
     const { map } = this;
 
+    console.log(coordinate, "coordinate");
+
     const point = createPoint(coordinate[0], coordinate[1]);
     const marker = createMarker(point, options);
 
@@ -230,8 +232,6 @@ class Map extends Component {
       ...options,
     });
 
-    console.log("label", label);
-
     map.addOverlay(label);
     callback && callback();
 
@@ -242,6 +242,13 @@ class Map extends Component {
       },
     };
   }
+
+  searchText = (text) => {
+    var local = new window.BMapGL.LocalSearch("深圳市", {
+      renderOptions: { map: this.map },
+    });
+    local.search(text);
+  };
 
   render() {
     return <div style={mapStyle} ref={this.setRef}></div>;
