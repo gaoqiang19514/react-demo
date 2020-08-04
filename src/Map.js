@@ -15,19 +15,19 @@ const defaultProps = {
 };
 
 function createMarker(point, options) {
-  return new window.BMapGL.Marker(point, options);
+  return new window.BMap.Marker(point, options);
 }
 
 function createPoint(longitude, latitude) {
-  return new window.BMapGL.Point(longitude, latitude);
+  return new window.BMap.Point(longitude, latitude);
 }
 
 function createPolygon(pointList) {
-  return new window.BMapGL.Polygon(pointList);
+  return new window.BMap.Polygon(pointList);
 }
 
 function createLabel(content, options) {
-  return new window.BMapGL.Label(content, options);
+  return new window.BMap.Label(content, options);
 }
 
 class Map extends Component {
@@ -49,8 +49,8 @@ class Map extends Component {
   }
 
   initialize() {
-    this.map = new window.BMapGL.Map(this.ref);
-    const point = new window.BMapGL.Point(
+    this.map = new window.BMap.Map(this.ref);
+    const point = new window.BMap.Point(
       this.props.center[0],
       this.props.center[1]
     );
@@ -114,7 +114,7 @@ class Map extends Component {
 
         pointArray = pointArray.concat(arr);
 
-        this.drawPolygon(arr);
+        this.addPolyline(arr);
       });
     });
 
@@ -122,7 +122,7 @@ class Map extends Component {
   }
 
   drawPolygon(arr) {
-    const ply = new window.BMapGL.Polygon(arr, {
+    const ply = new window.BMap.Polygon(arr, {
       strokeWeight: 2,
       fillOpacity: 0,
       strokeColor: "#3E9BEF",
@@ -146,7 +146,7 @@ class Map extends Component {
     this.map.addEventListener("dblclick", this.handleClick);
   }
 
-  handleClick = ({ latlng }) => {
+  handleClick = ({ point }) => {
     let target = null;
 
     getLastItemInArray(this.currentAreaList).forEach((item) => {
@@ -155,7 +155,7 @@ class Map extends Component {
 
       if (
         window.BMapLib.GeoUtils.isPointInPolygon(
-          createPoint(latlng.lng, latlng.lat),
+          point,
           createPolygon(pointList)
         )
       ) {
@@ -186,14 +186,10 @@ class Map extends Component {
     };
   }
 
-  addPolyline(coordinateList, options = {}) {
+  addPolyline(pointList, options = {}) {
     const { map } = this;
 
-    const pointList = coordinateList.map((item) =>
-      createPoint(item[0], item[1])
-    );
-
-    const polyline = new window.BMapGL.Polyline(pointList, options);
+    const polyline = new window.BMap.Polyline(pointList, options);
 
     map.addOverlay(polyline);
 
@@ -212,7 +208,7 @@ class Map extends Component {
       createMarker(createPoint(item[0], item[1]))
     );
 
-    const polygon = new window.BMapGL.Polygon(pointList, options);
+    const polygon = new window.BMap.Polygon(pointList, options);
     map.addOverlay(polygon);
 
     return {
@@ -223,7 +219,7 @@ class Map extends Component {
     };
   }
 
-  addLabel(longitude, latitude, content, options, callback) {
+  addLabel({ longitude, latitude, content, options, callback }) {
     const { map } = this;
 
     const point = createPoint(longitude, latitude);
@@ -244,7 +240,7 @@ class Map extends Component {
   }
 
   searchText = (text) => {
-    var local = new window.BMapGL.LocalSearch("深圳市", {
+    var local = new window.BMap.LocalSearch("深圳市", {
       renderOptions: { map: this.map },
     });
     local.search(text);
