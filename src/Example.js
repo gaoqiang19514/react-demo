@@ -22,7 +22,7 @@ class Example extends Component {
     this.mapInstance = instance;
     // this.labelHandle = this.drawLabel();
 
-    this.drawMarkers();
+    this.drawMarkers(this.handleMarkerClick);
   };
 
   drawLabel = () => {
@@ -55,7 +55,11 @@ class Example extends Component {
     });
   };
 
-  drawMarkers = () => {
+  handleMarkerClick = () => {
+    alert("123");
+  };
+
+  drawMarkers = (eventHandler) => {
     const EXAMPLE_URL =
       "http://api.map.baidu.com/library/MarkerClusterer/1.2/examples/";
 
@@ -66,7 +70,9 @@ class Example extends Component {
         Math.random() * 40 + 85,
         Math.random() * 30 + 21
       );
-      markers.push(new window.BMap.Marker(point, { enableMassClear: false }));
+      const marker = new window.BMap.Marker(point, { enableMassClear: false });
+      marker.addEventListener("click", eventHandler);
+      markers.push(marker);
     }
 
     this.markerClusterer = new window.BMapLib.MarkerClusterer(
