@@ -4,7 +4,7 @@ import axios from "axios";
 
 import Map from "../Map";
 import { getChartOption } from "./config";
-import { formatWktData, createPoint } from "../../utils";
+import { formatWktData } from "../../utils";
 
 const API = {
   getAreaCenterPoint: (deptCode) =>
@@ -63,9 +63,14 @@ class Example extends Component {
       content: `<div id="${id}" style="width: 60px;height:150px;">chart</div>`,
       options: {
         enableMassClear: false,
-        offset: new window.BMap.Size(10, 20),
+        offset: new window.BMap.Size(-30, -150),
       },
-      callback: () => {
+      callback: (label) => {
+        label.setStyle({
+          background: "transparent",
+          border: "none",
+          padding: 0,
+        });
         const myChart = echarts.init(document.getElementById(id));
         myChart.setOption(getChartOption());
       },

@@ -2,6 +2,7 @@ import React, { Component } from "react";
 import axios from "axios";
 
 import { formatWktData, getLastItemInArray } from "../utils";
+import api from "../api";
 
 const mapStyle = {
   width: "100%",
@@ -71,6 +72,7 @@ class Map extends Component {
       this.props.mapLoaded(this);
       this.initEvents();
       this.loadAreaBoundaryLine("4403");
+      this.drawAreaLabel();
 
       this.isLoaded = true;
     });
@@ -120,6 +122,30 @@ class Map extends Component {
 
     this.map.setViewport(pointArray);
   }
+
+  /**
+   * 绘制深圳市各区标识
+   * @return undefined
+   */
+  drawAreaLabel = () => {
+    api
+      .getAreaData("4403")
+      .then((res) => {
+        const { childrenList } = res.data.data;
+
+        if (!childrenList.length) {
+          return;
+        }
+
+        childrenList.forEach((item) => {
+          const coordinate = formatWktData(item.wktAreaCenter);
+          this.addMarker(coordinate, {
+            enableMassClear: false,
+          });
+        });
+      })
+      .catch(console.error);
+  };
 
   drawPolygon(arr) {
     const ply = new window.BMap.Polygon(arr, {
@@ -226,13 +252,8 @@ class Map extends Component {
       ...options,
     });
 
-    label.setStyle({
-	  background: "transparent",
-      border: "none",
-    });
-
     map.addOverlay(label);
-    callback && callback();
+    callback && callback(label);
 
     return {
       label,

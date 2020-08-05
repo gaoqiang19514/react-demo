@@ -96,6 +96,18 @@ export function createPoint(longitude, latitude) {
   return new window.BMap.Point(longitude, latitude);
 }
 
+export function createMarker(point, options) {
+  return new window.BMap.Marker(point, options);
+}
+
+export function createPolygon(pointList) {
+  return new window.BMap.Polygon(pointList);
+}
+
+export function createLabel(content, options) {
+  return new window.BMap.Label(content, options);
+}
+
 /**
  * 获取数组第一个元素
  * @param {Array} arr
