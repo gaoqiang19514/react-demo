@@ -1,7 +1,18 @@
 import React, { Component } from "react";
 import echarts from "echarts";
+import axios from "axios";
 
-import Map from "./Map";
+import Map from "../Map";
+import { getChartOption } from "./config";
+import { formatWktData, createPoint } from "../../utils";
+
+const API = {
+  getAreaCenterPoint: (deptCode) =>
+    axios.post("/zfzh-service/webapi/resourceMap/areaChildrenByDeptCode", {
+      coordinateType: "gcj02",
+      deptCode,
+    }),
+};
 
 const mapStyle = {
   position: "absolute",
@@ -20,37 +31,43 @@ class Example extends Component {
 
   mapLoaded = (instance) => {
     this.mapInstance = instance;
-    // this.labelHandle = this.drawLabel();
+
+    this.drawAreaCharts();
 
     this.drawMarkers(this.handleMarkerClick);
   };
 
-  drawLabel = () => {
+  drawAreaCharts = () => {
+    // 请求得到各区的中心点
+    API.getAreaCenterPoint("4403")
+      .then((res) => {
+        const { childrenList } = res.data.data;
+
+        if (!childrenList.length) {
+          return;
+        }
+
+        childrenList.forEach((item, index) => {
+          const [longitude, latitude] = formatWktData(item.wktAreaCenter);
+          this.drawLabel([longitude, latitude], index);
+        });
+      })
+      .catch(console.error);
+  };
+
+  drawLabel = (point, index) => {
+    const id = `chart-${index}`;
     return this.mapInstance.addLabel({
-      longitude: 114.085947,
-      latitude: 22.547,
-      content: `<div id="chart" style="width: 200px;height:200px;">chart</div>`,
+      longitude: point[0],
+      latitude: point[1],
+      content: `<div id="${id}" style="width: 60px;height:150px;">chart</div>`,
       options: {
         enableMassClear: false,
         offset: new window.BMap.Size(10, 20),
       },
       callback: () => {
-        const myChart = echarts.init(document.getElementById("chart"));
-        const option = {
-          tooltip: {},
-          xAxis: {
-            data: ["衬衫", "羊毛衫", "雪纺衫", "裤子", "高跟鞋", "袜子"],
-          },
-          yAxis: {},
-          series: [
-            {
-              name: "销量",
-              type: "bar",
-              data: [5, 20, 36, 10, 10, 20],
-            },
-          ],
-        };
-        myChart.setOption(option);
+        const myChart = echarts.init(document.getElementById(id));
+        myChart.setOption(getChartOption());
       },
     });
   };
@@ -92,12 +109,6 @@ class Example extends Component {
     );
   };
 
-  handleRemoveLabelsClick = () => {
-    if (this.labelHandle) {
-      this.labelHandle.remove();
-    }
-  };
-
   handleBackLevelClick = () => {
     this.mapInstance.backLevel();
   };
@@ -122,9 +133,6 @@ class Example extends Component {
       <div style={mapStyle}>
         <Map mapLoaded={this.mapLoaded} />
         <div style={{ position: "absolute", zIndex: 10, top: 0 }}>
-          <button type="button" onClick={this.handleRemoveLabelsClick}>
-            remove labels
-          </button>
           <button type="button" onClick={this.handleBackLevelClick}>
             back level
           </button>

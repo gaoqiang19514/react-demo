@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 import axios from "axios";
 
-import { formatWktData, getLastItemInArray } from "./utils";
+import { formatWktData, getLastItemInArray } from "../utils";
 
 const mapStyle = {
   width: "100%",
@@ -171,8 +171,6 @@ class Map extends Component {
   addMarker(coordinate, options = {}) {
     const { map } = this;
 
-    console.log(coordinate, "coordinate");
-
     const point = createPoint(coordinate[0], coordinate[1]);
     const marker = createMarker(point, options);
 
@@ -226,6 +224,11 @@ class Map extends Component {
     const label = createLabel(content, {
       position: point,
       ...options,
+    });
+
+    label.setStyle({
+	  background: "transparent",
+      border: "none",
     });
 
     map.addOverlay(label);

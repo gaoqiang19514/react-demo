@@ -92,6 +92,10 @@ export function formatWktData(wktData) {
   return [];
 }
 
+export function createPoint(longitude, latitude) {
+  return new window.BMap.Point(longitude, latitude);
+}
+
 /**
  * 获取数组第一个元素
  * @param {Array} arr
