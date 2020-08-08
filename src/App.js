@@ -1,9 +1,7 @@
 import React, { Component } from "react";
 import ReactEcharts from "echarts-for-react";
 
-// import Example from "./components/Example";
-
-import { getChartOption } from "./config";
+import { getColumnDiagramOption } from "./config";
 
 const echartBoxStyle = {
   width: 300,
@@ -11,41 +9,44 @@ const echartBoxStyle = {
   border: "1px solid #ccc",
 };
 
-class Demo extends Component {
-  getOption(x, y) {
-    return getChartOption({ institution: x, staff: y });
-    // return {
-    //   tooltip: {},
-    //   xAxis: {
-    //     data: ["衬衫", "羊毛衫"],
-    //   },
-    //   yAxis: {
-    //     max: 1200,
-    //     min: 1,
-    //   },
-    //   series: [
-    //     {
-    //       name: "销量",
-    //       type: "bar",
-    //       data,
-    //     },
-    //   ],
-    // };
-  }
+function getMaxFromArray(arr) {
+  return Math.max.apply(null, arr);
+}
 
+class Demo extends Component {
   render() {
-    // 指定图表的配置项和数据
+    const data = [
+      {
+        institution: 3720,
+        staff: 1,
+      },
+      {
+        institution: 800,
+        staff: 1,
+      },
+    ];
+
+    // 找出数据序列的最大值
+    const arr = [];
+    data.forEach((item) => {
+      arr.push(item.institution);
+      arr.push(item.staff);
+    });
+
+    const max = getMaxFromArray(arr);
 
     return (
       <div>
-        <ReactEcharts
-          style={echartBoxStyle}
-          option={this.getOption(90000, 1)}
-        />
-        <ReactEcharts
-          style={echartBoxStyle}
-          option={this.getOption(36, 1200)}
-        />
+        {data.map((item, index) => (
+          <ReactEcharts
+            key={index}
+            style={echartBoxStyle}
+            option={getColumnDiagramOption(
+              { institution: item.institution, staff: item.staff },
+              max
+            )}
+          />
+        ))}
       </div>
     );
   }
