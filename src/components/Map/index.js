@@ -1,8 +1,8 @@
 import React, { Component } from "react";
 import axios from "axios";
 
-import { formatWktData, getLastItemInArray } from "../utils";
-import api from "../api";
+import { formatWktData, getLastItemInArray } from "../../utils";
+import api from "../../api";
 
 const mapStyle = {
   width: "100%",
@@ -36,8 +36,9 @@ class Map extends Component {
     super(props);
 
     this.map = null;
-    this.isLoaded = false;
-    this.currentAreaList = [];
+    this.initialized = false;
+    this.currentAreaLineList = [];
+
     this.setRef = this.setRef.bind(this);
   }
 
@@ -46,7 +47,7 @@ class Map extends Component {
   }
 
   /**
-   * 绘制深圳市各区标识
+   * 获取地图引用
    * @return undefined
    */
   setRef(ref) {
@@ -54,48 +55,42 @@ class Map extends Component {
   }
 
   /**
-   * 绘制深圳市各区标识
+   * 初始化
    * @return undefined
    */
   initialize() {
     this.map = new window.BMap.Map(this.ref);
-    const point = new window.BMap.Point(
-      this.props.center[0],
-      this.props.center[1]
-    );
-
     this.map.enableScrollWheelZoom(true);
     this.map.disableDoubleClickZoom();
-
-    this.map.centerAndZoom(point, this.props.zoom);
+    this.map.centerAndZoom(
+      new window.BMap.Point(this.props.center[0], this.props.center[1]),
+      this.props.zoom
+    );
     this.map.setMapStyleV2({
       styleId: this.props.styleId,
     });
 
     this.map.addEventListener("tilesloaded", () => {
-      if (this.isLoaded) {
+      if (this.initialized) {
         return;
       }
 
-      this.props.mapLoaded(this);
-      this.initEvents();
       this.loadAreaBoundaryLine("4403");
-      this.drawAreaLabel();
+      this.loadAreaLabel("4403");
+      this.initEvents();
 
-      this.isLoaded = true;
+      this.initialized = true;
+      this.props.mapLoaded(this, this.map);
     });
   }
 
   /**
-   * 绘制深圳市各区边界线
+   * 绘制深圳市各区标识
    * @return undefined
    */
   loadAreaBoundaryLine(deptCode) {
-    axios
-      .post("/zfzh-service/webapi/resourceMap/areaChildrenByDeptCode", {
-        coordinateType: "gcj02",
-        deptCode,
-      })
+    api
+      .getAreaData(deptCode)
       .then((res) => {
         const { childrenList } = res.data.data;
 
@@ -103,49 +98,47 @@ class Map extends Component {
           return;
         }
 
-        this.currentAreaList.push(childrenList);
+        this.currentAreaLineList.push(childrenList);
 
         this.drawAreaBoundaryLine(childrenList);
       })
       .catch(console.error);
   }
 
-  /**
-   * 绘制深圳市各区标识
-   * @return undefined
-   */
   drawAreaBoundaryLine(list) {
-    let pointArray = [];
+    const pointsList = [];
 
-    this.map.clearOverlays();
+    this.clearAreaBoundaryLine();
 
     list.forEach((item) => {
       const data = formatWktData(item.wktPoly);
 
       data.forEach((item) => {
-        const arr = [];
+        const points = [];
 
         item.forEach((_item) => {
           const point = createPoint(_item[0], _item[1]);
-          arr.push(point);
+          points.push(point);
         });
 
-        pointArray = pointArray.concat(arr);
+        pointsList = pointsList.concat(points);
 
-        this.addPolyline(arr);
+        this.addPolyline(points);
       });
     });
 
-    this.map.setViewport(pointArray);
+    this.map.setViewport(pointsList);
   }
+
+  clearAreaBoundaryLine = () => {};
 
   /**
    * 绘制深圳市各区标识
    * @return undefined
    */
-  drawAreaLabel = () => {
+  loadAreaLabel(deptCode) {
     api
-      .getAreaData("4403")
+      .getAreaData(deptCode)
       .then((res) => {
         const { childrenList } = res.data.data;
 
@@ -153,30 +146,25 @@ class Map extends Component {
           return;
         }
 
-        childrenList.forEach((item) => {
-          const coordinate = formatWktData(item.wktAreaCenter);
-          this.addMarker(coordinate, {
-            enableMassClear: false,
-          });
-        });
+        this.drawAreaLabel(childrenList);
       })
       .catch(console.error);
-  };
+  }
 
-  /**
-   * 绘制深圳市各区标识
-   * @return undefined
-   */
-  backLevel = () => {
-    const item = this.currentAreaList.pop();
+  drawAreaLabel(list) {
+    this.cleanAreaLabel();
 
-    if (!this.currentAreaList.length) {
-      this.currentAreaList.push(item);
-      return;
-    }
+    const coordinateList = [];
+    list.forEach((item) => {
+      coordinateList.push(formatWktData(item.wktAreaCenter));
+    });
 
-    this.drawAreaBoundaryLine(getLastItemInArray(this.currentAreaList));
-  };
+    this.addLabels(coordinateList, {
+      enableMassClear: false,
+    });
+  }
+
+  cleanAreaLabel = () => {};
 
   /**
    * 绘制深圳市各区标识
@@ -187,21 +175,20 @@ class Map extends Component {
   }
 
   /**
-   * 绘制深圳市各区标识
+   * 区域下钻
    * @return undefined
    */
   handleClick = ({ point }) => {
     let target = null;
 
-    getLastItemInArray(this.currentAreaList).forEach((item) => {
-      let [pointList] = formatWktData(item.wktPoly);
-      pointList = pointList.map((_item) => createPoint(_item[0], _item[1]));
+    getLastItemInArray(this.currentAreaLineList).forEach((item) => {
+      const [coordinateList] = formatWktData(item.wktPoly);
+      const points = coordinateList.map((coordinate) =>
+        createPoint(coordinate)
+      );
 
       if (
-        window.BMapLib.GeoUtils.isPointInPolygon(
-          point,
-          createPolygon(pointList)
-        )
+        window.BMapLib.GeoUtils.isPointInPolygon(point, createPolygon(points))
       ) {
         target = item;
       }
@@ -210,6 +197,21 @@ class Map extends Component {
     if (target?.code) {
       this.loadAreaBoundaryLine(target.code);
     }
+  };
+
+  /**
+   * 绘制深圳市各区标识
+   * @return undefined
+   */
+  backLevel = () => {
+    const item = this.currentAreaLineList.pop();
+
+    if (!this.currentAreaLineList.length) {
+      this.currentAreaLineList.push(item);
+      return;
+    }
+
+    this.drawAreaBoundaryLine(getLastItemInArray(this.currentAreaLineList));
   };
 
   /**
@@ -375,17 +377,6 @@ class Map extends Component {
 
     return labelList;
   }
-
-  /**
-   * 绘制深圳市各区标识
-   * @return undefined
-   */
-  searchText = (text) => {
-    var local = new window.BMap.LocalSearch("深圳市", {
-      renderOptions: { map: this.map },
-    });
-    local.search(text);
-  };
 
   /**
    * 绘制深圳市各区标识

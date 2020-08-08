@@ -24,29 +24,31 @@ class Example extends Component {
   constructor(props) {
     super(props);
 
+    this.areaChartList = [];
+    this.areaMarkerList = [];
+
     this.state = {
       searchText: "",
     };
   }
 
   /**
-   * 绘制深圳市各区标识
+   * 地图初始化完成回调
    * @return undefined
    */
-  mapLoaded = (instance) => {
+  mapLoaded = (instance, map) => {
     this.mapInstance = instance;
+    this.map = map;
 
-    this.drawAreaCharts();
-
-    this.drawMarkers(this.handleMarkerClick);
+    this.areaChartList = this.loadAreaChartsData();
+    this.areaMarkerList = this.loadAreaMarkersData();
   };
 
   /**
-   * 绘制深圳市各区标识
+   * 绘制各区echarts图表
    * @return undefined
    */
-  drawAreaCharts = () => {
-    // 请求得到各区的中心点
+  loadAreaChartsData = () => {
     API.getAreaCenterPoint("4403")
       .then((res) => {
         const { childrenList } = res.data.data;
@@ -55,86 +57,115 @@ class Example extends Component {
           return;
         }
 
-        childrenList.forEach((item, index) => {
-          const [longitude, latitude] = formatWktData(item.wktAreaCenter);
-          this.drawLabel([longitude, latitude], index);
-        });
+        this.drawEchartsLabels(childrenList);
       })
       .catch(console.error);
   };
+
   /**
    * 绘制深圳市各区标识
    * @return undefined
    */
-  drawLabel = (point, index) => {
-    const id = `chart-${index}`;
-    return this.mapInstance.addLabel({
-      longitude: point[0],
-      latitude: point[1],
-      content: `<div id="${id}" style="width: 60px;height:150px;">chart</div>`,
-      options: {
-        enableMassClear: false,
-        offset: new window.BMap.Size(-30, -150),
-      },
-      callback: (label) => {
-        label.setStyle({
-          background: "transparent",
-          border: "none",
-          padding: 0,
-        });
-        const myChart = echarts.init(document.getElementById(id));
-        myChart.setOption(getChartOption());
-      },
+  drawEchartsLabels = (list) => {
+    const labels = [];
+
+    this.clearAreaCharts();
+
+    list.forEach((item, index) => {
+      const id = `chart-${index}`;
+      const [longitude, latitude] = formatWktData(item.wktAreaCenter);
+
+      labels.push({
+        longitude,
+        latitude,
+        content: `<div id="${id}" style="width: 60px;height:150px;">chart</div>`,
+        options: {
+          enableMassClear: false,
+          offset: new window.BMap.Size(-30, -150),
+        },
+        callback: (label) => {
+          label.setStyle({
+            background: "transparent",
+            border: "none",
+            padding: 0,
+          });
+          echarts.init(document.getElementById(id)).setOption(getChartOption());
+        },
+      });
     });
+
+    return this.mapInstance.addLabels(labels);
   };
 
-  /**
-   * 绘制深圳市各区标识
-   * @return undefined
-   */
-  handleMarkerClick = () => {
-    alert("123");
-  };
+  clearAreaCharts = () => {
+    const { areaChartList } = this;
 
-  /**
-   * 绘制深圳市各区标识
-   * @return undefined
-   */
-  drawMarkers = (eventHandler) => {
-    const EXAMPLE_URL =
-      "http://api.map.baidu.com/library/MarkerClusterer/1.2/examples/";
-
-    const MAX = 10;
-    const markers = [];
-    for (let i = 0; i < MAX; i++) {
-      const point = new window.BMap.Point(
-        Math.random() * 40 + 85,
-        Math.random() * 30 + 21
-      );
-      const marker = new window.BMap.Marker(point, { enableMassClear: false });
-      marker.addEventListener("click", eventHandler);
-      markers.push(marker);
+    if (!areaChartList.length) {
+      return;
     }
 
-    this.markerClusterer = new window.BMapLib.MarkerClusterer(
-      this.mapInstance.map,
-      {
-        markers: markers,
-        styles: [
-          {
-            url: EXAMPLE_URL + "images/heart30.png",
-            size: new window.BMap.Size(30, 26),
-            opt_anchor: [16, 0],
-            textColor: "#ff00ff",
-            opt_textSize: 10,
-          },
-        ],
-      }
-    );
+    areaChartList.forEach((item) => item.remove());
   };
 
   /**
    * 绘制深圳市各区标识
+   * @return undefined
+   */
+  loadAreaMarkersData = (callback = () => {}) => {
+    API.getAreaCenterPoint("4403")
+      .then((res) => {
+        const { childrenList } = res.data.data;
+
+        if (!childrenList.length) {
+          return;
+        }
+
+        this.drawAreaLabels(childrenList);
+      })
+      .catch(console.error);
+  };
+
+  drawAreaLabels = (list) => {
+    const labels = [];
+
+    this.clearAreaLabels();
+
+    list.forEach((item) => {
+      const [longitude, latitude] = formatWktData(item.wktAreaCenter);
+
+      labels.push({
+        longitude,
+        latitude,
+        content: `${item.areaName}`,
+        options: {
+          enableMassClear: false,
+          offset: new window.BMap.Size(-30, -150),
+        },
+        callback: (label) => {
+          label.setStyle({
+            background: "transparent",
+            border: "none",
+            padding: 0,
+          });
+        },
+      });
+    });
+
+    return this.mapInstance.addMarkers(labels);
+  };
+
+  clearAreaLabels = () => {
+    const { areaMarkerList } = this;
+
+    if (!areaMarkerList.length) {
+      return;
+    }
+
+    areaMarkerList.forEach((item) => item.remove());
+  };
+
+  /**
+   * 下钻回退
    * @return undefined
    */
   handleBackLevelClick = () => {
@@ -142,7 +173,7 @@ class Example extends Component {
   };
 
   /**
-   * 绘制深圳市各区标识
+   * 同步state
    * @return undefined
    */
   handleSearchChange = (e) => {
@@ -150,7 +181,7 @@ class Example extends Component {
   };
 
   /**
-   * 绘制深圳市各区标识
+   * 搜索数据
    * @return undefined
    */
   handleSearchClick = () => {
@@ -161,7 +192,7 @@ class Example extends Component {
       return;
     }
 
-    this.mapInstance.searchText(searchText);
+    // TODO: 这里请求后台结果，然后用点位绘制到地图上
   };
 
   render() {
