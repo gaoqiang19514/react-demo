@@ -29,6 +29,10 @@ class Example extends Component {
     };
   }
 
+  /**
+   * 绘制深圳市各区标识
+   * @return undefined
+   */
   mapLoaded = (instance) => {
     this.mapInstance = instance;
 
@@ -37,6 +41,10 @@ class Example extends Component {
     this.drawMarkers(this.handleMarkerClick);
   };
 
+  /**
+   * 绘制深圳市各区标识
+   * @return undefined
+   */
   drawAreaCharts = () => {
     // 请求得到各区的中心点
     API.getAreaCenterPoint("4403")
@@ -54,7 +62,10 @@ class Example extends Component {
       })
       .catch(console.error);
   };
-
+  /**
+   * 绘制深圳市各区标识
+   * @return undefined
+   */
   drawLabel = (point, index) => {
     const id = `chart-${index}`;
     return this.mapInstance.addLabel({
@@ -77,10 +88,18 @@ class Example extends Component {
     });
   };
 
+  /**
+   * 绘制深圳市各区标识
+   * @return undefined
+   */
   handleMarkerClick = () => {
     alert("123");
   };
 
+  /**
+   * 绘制深圳市各区标识
+   * @return undefined
+   */
   drawMarkers = (eventHandler) => {
     const EXAMPLE_URL =
       "http://api.map.baidu.com/library/MarkerClusterer/1.2/examples/";
@@ -114,14 +133,26 @@ class Example extends Component {
     );
   };
 
+  /**
+   * 绘制深圳市各区标识
+   * @return undefined
+   */
   handleBackLevelClick = () => {
     this.mapInstance.backLevel();
   };
 
+  /**
+   * 绘制深圳市各区标识
+   * @return undefined
+   */
   handleSearchChange = (e) => {
     this.setState({ searchText: e.target.value });
   };
 
+  /**
+   * 绘制深圳市各区标识
+   * @return undefined
+   */
   handleSearchClick = () => {
     const { searchText } = this.state;
 

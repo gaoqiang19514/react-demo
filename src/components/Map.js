@@ -19,8 +19,8 @@ function createMarker(point, options) {
   return new window.BMap.Marker(point, options);
 }
 
-function createPoint(longitude, latitude) {
-  return new window.BMap.Point(longitude, latitude);
+function createPoint(coordinate) {
+  return new window.BMap.Point(...coordinate);
 }
 
 function createPolygon(pointList) {
@@ -45,10 +45,18 @@ class Map extends Component {
     this.initialize();
   }
 
+  /**
+   * 绘制深圳市各区标识
+   * @return undefined
+   */
   setRef(ref) {
     this.ref = ref;
   }
 
+  /**
+   * 绘制深圳市各区标识
+   * @return undefined
+   */
   initialize() {
     this.map = new window.BMap.Map(this.ref);
     const point = new window.BMap.Point(
@@ -78,6 +86,10 @@ class Map extends Component {
     });
   }
 
+  /**
+   * 绘制深圳市各区边界线
+   * @return undefined
+   */
   loadAreaBoundaryLine(deptCode) {
     axios
       .post("/zfzh-service/webapi/resourceMap/areaChildrenByDeptCode", {
@@ -98,6 +110,10 @@ class Map extends Component {
       .catch(console.error);
   }
 
+  /**
+   * 绘制深圳市各区标识
+   * @return undefined
+   */
   drawAreaBoundaryLine(list) {
     let pointArray = [];
 
@@ -147,16 +163,10 @@ class Map extends Component {
       .catch(console.error);
   };
 
-  drawPolygon(arr) {
-    const ply = new window.BMap.Polygon(arr, {
-      strokeWeight: 2,
-      fillOpacity: 0,
-      strokeColor: "#3E9BEF",
-    });
-
-    this.map.addOverlay(ply);
-  }
-
+  /**
+   * 绘制深圳市各区标识
+   * @return undefined
+   */
   backLevel = () => {
     const item = this.currentAreaList.pop();
 
@@ -168,10 +178,18 @@ class Map extends Component {
     this.drawAreaBoundaryLine(getLastItemInArray(this.currentAreaList));
   };
 
+  /**
+   * 绘制深圳市各区标识
+   * @return undefined
+   */
   initEvents() {
     this.map.addEventListener("dblclick", this.handleClick);
   }
 
+  /**
+   * 绘制深圳市各区标识
+   * @return undefined
+   */
   handleClick = ({ point }) => {
     let target = null;
 
@@ -194,11 +212,16 @@ class Map extends Component {
     }
   };
 
+  /**
+   * 绘制单个marker
+   * @param {Array} coordinate
+   * @param {Object} options
+   * @return {Object}
+   */
   addMarker(coordinate, options = {}) {
     const { map } = this;
 
-    const point = createPoint(coordinate[0], coordinate[1]);
-    const marker = createMarker(point, options);
+    const marker = createMarker(createPoint(coordinate), options);
 
     map.addOverlay(marker);
 
@@ -210,8 +233,34 @@ class Map extends Component {
     };
   }
 
-  addPolyline(pointList, options = {}) {
+  /**
+   * 绘制一组marker
+   * @param {Array} coordinateList
+   * @param {Object} options
+   * @return {Array}
+   */
+  addMarkers(coordinateList, options) {
+    const markerList = [];
+
+    coordinateList.forEach((coordinate) => {
+      markerList.push(this.addMarker(coordinate, options));
+    });
+
+    return markerList;
+  }
+
+  /**
+   * 绘制单根线条
+   * @param {Array} coordinateList [[124.12, 24,12], [123.12, 24.22]]
+   * @param {Object} options
+   * @return {Object}
+   */
+  addPolyline(coordinateList, options = {}) {
     const { map } = this;
+
+    const pointList = coordinateList.map((coordinate) =>
+      createPoint(coordinate)
+    );
 
     const polyline = new window.BMap.Polyline(pointList, options);
 
@@ -225,14 +274,37 @@ class Map extends Component {
     };
   }
 
+  /**
+   * 绘制一组线条
+   * @param {Array} coordinateList [[[124.12, 24,12], [123.12, 24.22]], [[124.12, 24,12], [123.12, 24.22]]]
+   * @param {Object} options
+   * @return {Array}
+   */
+  addPolylines(coordinateList, options) {
+    const lineList = [];
+
+    coordinateList.forEach((coordinate) => {
+      lineList.push(this.addPolyline(coordinate, options));
+    });
+
+    return lineList;
+  }
+
+  /**
+   * 绘制单个多边形
+   * @param {Array} coordinateList [[124.12, 24,12], [123.12, 24.22]]
+   * @param {Object} options
+   * @return {Object}
+   */
   addPolygon(coordinateList, options) {
     const { map } = this;
 
-    const pointList = coordinateList.map((item) =>
-      createMarker(createPoint(item[0], item[1]))
+    const pointList = coordinateList.map((coordinate) =>
+      createMarker(createPoint(coordinate))
     );
 
     const polygon = new window.BMap.Polygon(pointList, options);
+
     map.addOverlay(polygon);
 
     return {
@@ -243,17 +315,42 @@ class Map extends Component {
     };
   }
 
-  addLabel({ longitude, latitude, content, options, callback }) {
+  /**
+   * 绘制一组多边形
+   * @param {Array} coordinateList [[[124.12, 24,12], [123.12, 24.22]], [[124.12, 24,12], [123.12, 24.22]]]
+   * @param {Object} options
+   * @return {Array}
+   */
+  addPolygons(coordinateList, options) {
+    const polygonList = [];
+
+    coordinateList.forEach((coordinate) => {
+      polygonList.push(this.addPolygon(coordinate, options));
+    });
+
+    return polygonList;
+  }
+
+  /**
+   * 绘制单个label
+   * @param {Object} params
+   * @param {Object} globalOptions
+   * @return {Object}
+   */
+  addLabel(
+    { longitude, latitude, content, options, callback = () => {} },
+    globalOptions
+  ) {
     const { map } = this;
 
     const point = createPoint(longitude, latitude);
     const label = createLabel(content, {
       position: point,
-      ...options,
+      ...(options || globalOptions),
     });
 
     map.addOverlay(label);
-    callback && callback(label);
+    callback(label);
 
     return {
       label,
@@ -263,6 +360,26 @@ class Map extends Component {
     };
   }
 
+  /**
+   * 绘制一组label
+   * @param {Array} labels
+   * @param {Object} options
+   * @return {Array}
+   */
+  addLabels(labels, options) {
+    const labelList = [];
+
+    labels.forEach((item) => {
+      labelList.push(this.addLabel(item, options));
+    });
+
+    return labelList;
+  }
+
+  /**
+   * 绘制深圳市各区标识
+   * @return undefined
+   */
   searchText = (text) => {
     var local = new window.BMap.LocalSearch("深圳市", {
       renderOptions: { map: this.map },
@@ -270,6 +387,10 @@ class Map extends Component {
     local.search(text);
   };
 
+  /**
+   * 绘制深圳市各区标识
+   * @return undefined
+   */
   render() {
     return <div style={mapStyle} ref={this.setRef}></div>;
   }
