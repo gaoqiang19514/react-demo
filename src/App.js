@@ -3,14 +3,7 @@ import React from "react";
 import List from "./components/List";
 import Item from "./components/Item";
 import Mouse from "./components/Mouse";
-
-function Cat({ mouse }) {
-  return (
-    <>
-      {mouse.x}, {mouse.y}
-    </>
-  );
-}
+import Cat from "./components/Cat";
 
 function App() {
   const data = [

@@ -1,28 +1,27 @@
 import React from "react";
+import PropTypes from "prop-types";
 
-class Mouse extends React.Component {
-  constructor(props) {
-    super(props);
+const propTypes = {
+  render: PropTypes.func.isRequired,
+};
 
-    this.handleMouseMove = this.handleMouseMove.bind(this);
+function Mouse({ render }) {
+  const [state, setState] = React.useState({ x: 0, y: 0 });
 
-    this.state = { x: 0, y: 0 };
-  }
-
-  handleMouseMove(event) {
-    this.setState({
+  const handleMouseMove = (event) => {
+    setState({
       x: event.clientX,
       y: event.clientY,
     });
-  }
+  };
 
-  render() {
-    return (
-      <div style={{ height: "50vh" }} onMouseMove={this.handleMouseMove}>
-        {this.props.render(this.state)}
-      </div>
-    );
-  }
+  return (
+    <div style={{ height: "50vh" }} onMouseMove={handleMouseMove}>
+      {render(state)}
+    </div>
+  );
 }
+
+Mouse.propTypes = propTypes;
 
 export default Mouse;
