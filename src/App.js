@@ -1,25 +1,36 @@
-import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import React from "react";
+
+import List from "./components/List";
+import Item from "./components/Item";
+import Mouse from "./components/Mouse";
+
+function Cat({ mouse }) {
+  return (
+    <>
+      {mouse.x}, {mouse.y}
+    </>
+  );
+}
 
 function App() {
+  const data = [
+    {
+      id: 1,
+      name: "tomcat",
+    },
+    {
+      id: 2,
+      name: "lina",
+    },
+  ];
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <>
+      <Mouse render={(mouse) => <Cat mouse={mouse} />} />
+      <List
+        render={() => data.map(({ id, name }) => <Item key={id} name={name} />)}
+      />
+    </>
   );
 }
 
