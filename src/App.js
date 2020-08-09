@@ -1,25 +1,20 @@
 import React from "react";
+import Tabs, { TabPane } from "@bit/tomcat.react-components.tabs";
 
-import { With } from "./CommonContext";
-
-function Demo(props) {
-  console.log(props);
-  return <div>Demo</div>;
-}
-
-function Demo2(props) {
-  console.log(props);
-  return <div>Demo2</div>;
-}
-
-const WithDemo = With(Demo);
-const WithDemo2 = With(Demo2);
+import Demo from "./Demo";
 
 function App() {
   return (
     <div className="App">
-      <WithDemo age={30} />
-      <WithDemo2 age={31} />
+      <Tabs>
+        <TabPane key="1" title="科技">
+          科技内容
+        </TabPane>
+        <TabPane key="2" title="娱乐">
+          娱乐内容
+        </TabPane>
+      </Tabs>
+      <Demo />
     </div>
   );
 }
