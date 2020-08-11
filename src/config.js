@@ -56,7 +56,7 @@ export function getColumnDiagramOption(
   max = isRequired()
 ) {
   const topSeriesData = Object.keys(params).map((key) => ({
-    value: params[key],
+    value: params[key] === 0 ? undefined : params[key],
     label: {
       show: true,
       color: theme[key].topColor,
@@ -70,7 +70,7 @@ export function getColumnDiagramOption(
   }));
 
   const middleSeriesData = Object.keys(params).map((key) => ({
-    value: params[key],
+    value: params[key] === 0 ? undefined : params[key],
     itemStyle: {
       color: theme[key],
     },
