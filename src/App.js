@@ -2,6 +2,7 @@ import React, { Component } from "react";
 import ReactEcharts from "echarts-for-react";
 
 import { getColumnDiagramOption } from "./config";
+import EventDemo from "./components/EventDemo";
 
 const echartBoxStyle = {
   width: 300,
@@ -56,6 +57,7 @@ function App() {
   return (
     <div className="App">
       <Demo />
+      <EventDemo />
     </div>
   );
 }
