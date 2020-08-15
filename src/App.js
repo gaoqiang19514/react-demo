@@ -51,6 +51,9 @@ class App extends React.Component {
     api
       .getData({ key })
       .then((res) => {
+        if (this.isHidden(key)) {
+          return;
+        }
         // 这里还要考虑结果为空的情况
         this.draw(res.data, key);
       })
@@ -98,9 +101,30 @@ class App extends React.Component {
     });
 
     this.setState({ viewList: nextList }, () => {
-      // 这样调用会导致没有取消勾选的项目重新发起请求
-      this.init();
+      this.changeItem(key);
     });
+  };
+
+  changeItem = (key) => {
+    const { viewList } = this.state;
+    const matchItem = viewList.find((item) => item.key === key);
+
+    if (matchItem.checked) {
+      this.loadDataByKey(matchItem.key);
+    } else {
+      this.clearOverlayByKey(key);
+    }
+  };
+
+  isHidden = (key) => {
+    const { viewList } = this.state;
+    const matchItem = viewList.find((item) => item.key === key);
+
+    if (matchItem) {
+      return !matchItem.checked;
+    }
+
+    return true;
   };
 
   render() {
