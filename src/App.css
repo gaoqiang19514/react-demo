@@ -1,4 +1,11 @@
+html,
+body,
+#root {
+  height: 100%;
+}
 .App {
+  position: relative;
+  height: 100%;
   text-align: center;
 }
 
@@ -19,4 +26,13 @@
 
 .App-link {
   color: #09d3ac;
+}
+
+.top {
+  position: absolute;
+  top: 30px;
+  left: 30px;
+  z-index: 100;
+  padding: 20px;
+  background: #fff;
 }
