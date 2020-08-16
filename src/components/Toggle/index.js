@@ -9,7 +9,7 @@ function Toggle({ viewList, onChange }) {
           <input
             type="checkbox"
             checked={item.checked}
-            onChange={() => onChange(item.key)}
+            onChange={() => onChange(item.key, item.checked)}
           />
         </div>
       ))}

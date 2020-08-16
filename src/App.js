@@ -16,80 +16,85 @@ function createMapIcon(icon, width = 100, height = 100) {
   return new window.BMapGL.Icon(icon, new window.BMapGL.Size(width, height));
 }
 
-class App extends React.Component {
-  constructor(props) {
-    super(props);
+function App() {
+  let mapRef = React.useRef();
+  let mapInstanceRef = React.useRef();
+  let reactRefList = React.useRef();
+  let vueRefList = React.useRef();
 
-    this.state = {
-      viewList: [
-        { key: "react", checked: true },
-        { key: "vue", checked: true },
-      ],
-    };
-  }
+  const [viewList, setViewList] = React.useState([
+    { key: "react", checked: true },
+    { key: "vue", checked: true },
+  ]);
 
-  mapInitCallback = (map, mapInstance) => {
-    this.map = map;
-    this.mapInstance = mapInstance;
+  const mapInitCallback = (map, mapInstance) => {
+    mapRef.current = map;
+    mapInstanceRef.current = mapInstance;
 
-    this.init();
+    init();
   };
 
-  init = () => {
-    const { viewList } = this.state;
-
+  const init = () => {
     viewList.forEach((item) => {
       if (item.checked) {
-        this.loadDataByKey(item.key);
+        loadDataByKey(item.key);
       } else {
-        this.clearOverlayByKey(item.key);
+        clearOverlayByKey(item.key);
       }
     });
   };
 
-  loadDataByKey = (key) => {
+  const loadDataByKey = (key) => {
     api
       .getData({ key })
       .then((res) => {
-        if (this.isHidden(key)) {
+        if (isHidden(key)) {
           return;
         }
         // 这里还要考虑结果为空的情况
-        this.draw(res.data, key);
+        draw(res.data, key);
       })
       .catch(console.error);
   };
 
-  // 根据key采用data绘制覆盖物
-  draw = (data, key) => {
+  const draw = (data, key) => {
     if (key === "react") {
-      this.clearOverlayByKey("react");
-      this.reactRefList = this.mapInstance.drawMarkers(data, {
+      clearReact();
+      reactRefList.current = mapInstanceRef.current.drawMarkers(data, {
         icon: createMapIcon(reactIcon),
       });
     }
 
     if (key === "vue") {
-      this.clearOverlayByKey("vue");
-      this.vueRefList = this.mapInstance.drawMarkers(data, {
+      clearVue();
+      vueRefList.current = mapInstanceRef.current.drawMarkers(data, {
         icon: createMapIcon(vueIcon),
       });
     }
   };
 
-  clearOverlayByKey = (key) => {
-    if (key === "react" && this.reactRefList) {
-      this.reactRefList.forEach((item) => item.remove());
-    }
-
-    if (key === "vue" && this.vueRefList) {
-      this.vueRefList.forEach((item) => item.remove());
+  const clearReact = () => {
+    if (reactRefList.current) {
+      reactRefList.current.forEach((item) => item.remove());
     }
   };
 
-  handleChange = (key) => {
-    const { viewList } = this.state;
+  const clearVue = () => {
+    if (vueRefList.current) {
+      vueRefList.current.forEach((item) => item.remove());
+    }
+  };
 
+  const clearOverlayByKey = (key) => {
+    if (key === "react") {
+      clearReact();
+    }
+    if (key === "vue") {
+      clearVue();
+    }
+  };
+
+  const handleChange = (key, checked) => {
     const nextList = viewList.map((item) => {
       if (item.key === key) {
         return {
@@ -100,24 +105,19 @@ class App extends React.Component {
       return item;
     });
 
-    this.setState({ viewList: nextList }, () => {
-      this.changeItem(key);
-    });
+    setViewList(nextList);
+    changeItem(key, checked);
   };
 
-  changeItem = (key) => {
-    const { viewList } = this.state;
-    const matchItem = viewList.find((item) => item.key === key);
-
-    if (matchItem.checked) {
-      this.loadDataByKey(matchItem.key);
+  const changeItem = (key, checked) => {
+    if (!checked) {
+      loadDataByKey(key);
     } else {
-      this.clearOverlayByKey(key);
+      clearOverlayByKey(key);
     }
   };
 
-  isHidden = (key) => {
-    const { viewList } = this.state;
+  const isHidden = (key) => {
     const matchItem = viewList.find((item) => item.key === key);
 
     if (matchItem) {
@@ -127,20 +127,16 @@ class App extends React.Component {
     return true;
   };
 
-  render() {
-    const { viewList } = this.state;
-
-    return (
-      <div className="App">
-        <div className="top">
-          <Toggle viewList={viewList} onChange={this.handleChange} />
-        </div>
-        <div style={{ width: "100%", height: "100%" }}>
-          <Map initCallback={this.mapInitCallback} />
-        </div>
+  return (
+    <div className="App">
+      <div className="top">
+        <Toggle viewList={viewList} onChange={handleChange} />
       </div>
-    );
-  }
+      <div style={{ width: "100%", height: "100%" }}>
+        <Map initCallback={mapInitCallback} />
+      </div>
+    </div>
+  );
 }
 
 export default App;
