@@ -20,3 +20,9 @@
 .App-link {
   color: #09d3ac;
 }
+
+.editable-row .ant-form-explain {
+  position: absolute;
+  font-size: 12px;
+  margin-top: -4px;
+}
