@@ -3,6 +3,7 @@ import ReactEcharts from "echarts-for-react";
 
 import { getColumnDiagramOption } from "./config";
 import EventDemo from "./components/EventDemo";
+import NativeEcharts from "./components/NativeEcharts";
 
 const echartBoxStyle = {
   width: 300,
@@ -56,6 +57,7 @@ class Demo extends Component {
 function App() {
   return (
     <div className="App">
+      <NativeEcharts />
       <Demo />
       <EventDemo />
     </div>
