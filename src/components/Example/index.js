@@ -1,18 +1,10 @@
 import React, { Component } from "react";
 import echarts from "echarts";
-import axios from "axios";
 
+import api from "./api";
 import Map from "../Map";
 import { getChartOption } from "./config";
 import { formatWktData } from "../../utils";
-
-const API = {
-  getAreaCenterPoint: (deptCode) =>
-    axios.post("/zfzh-service/webapi/resourceMap/areaChildrenByDeptCode", {
-      coordinateType: "gcj02",
-      deptCode,
-    }),
-};
 
 const mapStyle = {
   position: "absolute",
@@ -25,7 +17,6 @@ class Example extends Component {
     super(props);
 
     this.areaChartList = [];
-    this.areaMarkerList = [];
 
     this.state = {
       searchText: "",
@@ -40,8 +31,7 @@ class Example extends Component {
     this.mapInstance = instance;
     this.map = map;
 
-    this.areaChartList = this.loadAreaChartsData();
-    this.areaMarkerList = this.loadAreaMarkersData();
+    // this.loadAreaChartsData();
   };
 
   /**
@@ -49,7 +39,8 @@ class Example extends Component {
    * @return undefined
    */
   loadAreaChartsData = () => {
-    API.getAreaCenterPoint("4403")
+    api
+      .getAreaCenterPoint("4403")
       .then((res) => {
         const { childrenList } = res.data.data;
 
@@ -57,13 +48,13 @@ class Example extends Component {
           return;
         }
 
-        this.drawEchartsLabels(childrenList);
+        this.areaChartList = this.drawEchartsLabels(childrenList);
       })
       .catch(console.error);
   };
 
   /**
-   * 绘制深圳市各区标识
+   * 绘制深圳市各区图表
    * @return undefined
    */
   drawEchartsLabels = (list) => {
@@ -73,11 +64,9 @@ class Example extends Component {
 
     list.forEach((item, index) => {
       const id = `chart-${index}`;
-      const [longitude, latitude] = formatWktData(item.wktAreaCenter);
 
       labels.push({
-        longitude,
-        latitude,
+        coordinate: formatWktData(item.wktAreaCenter),
         content: `<div id="${id}" style="width: 60px;height:150px;">chart</div>`,
         options: {
           enableMassClear: false,
@@ -105,63 +94,6 @@ class Example extends Component {
     }
 
     areaChartList.forEach((item) => item.remove());
-  };
-
-  /**
-   * 绘制深圳市各区标识
-   * @return undefined
-   */
-  loadAreaMarkersData = (callback = () => {}) => {
-    API.getAreaCenterPoint("4403")
-      .then((res) => {
-        const { childrenList } = res.data.data;
-
-        if (!childrenList.length) {
-          return;
-        }
-
-        this.drawAreaLabels(childrenList);
-      })
-      .catch(console.error);
-  };
-
-  drawAreaLabels = (list) => {
-    const labels = [];
-
-    this.clearAreaLabels();
-
-    list.forEach((item) => {
-      const [longitude, latitude] = formatWktData(item.wktAreaCenter);
-
-      labels.push({
-        longitude,
-        latitude,
-        content: `${item.areaName}`,
-        options: {
-          enableMassClear: false,
-          offset: new window.BMap.Size(-30, -150),
-        },
-        callback: (label) => {
-          label.setStyle({
-            background: "transparent",
-            border: "none",
-            padding: 0,
-          });
-        },
-      });
-    });
-
-    return this.mapInstance.addMarkers(labels);
-  };
-
-  clearAreaLabels = () => {
-    const { areaMarkerList } = this;
-
-    if (!areaMarkerList.length) {
-      return;
-    }
-
-    areaMarkerList.forEach((item) => item.remove());
   };
 
   /**

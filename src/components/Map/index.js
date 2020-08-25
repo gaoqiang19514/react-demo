@@ -1,5 +1,4 @@
 import React, { Component } from "react";
-import axios from "axios";
 
 import { formatWktData, getLastItemInArray } from "../../utils";
 import api from "../../api";
@@ -19,6 +18,11 @@ function createMarker(point, options) {
   return new window.BMap.Marker(point, options);
 }
 
+/**
+ * 创建Point实例
+ * @param {Array} coordinate
+ * @return {BMap.Point}
+ */
 function createPoint(coordinate) {
   return new window.BMap.Point(...coordinate);
 }
@@ -106,7 +110,7 @@ class Map extends Component {
   }
 
   drawAreaBoundaryLine(list) {
-    const pointsList = [];
+    let pointsList = [];
 
     this.clearAreaBoundaryLine();
 
@@ -116,14 +120,14 @@ class Map extends Component {
       data.forEach((item) => {
         const points = [];
 
-        item.forEach((_item) => {
-          const point = createPoint(_item[0], _item[1]);
+        item.forEach((coordinate) => {
+          const point = createPoint(coordinate);
           points.push(point);
         });
 
         pointsList = pointsList.concat(points);
 
-        this.addPolyline(points);
+        this.addPolyline(item);
       });
     });
 
@@ -154,12 +158,15 @@ class Map extends Component {
   drawAreaLabel(list) {
     this.cleanAreaLabel();
 
-    const coordinateList = [];
-    list.forEach((item) => {
-      coordinateList.push(formatWktData(item.wktAreaCenter));
+    const labels = list.map((item) => {
+      return {
+        coordinate: formatWktData(item.wktAreaCenter),
+        content: item.name,
+      };
     });
 
-    this.addLabels(coordinateList, {
+    // 这种调用方式 addLabels不支持
+    this.addLabels(labels, {
       enableMassClear: false,
     });
   }
@@ -194,7 +201,7 @@ class Map extends Component {
       }
     });
 
-    if (target?.code) {
+    if (target && target.code) {
       this.loadAreaBoundaryLine(target.code);
     }
   };
@@ -340,12 +347,12 @@ class Map extends Component {
    * @return {Object}
    */
   addLabel(
-    { longitude, latitude, content, options, callback = () => {} },
+    { coordinate, content, options, callback = () => {} },
     globalOptions
   ) {
     const { map } = this;
 
-    const point = createPoint(longitude, latitude);
+    const point = createPoint(coordinate);
     const label = createLabel(content, {
       position: point,
       ...(options || globalOptions),
@@ -368,7 +375,7 @@ class Map extends Component {
    * @param {Object} options
    * @return {Array}
    */
-  addLabels(labels, options) {
+  addLabels(labels, options = {}) {
     const labelList = [];
 
     labels.forEach((item) => {
