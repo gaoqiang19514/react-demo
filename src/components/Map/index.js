@@ -15,7 +15,7 @@ const defaultProps = {
 };
 
 function createMarker(point, options) {
-  return new window.BMap.Marker(point, options);
+  return new window.BMapGL.Marker(point, options);
 }
 
 /**
@@ -24,15 +24,15 @@ function createMarker(point, options) {
  * @return {BMap.Point}
  */
 function createPoint(coordinate) {
-  return new window.BMap.Point(...coordinate);
+  return new window.BMapGL.Point(...coordinate);
 }
 
 function createPolygon(pointList) {
-  return new window.BMap.Polygon(pointList);
+  return new window.BMapGL.Polygon(pointList);
 }
 
 function createLabel(content, options) {
-  return new window.BMap.Label(content, options);
+  return new window.BMapGL.Label(content, options);
 }
 
 class Map extends Component {
@@ -63,11 +63,11 @@ class Map extends Component {
    * @return undefined
    */
   initialize() {
-    this.map = new window.BMap.Map(this.ref);
+    this.map = new window.BMapGL.Map(this.ref);
     this.map.enableScrollWheelZoom(true);
     this.map.disableDoubleClickZoom();
     this.map.centerAndZoom(
-      new window.BMap.Point(this.props.center[0], this.props.center[1]),
+      new window.BMapGL.Point(this.props.center[0], this.props.center[1]),
       this.props.zoom
     );
     this.map.setMapStyleV2({
@@ -195,7 +195,7 @@ class Map extends Component {
       );
 
       if (
-        window.BMapLib.GeoUtils.isPointInPolygon(point, createPolygon(points))
+        window.BMapGLLib.GeoUtils.isPointInPolygon(point, createPolygon(points))
       ) {
         target = item;
       }
@@ -271,7 +271,7 @@ class Map extends Component {
       createPoint(coordinate)
     );
 
-    const polyline = new window.BMap.Polyline(pointList, options);
+    const polyline = new window.BMapGL.Polyline(pointList, options);
 
     map.addOverlay(polyline);
 
@@ -312,7 +312,7 @@ class Map extends Component {
       createMarker(createPoint(coordinate))
     );
 
-    const polygon = new window.BMap.Polygon(pointList, options);
+    const polygon = new window.BMapGL.Polygon(pointList, options);
 
     map.addOverlay(polygon);
 
