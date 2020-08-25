@@ -589,9 +589,10 @@ var BMapLib = window.BMapLib = BMapLib || {};
         this._clusterMarker.setText(this._markers.length);
 
         var thatMap = this._map;
-        var thatBounds = this.getBounds();
+		var thatBounds = this.getBounds();
+		var points = this.getViewPoints()
         this._clusterMarker.addEventListener("click", function(event){
-            thatMap.setViewport(thatBounds);
+            thatMap.setViewport(points);
         });
 
     };
@@ -614,12 +615,25 @@ var BMapLib = window.BMapLib = BMapLib || {};
      * @return {BMapGL.Bounds} 计算出的范围。
      */
     Cluster.prototype.getBounds = function() {
-        var bounds = new BMapGL.Bounds(this._center,this._center);
+		var bounds = new BMapGL.Bounds(this._center,this._center);
         for (var i = 0, marker; marker = this._markers[i]; i++) {
             bounds.extend(marker.getPosition());
-        }
+		}
         return bounds;
     };
+
+	/**
+     * 获取该聚合所包含的所有标记的最小外接矩形的范围。
+     * @return {BMapGL.Bounds} 计算出的范围。
+     */
+    Cluster.prototype.getViewPoints = function() {
+		var points = [new BMapGL.Point(this._center.lng, this._center.lat)];
+        for (var i = 0, marker; marker = this._markers[i]; i++) {
+			const point = new BMapGL.Point(marker.getPosition().lng, marker.getPosition().lat)
+            points.push(point);
+		}
+        return points;
+	};
 
     /**
      * 获取该聚合的落脚点。

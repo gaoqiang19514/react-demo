@@ -63,7 +63,7 @@ class Map extends Component {
    * @return undefined
    */
   initialize() {
-    this.map = new window.BMapGL.Map(this.ref);
+    this.map = new window.BMapGL.Map(this.ref, { minZoom: 6 });
     this.map.enableScrollWheelZoom(true);
     this.map.disableDoubleClickZoom();
     this.map.centerAndZoom(
@@ -82,11 +82,30 @@ class Map extends Component {
       this.loadAreaBoundaryLine("4403");
       this.loadAreaLabel("4403");
       this.initEvents();
+      this.loadInstitution(this.map);
 
       this.initialized = true;
       this.props.mapLoaded(this, this.map);
     });
   }
+
+  loadInstitution = (map) => {
+    var MAX = 4010;
+    var markers = [];
+    var pt = null;
+    var i = 0;
+    for (; i < MAX; i++) {
+      pt = new window.BMapGL.Point(
+        Math.random() * 40 + 85,
+        Math.random() * 30 + 21
+      );
+      markers.push(new window.BMapGL.Marker(pt));
+    }
+    //最简单的用法，生成一个marker数组，然后调用markerClusterer类即可。
+    var markerClusterer = new window.BMapLib.MarkerClusterer(map, {
+      markers: markers,
+    });
+  };
 
   /**
    * 绘制深圳市各区标识
@@ -185,7 +204,8 @@ class Map extends Component {
    * 区域下钻
    * @return undefined
    */
-  handleClick = ({ point }) => {
+  handleClick = (event) => {
+    debugger;
     let target = null;
 
     getLastItemInArray(this.currentAreaLineList).forEach((item) => {
@@ -195,7 +215,10 @@ class Map extends Component {
       );
 
       if (
-        window.BMapGLLib.GeoUtils.isPointInPolygon(point, createPolygon(points))
+        window.BMapLib.GeoUtils.isPointInPolygon(
+          event.latlng,
+          createPolygon(points)
+        )
       ) {
         target = item;
       }
