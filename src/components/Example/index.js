@@ -7,7 +7,6 @@ import { getChartOption } from "./config";
 import { formatWktData } from "../../utils";
 
 const mapStyle = {
-  position: "absolute",
   width: "100%",
   height: "100%",
 };
@@ -131,7 +130,7 @@ class Example extends Component {
     return (
       <div style={mapStyle}>
         <Map mapLoaded={this.mapLoaded} />
-        <div style={{ position: "absolute", zIndex: 10, top: 0 }}>
+        {/* <div style={{ position: "absolute", zIndex: 10, top: 0 }}>
           <button type="button" onClick={this.handleBackLevelClick}>
             back level
           </button>
@@ -143,7 +142,7 @@ class Example extends Component {
           <button type="button" onClick={this.handleSearchClick}>
             搜索
           </button>
-        </div>
+        </div> */}
       </div>
     );
   }

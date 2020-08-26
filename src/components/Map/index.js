@@ -90,7 +90,7 @@ class Map extends Component {
   }
 
   loadInstitution = (map) => {
-    var MAX = 4010;
+    var MAX = 500;
     var markers = [];
     var pt = null;
     var i = 0;
@@ -99,12 +99,28 @@ class Map extends Component {
         Math.random() * 40 + 85,
         Math.random() * 30 + 21
       );
-      markers.push(new window.BMapGL.Marker(pt));
+      const marker = new window.BMapGL.Marker(pt);
+      this.map.addOverlay(marker);
+
+      var opts = {
+        width: 200, // 信息窗口宽度
+        height: 100, // 信息窗口高度
+        enableCloseOnClick: false,
+      };
+      var infoWindow = new window.BMapGL.InfoWindow(
+        "地址：北京市东城区王府井大街88号乐天银泰百货八层",
+        opts
+      ); // 创建信息窗口对象
+      marker.addEventListener("click", (event) => {
+        this.map.openInfoWindow(infoWindow, event.latLng); //开启信息窗口
+      });
+
+      markers.push(marker);
     }
-    //最简单的用法，生成一个marker数组，然后调用markerClusterer类即可。
-    var markerClusterer = new window.BMapLib.MarkerClusterer(map, {
-      markers: markers,
-    });
+    // //最简单的用法，生成一个marker数组，然后调用markerClusterer类即可。
+    // var markerClusterer = new window.BMapLib.MarkerClusterer(map, {
+    //   markers: markers,
+    // });
   };
 
   /**
@@ -198,6 +214,11 @@ class Map extends Component {
    */
   initEvents() {
     this.map.addEventListener("dblclick", this.handleClick);
+    this.map.addEventListener("click", (event) => {
+      if (event.target.className !== "BMap_Marker BMap_noprint") {
+        this.map.closeInfoWindow();
+      }
+    });
   }
 
   /**
@@ -205,7 +226,6 @@ class Map extends Component {
    * @return undefined
    */
   handleClick = (event) => {
-    debugger;
     let target = null;
 
     getLastItemInArray(this.currentAreaLineList).forEach((item) => {
