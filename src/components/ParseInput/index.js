@@ -1,10 +1,9 @@
 import React, { useState, useRef } from "react";
-import { Button } from "antd";
 
 import {
-  TextRight,
+  Main,
+  MainItem,
   PaddingPrimary,
-  PaddingHorizontalPrimary,
   Textarea,
   TextareaBox,
 } from "./styled";
@@ -12,7 +11,7 @@ import Display from "../Display";
 
 function ParseInput() {
   const ref = useRef(null);
-  const [dataSource, setDataSource] = useState("");
+  const [dataSource, setDataSource] = useState([]);
 
   const onInput = (e) => {
     setDataSource(parseString(e.target.value));
@@ -55,21 +54,20 @@ function ParseInput() {
   };
 
   return (
-    <div>
-      <PaddingPrimary>
-        <TextareaBox>
-          <Textarea ref={ref} onInput={onInput} />
-        </TextareaBox>
-      </PaddingPrimary>
-      <PaddingHorizontalPrimary>
-        <TextRight>
-          <Button type="primary">计算</Button>
-        </TextRight>
-      </PaddingHorizontalPrimary>
-      <PaddingPrimary>
-        <Display dataSource={dataSource} />
-      </PaddingPrimary>
-    </div>
+    <Main>
+      <MainItem>
+        <PaddingPrimary>
+          <TextareaBox>
+            <Textarea ref={ref} onInput={onInput} />
+          </TextareaBox>
+        </PaddingPrimary>
+      </MainItem>
+      <MainItem>
+        <PaddingPrimary>
+          <Display dataSource={dataSource} />
+        </PaddingPrimary>
+      </MainItem>
+    </Main>
   );
 }
 

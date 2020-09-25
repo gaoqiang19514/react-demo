@@ -28,7 +28,13 @@ const defaultProps = {
 function Display(props) {
   const { dataSource } = props;
 
-  return <Table columns={columns} dataSource={dataSource} />;
+  return (
+    <Table
+      columns={columns}
+      dataSource={dataSource}
+      pagination={{ defaultPageSize: 1000, hideOnSinglePage: true }}
+    />
+  );
 }
 
 Display.propTypes = propTypes;

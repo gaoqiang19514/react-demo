@@ -28,3 +28,12 @@ export const TextareaBox = styled.div`
   border: 2px dashed #ccc;
   padding: 20px;
 `;
+
+export const Main = styled.div`
+  display: flex;
+  justify-content: space-between;
+`;
+
+export const MainItem = styled.div`
+  flex: 1;
+`;
