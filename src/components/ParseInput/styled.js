@@ -14,7 +14,7 @@ export const TextRight = styled.div`
 
 export const Textarea = styled.textarea`
   width: 100%;
-  height: 300px;
+  height: 100%;
   padding: 0;
   border: none;
   font-size: 16px;
@@ -27,13 +27,26 @@ export const Textarea = styled.textarea`
 export const TextareaBox = styled.div`
   border: 2px dashed #ccc;
   padding: 20px;
+  height: 100%;
+`;
+
+export const TextareaOutBox = styled.div`
+  padding: 20px;
+  height: 100%;
+`;
+
+export const Aside = styled.div`
+  position: fixed;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  width: 300px;
 `;
 
 export const Main = styled.div`
-  display: flex;
-  justify-content: space-between;
+  margin-left: 300px;
 `;
 
-export const MainItem = styled.div`
-  flex: 1;
+export const DisplayBox = styled.div`
+  padding: 20px 20px 20px 0;
 `;

@@ -2,10 +2,11 @@ import React, { useState, useRef } from "react";
 
 import {
   Main,
-  MainItem,
-  PaddingPrimary,
+  Aside,
+  DisplayBox,
   Textarea,
   TextareaBox,
+  TextareaOutBox,
 } from "./styled";
 import Display from "../Display";
 
@@ -45,6 +46,7 @@ function ParseInput() {
     });
 
     const result = Object.keys(newestNameSpace).map((key, index) => ({
+      id: index + 1,
       serial: index + 1,
       name: key,
       count: newestNameSpace[key],
@@ -54,20 +56,20 @@ function ParseInput() {
   };
 
   return (
-    <Main>
-      <MainItem>
-        <PaddingPrimary>
+    <>
+      <Aside>
+        <TextareaOutBox>
           <TextareaBox>
             <Textarea ref={ref} onInput={onInput} />
           </TextareaBox>
-        </PaddingPrimary>
-      </MainItem>
-      <MainItem>
-        <PaddingPrimary>
+        </TextareaOutBox>
+      </Aside>
+      <Main>
+        <DisplayBox>
           <Display dataSource={dataSource} />
-        </PaddingPrimary>
-      </MainItem>
-    </Main>
+        </DisplayBox>
+      </Main>
+    </>
   );
 }
 
