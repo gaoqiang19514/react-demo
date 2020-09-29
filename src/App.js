@@ -9,9 +9,10 @@ import styled from "styled-components";
 // import DatePickerExample from "./components/DatePickerExample";
 // import RangePickerExample from "./components/RangePickerExample";
 import EditableTable from "./components/EditableTable";
+import CalendarDemo from "./components/CalendarDemo";
 
 const PageContainer = styled.div`
-  margin: 30px;
+  padding: 30px;
 `;
 
 function App() {
@@ -50,7 +51,7 @@ function App() {
   ];
   return (
     <PageContainer>
-      <EditableTable columns={columns} dataSource={dataSource} />
+      {/* <EditableTable columns={columns} dataSource={dataSource} /> */}
       {/* <h2>禁用日期</h2> */}
       {/* <DatePickerExample /> */}
       {/* <h2>禁用日期和时间</h2> */}
@@ -65,6 +66,7 @@ function App() {
       <ListViewExample />
       <h2>TreeExample</h2>
       <TreeExample /> */}
+      <CalendarDemo />
     </PageContainer>
   );
 }
