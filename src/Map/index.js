@@ -27,7 +27,7 @@ class Map extends Component {
 
   setup() {
     this.map = new window.AMap.Map(this.ref, {
-      zoom: 10,
+      zoom: 3,
       mapStyle: "amap://styles/589c48e75fa983f0fe682837ff5077f1",
     });
     this.map.setStatus({ doubleClickZoom: false });
@@ -60,7 +60,15 @@ class Map extends Component {
       div.style.height = "24px";
 
       div.onclick = () => {
-        console.log("event", context);
+        const markers = context.clusterData.map((item) =>
+          createMarker(item.lnglat.lng, item.lnglat.lat)
+        );
+
+        this.map.setFitView(
+          markers, // 覆盖物数组
+          true, // 动画过渡到指定位置
+          [60, 60, 60, 60] // 周围边距，上、下、左、右
+        );
       };
 
       context.marker.setOffset(new window.AMap.Pixel(-20 / 2, -24 / 2));
