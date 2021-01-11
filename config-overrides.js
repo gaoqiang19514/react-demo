@@ -2,9 +2,14 @@ const path = require("path");
 const { override } = require("customize-cra");
 
 module.exports = function override(config, env) {
-  const ratio1 = path.resolve(__dirname, "./src/ratio1.scss");
-  const ratio2 = path.resolve(__dirname, "./src/ratio2.scss");
-  console.log("process", process);
+  const sassFilePath = path.resolve(
+    __dirname,
+    `./src/ratio${process.env.npm_config_PAGE_RATIO}.scss`
+  );
+
+  // if (!isValidFilePath(sassFilePath)) {
+  //   throw new Error("文件路径不存在");
+  // }
 
   config.module.rules.push({
     test: /\.scss$/,
@@ -12,7 +17,7 @@ module.exports = function override(config, env) {
       {
         loader: "sass-resources-loader",
         options: {
-          resources: [ratio2],
+          resources: [sassFilePath],
         },
       },
     ],

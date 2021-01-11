@@ -9,7 +9,8 @@
     "why-did-you-update": "^0.1.1"
   },
   "scripts": {
-    "start": "react-app-rewired start -- --TOM=CAT",
+    "start": "react-app-rewired start",
+    "go": "npm run start --PAGE_RATIO=2",
     "build": "react-app-rewired build",
     "test": "react-app-rewired test",
     "eject": "react-scripts eject"
@@ -30,7 +31,9 @@
     ]
   },
   "devDependencies": {
+    "customize-cra": "^1.0.0",
     "node-sass": "^4.14.1",
+    "react-app-rewired": "^2.1.8",
     "sass-resources-loader": "^2.1.1"
   }
 }
