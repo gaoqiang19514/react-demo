@@ -10,9 +10,9 @@
   },
   "scripts": {
     "start": "react-app-rewired start",
-    "go:start": "npm run start --PAGE_RATIO=2",
+    "start-ratio1": "npm run start --PAGE_RATIO=1",
+    "start-ratio2": "npm run start --PAGE_RATIO=2",
     "build": "react-app-rewired build",
-    "go:build": "npm run build --PAGE_RATIO=1",
     "test": "react-app-rewired test",
     "eject": "react-scripts eject"
   },
