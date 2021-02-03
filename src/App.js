@@ -1,25 +1,30 @@
-import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import React from "react";
+import { Router, Route, Link } from "react-router-dom";
+import { createBrowserHistory } from "history";
+
+const customHistory = createBrowserHistory();
+
+function Notice() {
+  return <>Notice</>;
+}
+
+function NoticeDetail() {
+  return <>NoticeDetail</>;
+}
 
 function App() {
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
+    <Router history={customHistory}>
+      <header>
+        <Link to="/notice">公告列表</Link>
+        <Link to="/notice/1">查看详情</Link>
       </header>
-    </div>
+
+      <main>
+        <Route path="/notice" exact component={Notice} />
+        <Route path="/notice/:id" component={NoticeDetail} />
+      </main>
+    </Router>
   );
 }
 
