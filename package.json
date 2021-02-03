@@ -6,6 +6,7 @@
     "react": "^16.12.0",
     "react-dom": "^16.12.0",
     "react-scripts": "3.2.0",
+    "swiper": "^6.4.10",
     "why-did-you-update": "^0.1.1"
   },
   "scripts": {

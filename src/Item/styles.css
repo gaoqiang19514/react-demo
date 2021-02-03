@@ -1,0 +1,13 @@
+.wrap {
+  margin: 10px;
+  box-sizing: border-box;
+}
+
+.item {
+  line-height: 200px;
+  background: #ccc;
+}
+
+.swiper-slide .wrap.active {
+  border: 2px solid red;
+}
