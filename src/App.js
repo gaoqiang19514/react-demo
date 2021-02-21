@@ -1,10 +1,10 @@
 import React from "react";
 import { Route, Switch, Redirect, Link, useLocation } from "react-router-dom";
+import { TransitionGroup, CSSTransition } from "react-transition-group";
 
 import "./App.css";
 import jpg1 from "./1.jpg";
 import jpg2 from "./2.jpg";
-import TransitionRoute from "./TransitionRoute";
 
 function Home() {
   return (
@@ -34,13 +34,23 @@ function App() {
   let location = useLocation();
 
   return (
-    <TransitionRoute location={location}>
-      <Switch location={location}>
-        <Route path="/home" component={Home} />
-        <Route path="/about" component={About} />
-        <Redirect to="/home" />
-      </Switch>
-    </TransitionRoute>
+    <TransitionGroup>
+      <CSSTransition
+        key={location.key}
+        classNames="fade"
+        timeout={450}
+        onEntered={(arg1, arg2) => {
+          console.log("arg1", arg1);
+          console.log("arg2", arg2);
+        }}
+      >
+        <Switch location={location}>
+          <Route path="/home" component={Home} />
+          <Route path="/about" component={About} />
+          <Redirect to="/home" />
+        </Switch>
+      </CSSTransition>
+    </TransitionGroup>
   );
 }
 
