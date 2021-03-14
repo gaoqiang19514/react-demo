@@ -1,9 +1,8 @@
 import React from 'react';
 import logo from './logo.svg';
 import './App.css';
-import './App.scss';
 
-import List from './components/List';
+import List from '@/components/List';
 
 function App() {
     return (
