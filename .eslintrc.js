@@ -1,3 +1,3 @@
 module.exports = {
-    extends: ['eslint-config-react-zerod'],
+    extends: ['eslint-config-zerod'],
 };
