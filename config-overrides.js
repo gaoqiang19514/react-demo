@@ -3,9 +3,12 @@ const path = require('path');
 module.exports = (config) => {
     return {
         ...config,
-        alias: {
-            ...config.resolve.alias,
-            '@': path.resolve(__dirname, 'src'),
+        resolve: {
+            ...config.resolve,
+            alias: {
+                ...config.resolve.alias,
+                '@': path.resolve(__dirname, 'src'),
+            },
         },
     };
 };
