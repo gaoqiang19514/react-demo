@@ -9,22 +9,22 @@ import App from './App';
 import * as serviceWorker from './serviceWorker';
 
 const store = createStore(rootReducer, {
-    count: 0,
+  count: 0,
 });
 
 function render() {
-    ReactDOM.render(
-        <Provider store={store}>
-            <App />
-        </Provider>,
-        document.getElementById('root'),
-    );
+  ReactDOM.render(
+    <Provider store={store}>
+      <App />
+    </Provider>,
+    document.getElementById('root'),
+  );
 }
 
 render();
 
 module.hot.accept('./App', () => {
-    render();
+  render();
 });
 
 // If you want your app to work offline and load faster, you can change

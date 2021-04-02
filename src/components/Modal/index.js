@@ -10,54 +10,49 @@ const TIMEOUT = 300;
 const propTypes = { onClose: PropTypes.func, children: PropTypes.any };
 
 function Modal(props) {
-    const { onClose, children } = props;
-    const [inProp, setInProp] = useState(true);
+  const { onClose, children } = props;
+  const [inProp, setInProp] = useState(true);
 
-    const onClick = (e) => {
-        e.stopPropagation();
+  const onClick = (e) => {
+    e.stopPropagation();
 
-        setInProp(false);
+    setInProp(false);
 
-        setTimeout(() => {
-            onClose();
-        }, TIMEOUT);
-    };
+    setTimeout(() => {
+      onClose();
+    }, TIMEOUT);
+  };
 
-    return (
-        <Container>
-            <CSSTransition
-                appear
-                in={inProp}
-                timeout={TIMEOUT}
-                classNames="fade"
-            >
-                <Mask onClick={onClick}>
-                    <CloseBtn onClick={onClick}>×</CloseBtn>
-                    {children}
-                </Mask>
-            </CSSTransition>
-        </Container>
-    );
+  return (
+    <Container>
+      <CSSTransition appear in={inProp} timeout={TIMEOUT} classNames="fade">
+        <Mask onClick={onClick}>
+          <CloseBtn onClick={onClick}>×</CloseBtn>
+          {children}
+        </Mask>
+      </CSSTransition>
+    </Container>
+  );
 }
 
 Modal.propTypes = propTypes;
 
 function openModal(children) {
-    let div = document.createElement('div');
-    document.body.appendChild(div);
+  let div = document.createElement('div');
+  document.body.appendChild(div);
 
-    const onClose = () => {
-        if (!div) {
-            return;
-        }
+  const onClose = () => {
+    if (!div) {
+      return;
+    }
 
-        ReactDOM.unmountComponentAtNode(div);
-        document.body.removeChild(div);
-        div = null;
-    };
+    ReactDOM.unmountComponentAtNode(div);
+    document.body.removeChild(div);
+    div = null;
+  };
 
-    // 调出弹层
-    ReactDOM.render(<Modal onClose={onClose}>{children}</Modal>, div);
+  // 调出弹层
+  ReactDOM.render(<Modal onClose={onClose}>{children}</Modal>, div);
 }
 
 export { openModal };

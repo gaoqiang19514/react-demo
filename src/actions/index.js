@@ -2,13 +2,13 @@ export const INCREMENT = 'increment';
 export const DECREMENT = 'decrement';
 
 export function onIncrement() {
-    return {
-        type: INCREMENT,
-    };
+  return {
+    type: INCREMENT,
+  };
 }
 
 export function onDecrement() {
-    return {
-        type: DECREMENT,
-    };
+  return {
+    type: DECREMENT,
+  };
 }
