@@ -36,7 +36,7 @@
     ]
   },
   "devDependencies": {
-    "eslint-config-tomcat": "^1.0.2",
+    "eslint-config-tomcat": "^1.0.6",
     "react-app-rewired": "^2.1.8"
   }
 }
