@@ -70,6 +70,18 @@ function App() {
       imageryProviderViewModels: getImageryProviderArr(), // 地图底图
       terrainProviderViewModels: getTerrainProviderViewModelsArr(),
     });
+
+    // Entity方式
+    const entity = viewer.entities.add({
+      name: '点',
+      position: window.Cesium.Cartesian3.fromDegrees(116.308659, 30.914005),
+      point: {
+        color: new window.Cesium.Color.fromCssColorString('yellow'),
+        pixelSize: 10,
+        outlineColor: new window.Cesium.Color.fromCssColorString('#ffffff'),
+        outlineWidth: 2,
+      },
+    });
   }, []);
   return (
     <div className="App">
