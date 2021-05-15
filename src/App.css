@@ -22,3 +22,15 @@
 .App-link {
   color: #09d3ac;
 }
+
+.play-btn {
+  width: 30px;
+  height: 30px;
+  background: url(./voice_off.svg);
+  background-size: 30px 30px;
+}
+
+.play-btn.active {
+  background: url(./voice_on.svg);
+  background-size: 30px 30px;
+}
