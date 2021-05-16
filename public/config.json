@@ -1,0 +1,79 @@
+{
+  "map3d": {
+    "homeButton": true,
+    "sceneModePicker": true,
+    "navigationHelpButton": true,
+    "infoBox": true,
+    "vrButton": true,
+    "fullscreenButton": true,
+    "geocoder": true,
+    "geocoderConfig": {
+      "key": ["ae29a37307840c7ae4a785ac905927e0"],
+      "citycode": ""
+    },
+    "baseLayerPicker": true,
+    "center": {
+      "y": 22.63,
+      "x": 114.07
+    },
+
+    "style": {
+      "atmosphere": true,
+      "lighting": false,
+      "fog": false,
+      "testTerrain": false
+    },
+    "contextmenu": true,
+    "mouseZoom": true,
+    "navigation": {
+      "legend": { "right": "10px !important", "bottom": "-1px" },
+      "compass": { "top": "50px", "right": "5px" }
+    },
+    "terrain": {
+      "url": "http://data.marsgis.cn/terrain",
+      "visible": false
+    },
+    "basemaps": [
+      {
+        "id": 10,
+        "name": "地图底图",
+        "type": "group"
+      },
+      {
+        "name": "高德电子(GCJ02偏移)",
+        "type": "group",
+        "icon": "img/basemaps/gaode_vec.png",
+        "crs": "gcj",
+        "layers": [
+          { "name": "底图", "type": "www_gaode", "layer": "vec_d" },
+          { "name": "注记", "type": "www_gaode", "layer": "vec_z" }
+        ]
+      }
+    ],
+    "operationallayers": [
+      {
+        "name": "行政区划界线",
+        "type": "xyz",
+        "url": "https://t{s}.tianditu.gov.cn/DataServer?T=ibo_w&x={x}&y={y}&l={z}&tk=56b81006f361f6406d0e940d2f89a39c",
+        "subdomains": "01234567",
+        "maximumLevel": 10,
+        "visible": true
+      },
+      {
+        "pid": 10,
+        "name": "天地图注记",
+        "type": "www_tdt",
+        "layer": "img_z",
+        "key": [
+          "313cd4b28ed520472e8b43de00b2de56",
+          "83b36ded6b43b9bc81fbf617c40b83b5",
+          "0ebd57f93a114d146a954da4ecae1e67",
+          "6c99c7793f41fccc4bd595b03711913e",
+          "56b81006f361f6406d0e940d2f89a39c"
+        ],
+        "visible": false
+      },
+      { "type": "custom_graticule", "name": "经纬网" }
+    ]
+  }
+}

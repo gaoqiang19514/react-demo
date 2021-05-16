@@ -1,85 +1,76 @@
 import React, { useEffect } from 'react';
-import logo from './logo.svg';
 
 import './App.css';
 
-const key = [
-  '313cd4b28ed520472e8b43de00b2de56',
-  '83b36ded6b43b9bc81fbf617c40b83b5',
-  '0ebd57f93a114d146a954da4ecae1e67',
-  '6c99c7793f41fccc4bd595b03711913e',
-  '56b81006f361f6406d0e940d2f89a39c',
-];
-
-// 获取自定义底图切换
-function getImageryProviderArr() {
-  const providerViewModels = [];
-
-  // EPSG3857 web墨卡托
-  const imgModel = new window.Cesium.ProviderViewModel({
-    name: '高德影像',
-    tooltip: '高德影像地图服务',
-    iconUrl: logo,
-    creationFunction: () => {
-      return [
-        window.vusd.layer.createImageryProvider({
-          type: 'www_gaode',
-          layer: 'img_d',
-        }),
-        window.vusd.layer.createImageryProvider({
-          type: 'www_gaode',
-          layer: 'img_z',
-        }),
-      ];
-    },
-  });
-  providerViewModels.push(imgModel);
-
-  return providerViewModels;
-}
-
-function getTerrainProviderViewModelsArr() {
-  return [
-    new window.Cesium.ProviderViewModel({
-      name: '无地形',
-      tooltip: 'WGS84标准球体',
-      iconUrl: logo,
-      creationFunction: () => {
-        return new window.Cesium.EllipsoidTerrainProvider({
-          ellipsoid: window.Cesium.Ellipsoid.WGS84,
-        });
-      },
-    }),
-  ];
+function createPosition(lng, lat, z = 0) {
+  return window.Cesium.Cartesian3.fromDegrees(lng, lat, z);
 }
 
 function App() {
   useEffect(() => {
-    const viewer = new window.Cesium.Viewer('cesiumContainer', {
-      animation: false, // 是否创建动画小器件，左下角仪表
-      timeline: false, // 是否显示时间线控件
-      fullscreenButton: false, // 右下角全屏按钮
-      vrButton: false, // 右下角vr虚拟现实按钮
+    const defaultSetting = {
+      // 动画控件
+      animation: false,
+      // 时间轴控件
+      timeline: false,
+      // 是否显示全屏按钮
+      fullscreenButton: false,
+      // 底图切换
+      baseLayerPicker: false,
+      // 首页跳转控件
+      homeButton: false,
+      // 2D和3D切换控件
+      sceneModePicker: false,
+      sceneMode: window.Cesium.SceneMode.SCENE2D,
+      // 地理位置搜索控件
+      geocoder: false,
+      // 帮助提示控件
+      navigationHelpButton: false,
+    };
 
-      geocoder: false, // 是否显示地名查找控件
-      sceneModePicker: true, // 是否显示投影方式控件
-      homeButton: true, // 回到默认视域按钮
-      navigationHelpButton: false, // 是否显示帮助信息控件
-
-      baseLayerPicker: true, // 是否显示图层选择控件
-      imageryProviderViewModels: getImageryProviderArr(), // 地图底图
-      terrainProviderViewModels: getTerrainProviderViewModelsArr(),
+    // 创建底图·
+    const imageryProvider = window.vusd.layer.createImageryProvider({
+      type: 'www_gaode',
+      layer: 'vec',
     });
 
-    // Entity方式
+    // 构造地球
+    const viewer = new window.Cesium.Viewer('cesiumContainer', {
+      ...defaultSetting,
+      imageryProvider,
+    });
+
+    // 定位中心点和高度
+    viewer.camera.setView({
+      destination: createPosition(114.113702, 22.6208, 100000),
+    });
+
+    // 添加图片点位
     const entity = viewer.entities.add({
-      name: '点',
-      position: window.Cesium.Cartesian3.fromDegrees(116.308659, 30.914005),
-      point: {
-        color: new window.Cesium.Color.fromCssColorString('yellow'),
-        pixelSize: 10,
-        outlineColor: new window.Cesium.Color.fromCssColorString('#ffffff'),
+      name: '标点',
+      position: Cesium.Cartesian3.fromDegrees(114.113702, 22.6208),
+      billboard: {
+        image: './acting.png',
+        horizontalOrigin: Cesium.HorizontalOrigin.CENTER,
+        verticalOrigin: Cesium.VerticalOrigin.BOTTOM,
+        scale: 1,
+      },
+    });
+
+    // 添加文字点位
+    viewer.entities.add({
+      position: createPosition(114.113702, 22.6208),
+      label: {
+        text: '<div>123</div>',
+        font: '14pt Source Han Sans CN', //字体样式
+        fillColor: window.Cesium.Color.BLACK, //字体颜色
+        backgroundColor: window.Cesium.Color.AQUA, //背景颜色
+        showBackground: true, //是否显示背景颜色
+        style: window.Cesium.LabelStyle.FILL, //label样式
         outlineWidth: 2,
+        verticalOrigin: window.Cesium.VerticalOrigin.CENTER, //垂直位置
+        horizontalOrigin: window.Cesium.HorizontalOrigin.LEFT, //水平位置
+        pixelOffset: new window.Cesium.Cartesian2(10, 0), //偏移
       },
     });
   }, []);
@@ -91,3 +82,10 @@ function App() {
 }
 
 export default App;
+
+// ProviderViewModel和imageryProvider有什么区别？
+// imageryProvider指的是底图（瓦片）
+
+// billboard可以实现哪些工呢？
+
+// 什么对象可以实现可以传入html并且绑定点击事件的点位？
