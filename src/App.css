@@ -1,24 +1,21 @@
 @import '~antd/dist/antd.css';
 
+html,
+body,
+#root,
 .App {
-  padding: 30px;
+  height: 100%;
 }
 
-.App-logo {
-  height: 40vmin;
+#cesiumContainer {
+  position: relative;
 }
 
-.App-header {
-  background-color: #282c34;
-  min-height: 100vh;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  font-size: calc(10px + 2vmin);
-  color: white;
-}
-
-.App-link {
-  color: #09d3ac;
+.marker {
+  position: fixed;
+  left: 999px;
+  top: 999px;
+  width: 100px;
+  height: 100px;
+  background: red;
 }
