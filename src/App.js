@@ -10,6 +10,7 @@ import TreeExample from "./components/TreeExample";
 // import RangePickerExample from "./components/RangePickerExample";
 import EditableTable from "./components/EditableTable";
 import CalendarDemo from "./components/CalendarDemo";
+import Demo from './components/Demo'
 
 const PageContainer = styled.div`
   padding: 30px;
@@ -64,9 +65,10 @@ function App() {
       {/* <TableExample /> */}
       {/* <h2>ListViewExample</h2> */}
       {/* <ListViewExample /> */}
-      <h2>TreeExample</h2>
-      <TreeExample />
+      {/* <h2>TreeExample</h2> */}
+      {/* <TreeExample /> */}
       {/* <CalendarDemo /> */}
+	  <Demo />
     </PageContainer>
   );
 }
