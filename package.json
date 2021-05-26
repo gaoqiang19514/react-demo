@@ -3,6 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
+    "@turf/turf": "^6.3.0",
     "animate.css": "^4.1.1",
     "antd": "^4.15.1",
     "axios": "^0.21.1",
@@ -50,5 +51,5 @@
     "eslint-config-tomcat": "^1.0.7",
     "react-app-rewired": "^2.1.8"
   },
-  "proxy": "http://smart.zw-dev.com"
+  "proxy": "http://gateway.szmz.zw-dev.com"
 }

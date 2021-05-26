@@ -1,14 +1,131 @@
-import React, { useEffect } from 'react';
-import html2canvas from 'html2canvas';
+import React, { useRef, useEffect } from 'react';
+import * as turf from '@turf/turf';
 
 import './App.css';
+import Api from './Api';
+import { formatWktData } from './utils';
 
 function createPosition(lng, lat, height = 0) {
   return window.Cesium.Cartesian3.fromDegrees(lng, lat, height);
 }
 
+function lngLatToCssPosition({ lngLat, viewer }) {
+  if (!Array.isArray(lngLat)) {
+    throw Error('LngLat must be array!');
+  }
+
+  if (!viewer) {
+    throw Error('viewer is not defined!');
+  }
+
+  const scratch = new window.Cesium.Cartesian2();
+  const position = window.Cesium.Cartesian3.fromDegrees(...lngLat);
+
+  return viewer.scene.cartesianToCanvasCoordinates(position, scratch);
+}
+
+function buildHTMLString(text, code) {
+  return `<div class="map-label" data-code="${code}" >${text}</div>`;
+}
+
+function appendChild(str, container = document.body) {
+  const div = document.createElement('div');
+
+  div.className = 'fixed-box';
+  div.innerHTML = str;
+
+  container.appendChild(div);
+
+  return div;
+}
+
+let labelList = [];
+
 function App() {
+  const areaList = useRef([]);
   useEffect(() => {
+    const cesiumContainer = document.getElementById('cesiumContainer');
+
+    const insertMarker = (item, viewer, cesiumContainer) => {
+      const position = lngLatToCssPosition({
+        lngLat: item.lngLat,
+        viewer,
+      });
+
+      const onClick = () => {
+        alert();
+      };
+
+      const htmlString = buildHTMLString(item.name, item.code, onClick);
+      const label = appendChild(htmlString, cesiumContainer);
+
+      return {
+        label,
+        lngLat: item.lngLat,
+        text: item.text,
+        position,
+      };
+    };
+
+    const init = (viewer, cesiumContainer) => {
+      const dataList = [
+        {
+          code: '440309',
+          name: '光明',
+          lngLat: [113.93265657682667, 22.76543620618081],
+        },
+        {
+          code: '440305',
+          name: '南山',
+          lngLat: [113.95347654074698, 22.552659769694785],
+        },
+        {
+          code: '440304',
+          name: '福田',
+          lngLat: [114.04766968954374, 22.537413265112207],
+        },
+        {
+          code: '440310',
+          name: '坪山',
+          lngLat: [114.36812060814862, 22.68173896853149],
+        },
+        {
+          code: '440312',
+          name: '大鹏',
+          lngLat: [114.4885324684609, 22.611836106753188],
+        },
+        {
+          code: '440311',
+          name: '龙华',
+          lngLat: [114.03019054856384, 22.684426829236983],
+        },
+        {
+          code: '440306',
+          name: '宝安',
+          lngLat: [113.85928339195016, 22.661130285974608],
+        },
+        {
+          code: '440307',
+          name: '龙岗',
+          lngLat: [114.23411386040749, 22.67725908358105],
+        },
+        {
+          code: '440303',
+          name: '罗湖',
+          lngLat: [114.1544866624273, 22.56700788212045],
+        },
+        {
+          code: '440308',
+          name: '盐田',
+          lngLat: [114.2681010790252, 22.59659614775933],
+        },
+      ];
+
+      labelList = dataList.map((item) =>
+        insertMarker(item, viewer, cesiumContainer),
+      );
+    };
+
     const defaultSetting = {
       // 动画控件
       animation: false,
@@ -27,6 +144,7 @@ function App() {
       geocoder: false,
       // 帮助提示控件
       navigationHelpButton: false,
+      requestRenderMode: true,
     };
 
     // 创建底图·
@@ -36,7 +154,7 @@ function App() {
     });
 
     // 构造地球
-    const viewer = new window.Cesium.Viewer('cesiumContainer', {
+    const viewer = new window.Cesium.Viewer(cesiumContainer, {
       ...defaultSetting,
       imageryProvider,
     });
@@ -45,6 +163,8 @@ function App() {
     viewer.camera.setView({
       destination: createPosition(114.113702, 22.6208, 100000),
     });
+
+    init(viewer, cesiumContainer);
 
     // 添加文字点位
     viewer.entities.add({
@@ -63,14 +183,6 @@ function App() {
       },
     });
 
-    function createMarker() {
-      const div = document.createElement('div');
-      div.id = 'marker';
-      div.className = 'marker';
-
-      return div;
-    }
-
     // html2canvas(document.getElementById('marker')).then((canvas) => {
     //   console.log('canvas', canvas);
     //   // 添加图片点位
@@ -84,19 +196,9 @@ function App() {
     //   });
     // });
 
-    const popUp = (pick, position) => {
-      const cesiumContainer = document.getElementById('cesiumContainer');
+    const popUp = (pick, position) => {};
 
-      const div = document.createElement('div');
-      div.className = 'marker';
-      div.style.top = `${position.y}px`;
-      div.style.left = `${position.x}px`;
-      div.innerHTML = 'text';
-
-      cesiumContainer.appendChild(div);
-    };
-
-    // 事件绑定
+    // 左键单击事件绑定
     viewer.screenSpaceEventHandler.setInputAction((e) => {
       const pick = viewer.scene.pick(e.position);
 
@@ -104,6 +206,39 @@ function App() {
         popUp(pick, e.position);
       }
     }, window.Cesium.ScreenSpaceEventType.LEFT_CLICK);
+
+    // 左键双击事件绑定
+    viewer.screenSpaceEventHandler.setInputAction((movement) => {
+      // 将Cartesian2.position转换为lngLat
+      function cartesian2ToLngLat(x, y) {
+        const cartesian2 = new window.Cesium.Cartesian2(x, y);
+        const cartesian3 = viewer.scene.camera.pickEllipsoid(
+          cartesian2,
+          viewer.scene.globe.ellipsoid,
+        );
+        const wgs = window.Cesium.Cartographic.fromCartesian(cartesian3);
+        const longitude = window.Cesium.Math.toDegrees(wgs.longitude);
+        const latitude = window.Cesium.Math.toDegrees(wgs.latitude);
+
+        return {
+          longitude,
+          latitude,
+        };
+      }
+
+      const { x, y } = movement.position;
+      const res = cartesian2ToLngLat(x, y);
+
+      const pointData = turf.point([res.longitude, res.latitude]);
+
+      areaList.current.forEach((item) => {
+        if (turf.booleanPointInPolygon(pointData, turf.polygon(item.list))) {
+          alert(item.name);
+        }
+      });
+
+      // 1. 根据当前坐标判断属于哪个区
+    }, window.Cesium.ScreenSpaceEventType.LEFT_DOUBLE_CLICK);
 
     viewer.scene.postRender.addEventListener(() => {
       // 这里需要拿到屏幕上存在点位的数据，然后实时更新他们的位置
@@ -113,27 +248,67 @@ function App() {
     // scene.cartesianToCanvasCoordinates to map a world position to canvas x and y values.
     // This example places and img element, but any element will work.
 
-    const marker = createMarker();
-    document.body.appendChild(marker);
-
-    const markerElem = document.getElementById('marker');
-    const scratch = new window.Cesium.Cartesian2();
     viewer.scene.preRender.addEventListener(() => {
-      const position = window.Cesium.Cartesian3.fromDegrees(
-        114.113702,
-        22.6208,
-      );
-      const canvasPosition = viewer.scene.cartesianToCanvasCoordinates(
-        position,
-        scratch,
-      );
+      labelList.forEach((item) => {
+        const { label, lngLat } = item;
 
-      if (window.Cesium.defined(canvasPosition)) {
-        markerElem.style.top = `${canvasPosition.y}px`;
-        markerElem.style.left = `${canvasPosition.x}px`;
-      }
+        const position = lngLatToCssPosition({
+          lngLat,
+          viewer,
+        });
+
+        if (!window.Cesium.defined(position)) {
+          return;
+        }
+
+        label.style.top = `${position.y}px`;
+        label.style.left = `${position.x}px`;
+      });
     });
+
+    function drawLine(lngLatList, options = {}) {
+      viewer.entities.add({
+        polyline: {
+          positions: window.Cesium.Cartesian3.fromDegreesArray(lngLatList),
+          width: 2,
+          material: window.Cesium.Color.RED,
+          ...options,
+        },
+      });
+    }
+
+    function drawAreaByCode(code) {
+      return Api.getAreaData({ id: code }).then((res) => {
+        const childrenList = res?.data?.data?.childrenList || [];
+
+        // 各区
+        const nextList = childrenList.map((area) => {
+          const list = formatWktData(area.wktPoly);
+
+          // 每个区可能存在多个独立的小块
+          list.forEach((blockList) => {
+            const lngLatList = [];
+            blockList.forEach((_item) => {
+              lngLatList.push(..._item);
+            });
+            drawLine(lngLatList);
+          });
+
+          return {
+            name: area.name,
+            list,
+          };
+        });
+
+        areaList.current = nextList;
+      });
+    }
+
+    drawAreaByCode('4403000');
+
+    console.log('turf', turf);
   }, []);
+
   return (
     <div className="App">
       <div id="cesiumContainer" className="vusd-container" />
