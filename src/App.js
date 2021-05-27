@@ -161,7 +161,7 @@ function App() {
 
     // 定位中心点和高度
     viewer.camera.setView({
-      destination: createPosition(114.113702, 22.6208, 100000),
+      destination: createPosition(114.193702, 22.6508, 120000),
     });
 
     init(viewer, cesiumContainer);
@@ -207,6 +207,60 @@ function App() {
       }
     }, window.Cesium.ScreenSpaceEventType.LEFT_CLICK);
 
+    const lineCollection = [];
+    function drawLine(lngLatList, options = {}) {
+      const line = viewer.entities.add({
+        polyline: {
+          positions: window.Cesium.Cartesian3.fromDegreesArray(lngLatList),
+          width: 3,
+          material: window.Cesium.Color.BLUE,
+          ...options,
+        },
+      });
+      lineCollection.push(line);
+    }
+
+    function drawAreaByCode(code, drawDone = () => {}) {
+      return Api.getAreaData({ id: code }).then((res) => {
+        const areaInfo = res?.data?.data?.areaInfo;
+        const childrenList = res?.data?.data?.childrenList || [];
+
+        if (childrenList?.length) {
+          // 清理已存的区划线
+          viewer.entities.removeAll();
+        }
+
+        // 各个区域
+        const nextList = childrenList.map((area) => {
+          const list = formatWktData(area.wktPoly);
+
+          // 每个区域可能存在多个独立的小块
+          list.forEach((blockList) => {
+            const lngLatList = [];
+            blockList.forEach((_item) => {
+              lngLatList.push(..._item);
+            });
+            drawLine(lngLatList);
+          });
+
+          return {
+            name: area.name,
+            code: area.code,
+            list,
+          };
+        });
+
+        if (nextList?.length) {
+          if (areaInfo.wktAreaCenter) {
+            const areaCenter = formatWktData(areaInfo.wktAreaCenter);
+            drawDone(areaCenter);
+          }
+        }
+
+        areaList.current = nextList;
+      });
+    }
+
     // 左键双击事件绑定
     viewer.screenSpaceEventHandler.setInputAction((movement) => {
       // 将Cartesian2.position转换为lngLat
@@ -231,11 +285,19 @@ function App() {
 
       const pointData = turf.point([res.longitude, res.latitude]);
 
-      areaList.current.forEach((item) => {
-        if (turf.booleanPointInPolygon(pointData, turf.polygon(item.list))) {
-          alert(item.name);
-        }
-      });
+      const matchItem = areaList.current.find((item) =>
+        turf.booleanPointInPolygon(pointData, turf.polygon(item.list)),
+      );
+
+      if (matchItem?.code) {
+        drawAreaByCode(matchItem.code, () => {
+          // 绘制完成后，主动刷新
+          viewer.scene.requestRender();
+          viewer.flyTo(lineCollection, {
+            duration: 1,
+          });
+        });
+      }
 
       // 1. 根据当前坐标判断属于哪个区
     }, window.Cesium.ScreenSpaceEventType.LEFT_DOUBLE_CLICK);
@@ -265,44 +327,6 @@ function App() {
         label.style.left = `${position.x}px`;
       });
     });
-
-    function drawLine(lngLatList, options = {}) {
-      viewer.entities.add({
-        polyline: {
-          positions: window.Cesium.Cartesian3.fromDegreesArray(lngLatList),
-          width: 2,
-          material: window.Cesium.Color.RED,
-          ...options,
-        },
-      });
-    }
-
-    function drawAreaByCode(code) {
-      return Api.getAreaData({ id: code }).then((res) => {
-        const childrenList = res?.data?.data?.childrenList || [];
-
-        // 各区
-        const nextList = childrenList.map((area) => {
-          const list = formatWktData(area.wktPoly);
-
-          // 每个区可能存在多个独立的小块
-          list.forEach((blockList) => {
-            const lngLatList = [];
-            blockList.forEach((_item) => {
-              lngLatList.push(..._item);
-            });
-            drawLine(lngLatList);
-          });
-
-          return {
-            name: area.name,
-            list,
-          };
-        });
-
-        areaList.current = nextList;
-      });
-    }
 
     drawAreaByCode('4403000');
 
