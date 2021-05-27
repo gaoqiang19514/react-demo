@@ -1,12 +1,42 @@
 import React, { useRef, useEffect } from 'react';
 import * as turf from '@turf/turf';
+import wkx from 'wkx';
 
 import './App.css';
 import Api from './Api';
 import { formatWktData } from './utils';
+import { cesiumViewerDefaultSetting } from './cesium/config';
+
+function createGeoJson(coordinates, properties) {
+  return {
+    type: 'Feature',
+    properties,
+    geometry: {
+      type: 'Polygon',
+      coordinates,
+    },
+  };
+}
 
 function createPosition(lng, lat, height = 0) {
   return window.Cesium.Cartesian3.fromDegrees(lng, lat, height);
+}
+
+// 将Cartesian2.position转换为lngLat
+function cartesian2ToLngLat(x, y, viewer) {
+  const cartesian2 = new window.Cesium.Cartesian2(x, y);
+  const cartesian3 = viewer.scene.camera.pickEllipsoid(
+    cartesian2,
+    viewer.scene.globe.ellipsoid,
+  );
+  const wgs = window.Cesium.Cartographic.fromCartesian(cartesian3);
+  const longitude = window.Cesium.Math.toDegrees(wgs.longitude);
+  const latitude = window.Cesium.Math.toDegrees(wgs.latitude);
+
+  return {
+    longitude,
+    latitude,
+  };
 }
 
 function lngLatToCssPosition({ lngLat, viewer }) {
@@ -43,6 +73,8 @@ let labelList = [];
 
 function App() {
   const areaList = useRef([]);
+  const viewerRef = useRef(null);
+
   useEffect(() => {
     const cesiumContainer = document.getElementById('cesiumContainer');
 
@@ -126,28 +158,7 @@ function App() {
       );
     };
 
-    const defaultSetting = {
-      // 动画控件
-      animation: false,
-      // 时间轴控件
-      timeline: false,
-      // 是否显示全屏按钮
-      fullscreenButton: false,
-      // 底图切换
-      baseLayerPicker: false,
-      // 首页跳转控件
-      homeButton: false,
-      // 2D和3D切换控件
-      sceneModePicker: false,
-      sceneMode: window.Cesium.SceneMode.SCENE2D,
-      // 地理位置搜索控件
-      geocoder: false,
-      // 帮助提示控件
-      navigationHelpButton: false,
-      requestRenderMode: true,
-    };
-
-    // 创建底图·
+    // 创建底图
     const imageryProvider = window.vusd.layer.createImageryProvider({
       type: 'www_gaode',
       layer: 'vec',
@@ -155,57 +166,20 @@ function App() {
 
     // 构造地球
     const viewer = new window.Cesium.Viewer(cesiumContainer, {
-      ...defaultSetting,
+      ...cesiumViewerDefaultSetting,
       imageryProvider,
     });
+    viewerRef.current = viewer;
+
+    // 显示刷新率和帧率
+    viewer.scene.debugShowFramesPerSecond = true;
 
     // 定位中心点和高度
     viewer.camera.setView({
       destination: createPosition(114.193702, 22.6508, 120000),
     });
 
-    init(viewer, cesiumContainer);
-
-    // 添加文字点位
-    viewer.entities.add({
-      position: createPosition(114.113701, 24.6208),
-      label: {
-        text: '<div>123</div>',
-        font: '14pt Source Han Sans CN',
-        fillColor: window.Cesium.Color.BLACK,
-        backgroundColor: window.Cesium.Color.AQUA,
-        showBackground: true,
-        style: window.Cesium.LabelStyle.FILL,
-        outlineWidth: 2,
-        verticalOrigin: window.Cesium.VerticalOrigin.CENTER,
-        horizontalOrigin: window.Cesium.HorizontalOrigin.LEFT,
-        pixelOffset: new window.Cesium.Cartesian2(10, 0),
-      },
-    });
-
-    // html2canvas(document.getElementById('marker')).then((canvas) => {
-    //   console.log('canvas', canvas);
-    //   // 添加图片点位
-    //   viewer.entities.add({
-    //     id: 1234,
-    //     name: '标点',
-    //     position: window.Cesium.Cartesian3.fromDegrees(114.113702, 22.6208),
-    //     billboard: {
-    //       image: 'https://img-static.mihoyo.com/mainPage/ys-logo.png',
-    //     },
-    //   });
-    // });
-
-    const popUp = (pick, position) => {};
-
-    // 左键单击事件绑定
-    viewer.screenSpaceEventHandler.setInputAction((e) => {
-      const pick = viewer.scene.pick(e.position);
-
-      if (pick) {
-        popUp(pick, e.position);
-      }
-    }, window.Cesium.ScreenSpaceEventType.LEFT_CLICK);
+    // init(viewer, cesiumContainer);
 
     const lineCollection = [];
     function drawLine(lngLatList, options = {}) {
@@ -224,6 +198,32 @@ function App() {
       return Api.getAreaData({ id: code }).then((res) => {
         const areaInfo = res?.data?.data?.areaInfo;
         const childrenList = res?.data?.data?.childrenList || [];
+
+        const geometry = wkx.Geometry.parse(areaInfo.wktPoly);
+        const geojson = {
+          ...geometry.toGeoJSON(),
+          type: 'MultiPoint',
+        };
+
+        console.log('geojson', geojson);
+
+        window.Cesium.GeoJsonDataSource.load(geojson).then((dataSource) => {
+          const entities = dataSource.entities.values;
+
+          // entities.forEach((entity) => {
+          //   entity.polyline.material = window.Cesium.Color.TRANSPARENT;
+          //   entity.polyline.outlineColor = window.Cesium.Color.YELLOW;
+          //   entity.polyline.outlineWidth = 3;
+          // });
+
+          viewer.dataSources.add(dataSource, {
+            stroke: window.Cesium.Color.HOTPINK,
+            fill: window.Cesium.Color.PINK,
+            strokeWidth: 3,
+            markerSymbol: '?',
+          });
+        });
+        return;
 
         if (childrenList?.length) {
           // 清理已存的区划线
@@ -263,28 +263,10 @@ function App() {
 
     // 左键双击事件绑定
     viewer.screenSpaceEventHandler.setInputAction((movement) => {
-      // 将Cartesian2.position转换为lngLat
-      function cartesian2ToLngLat(x, y) {
-        const cartesian2 = new window.Cesium.Cartesian2(x, y);
-        const cartesian3 = viewer.scene.camera.pickEllipsoid(
-          cartesian2,
-          viewer.scene.globe.ellipsoid,
-        );
-        const wgs = window.Cesium.Cartographic.fromCartesian(cartesian3);
-        const longitude = window.Cesium.Math.toDegrees(wgs.longitude);
-        const latitude = window.Cesium.Math.toDegrees(wgs.latitude);
-
-        return {
-          longitude,
-          latitude,
-        };
-      }
-
       const { x, y } = movement.position;
-      const res = cartesian2ToLngLat(x, y);
+      const res = cartesian2ToLngLat(x, y, viewerRef.current);
 
       const pointData = turf.point([res.longitude, res.latitude]);
-
       const matchItem = areaList.current.find((item) =>
         turf.booleanPointInPolygon(pointData, turf.polygon(item.list)),
       );
@@ -292,23 +274,13 @@ function App() {
       if (matchItem?.code) {
         drawAreaByCode(matchItem.code, () => {
           // 绘制完成后，主动刷新
-          viewer.scene.requestRender();
-          viewer.flyTo(lineCollection, {
+          viewerRef.current.scene.requestRender();
+          viewerRef.current.flyTo(lineCollection, {
             duration: 1,
           });
         });
       }
-
-      // 1. 根据当前坐标判断属于哪个区
     }, window.Cesium.ScreenSpaceEventType.LEFT_DOUBLE_CLICK);
-
-    viewer.scene.postRender.addEventListener(() => {
-      // 这里需要拿到屏幕上存在点位的数据，然后实时更新他们的位置
-    });
-
-    // To geographically place an HTML element on top of the Cesium canvas, we use
-    // scene.cartesianToCanvasCoordinates to map a world position to canvas x and y values.
-    // This example places and img element, but any element will work.
 
     viewer.scene.preRender.addEventListener(() => {
       labelList.forEach((item) => {
@@ -330,7 +302,28 @@ function App() {
 
     drawAreaByCode('4403000');
 
-    console.log('turf', turf);
+    // window.Cesium.GeoJsonDataSource.load('./sz.geojson').then(
+    //   (dataSource) => {},
+    // );
+
+    // MULTIPOLYGON转geojson
+    // var geoJSONObject = wkx.Geometry.parse().toGeoJSON();
+
+    // window.Cesium.GeoJsonDataSource.load('./sz.geojson', {
+    //   clampToGround: true,
+    // }).then((dataSource) => {
+    //   const entities = dataSource.entities.values;
+    //   // viewer.dataSources.add(dataSource);
+    //   entities.map((entity) => {
+    //     entity.polygon.material = window.Cesium.Color.TRANSPARENT;
+    //     entity.polygon.outlineColor = window.Cesium.Color.RED;
+    //     entity.polygon.height = 50;
+    //     entity.polygon.outlineWidth = 13;
+    //     entity.polygon.closeTop = false;
+
+    //     viewer.entities.add(entity);
+    //   });
+    // });
   }, []);
 
   return (
@@ -377,3 +370,21 @@ export default App;
 //     pixelOffset: new window.Cesium.Cartesian2(10, 0), //偏移
 //   },
 // });
+
+// 判断当前点击的是否为一个点位，如果是，可以进行一些后续操作，比如产出infoWindow等等
+// viewer.screenSpaceEventHandler.setInputAction((e) => {
+//   const pick = viewer.scene.pick(e.position);
+
+//   if (!pick) {
+//     return;
+//   }
+
+//   // popUp(pick, e.position);
+// }, window.Cesium.ScreenSpaceEventType.LEFT_CLICK);
+
+// viewer.scene.postRender.addEventListener(() => {
+//   // 这里需要拿到屏幕上存在点位的数据，然后实时更新他们的位置
+// });
+
+// 绘制帧事件
+// viewer.scene.preRender.addEventListener
