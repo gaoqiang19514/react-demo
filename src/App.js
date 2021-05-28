@@ -7,14 +7,23 @@ import Api from './Api';
 import { formatWktData } from './utils';
 import { cesiumViewerDefaultSetting } from './cesium/config';
 
-function createGeoJson(coordinates, properties) {
+function createPointGeojson(coordinates, properties = {}) {
+  if (!Array.isArray(coordinates)) {
+    throw new Error('createPointGeojson(): coordinates must be an array');
+  }
+
   return {
-    type: 'Feature',
-    properties,
-    geometry: {
-      type: 'Polygon',
-      coordinates,
-    },
+    type: 'FeatureCollection',
+    features: [
+      {
+        type: 'Feature',
+        properties,
+        geometry: {
+          type: 'Point',
+          coordinates,
+        },
+      },
+    ],
   };
 }
 
@@ -41,11 +50,11 @@ function cartesian2ToLngLat(x, y, viewer) {
 
 function lngLatToCssPosition({ lngLat, viewer }) {
   if (!Array.isArray(lngLat)) {
-    throw Error('LngLat must be array!');
+    throw new Error('lngLatToCssPosition(): LngLat must be an array!');
   }
 
   if (!viewer) {
-    throw Error('viewer is not defined!');
+    throw new Error('lngLatToCssPosition(): viewer is not defined!');
   }
 
   const scratch = new window.Cesium.Cartesian2();
@@ -199,65 +208,57 @@ function App() {
         const areaInfo = res?.data?.data?.areaInfo;
         const childrenList = res?.data?.data?.childrenList || [];
 
-        const geometry = wkx.Geometry.parse(areaInfo.wktPoly);
-        const geojson = {
-          ...geometry.toGeoJSON(),
-          type: 'MultiPoint',
-        };
+        // const geometry = wkx.Geometry.parse(areaInfo.wktPoly);
+        // const geojson = geometry.toGeoJSON();
+        // const multiLineString = turf.polygonToLine(geojson);
+        // window.Cesium.GeoJsonDataSource.load(multiLineString).then(
+        //   (dataSource) => {
+        //     const entities = dataSource.entities.values;
 
-        console.log('geojson', geojson);
+        //     entities.forEach((entity) => {
+        //       entity.polyline.material = window.Cesium.Color.RED;
+        //       entity.polyline.width = 2;
+        //     });
 
-        window.Cesium.GeoJsonDataSource.load(geojson).then((dataSource) => {
-          const entities = dataSource.entities.values;
+        //     viewer.dataSources.add(dataSource);
+        //   },
+        // );
 
-          // entities.forEach((entity) => {
-          //   entity.polyline.material = window.Cesium.Color.TRANSPARENT;
-          //   entity.polyline.outlineColor = window.Cesium.Color.YELLOW;
-          //   entity.polyline.outlineWidth = 3;
-          // });
-
-          viewer.dataSources.add(dataSource, {
-            stroke: window.Cesium.Color.HOTPINK,
-            fill: window.Cesium.Color.PINK,
-            strokeWidth: 3,
-            markerSymbol: '?',
-          });
-        });
-        return;
-
-        if (childrenList?.length) {
-          // 清理已存的区划线
-          viewer.entities.removeAll();
+        // 获取到了下一级数据，清理已存在的覆盖物
+        if (!childrenList?.length) {
+          return;
         }
 
-        // 各个区域
-        const nextList = childrenList.map((area) => {
-          const list = formatWktData(area.wktPoly);
+        // 清理已存的区划线
+        viewer.dataSources.removeAll();
 
-          // 每个区域可能存在多个独立的小块
-          list.forEach((blockList) => {
-            const lngLatList = [];
-            blockList.forEach((_item) => {
-              lngLatList.push(..._item);
-            });
-            drawLine(lngLatList);
-          });
+        // 各个区域
+        const temp = childrenList.map((area) => {
+          const geometry = wkx.Geometry.parse(area.wktPoly);
+          const geojson = geometry.toGeoJSON();
+
+          const multiLineString = turf.polygonToLine(geojson);
+          window.Cesium.GeoJsonDataSource.load(multiLineString).then(
+            (dataSource) => {
+              dataSource.entities.values.forEach((entity) => {
+                entity.polyline.material = window.Cesium.Color.RED;
+                entity.polyline.width = 2;
+              });
+
+              viewer.dataSources.add(dataSource);
+            },
+          );
 
           return {
             name: area.name,
             code: area.code,
-            list,
+            geojson,
           };
         });
 
-        if (nextList?.length) {
-          if (areaInfo.wktAreaCenter) {
-            const areaCenter = formatWktData(areaInfo.wktAreaCenter);
-            drawDone(areaCenter);
-          }
-        }
+        drawDone();
 
-        areaList.current = nextList;
+        areaList.current = temp;
       });
     }
 
@@ -268,13 +269,14 @@ function App() {
 
       const pointData = turf.point([res.longitude, res.latitude]);
       const matchItem = areaList.current.find((item) =>
-        turf.booleanPointInPolygon(pointData, turf.polygon(item.list)),
+        turf.booleanPointInPolygon(
+          pointData,
+          turf.multiPolygon(item.geojson.coordinates),
+        ),
       );
 
       if (matchItem?.code) {
         drawAreaByCode(matchItem.code, () => {
-          // 绘制完成后，主动刷新
-          viewerRef.current.scene.requestRender();
           viewerRef.current.flyTo(lineCollection, {
             duration: 1,
           });
@@ -300,11 +302,12 @@ function App() {
       });
     });
 
-    drawAreaByCode('4403000');
+    // drawAreaByCode('4403000');
 
-    // window.Cesium.GeoJsonDataSource.load('./sz.geojson').then(
-    //   (dataSource) => {},
-    // );
+    const pointGeojson = createPointGeojson([114.193702, 22.6508]);
+    window.Cesium.GeoJsonDataSource.load(pointGeojson).then((dataSource) => {
+      viewer.dataSources.add(dataSource);
+    });
 
     // MULTIPOLYGON转geojson
     // var geoJSONObject = wkx.Geometry.parse().toGeoJSON();
