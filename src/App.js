@@ -336,6 +336,21 @@ function App() {
     // });
   }, []);
 
+  // html点位的点击事件绑定
+  useEffect(() => {
+    document.body.addEventListener('click', (e) => {
+      const { target } = e;
+      const { className } = target;
+      const code = target.getAttribute('data-code');
+
+      if (className !== 'map-label') {
+        return;
+      }
+
+      console.log('code', code);
+    });
+  }, []);
+
   return (
     <div className="App">
       <div id="cesiumContainer" className="vusd-container" />
