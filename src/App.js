@@ -64,8 +64,8 @@ function lngLatToCssPosition({ lngLat, viewer }) {
   return viewer.scene.cartesianToCanvasCoordinates(position, scratch);
 }
 
-function buildHTMLString(text, code) {
-  return `<div class="map-label" data-code="${code}" >${text}</div>`;
+function buildHTMLString(text, code, onClick) {
+  return `<div class="map-label" data-code=${code}>${text}</div>`;
 }
 
 function appendChild(str, container = document.body) {
@@ -79,22 +79,22 @@ function appendChild(str, container = document.body) {
   return div;
 }
 
-let labelList = [];
-
 function App() {
   const areaList = useRef([]);
+  const labelListRef = useRef([]);
   const viewerRef = useRef(null);
-  const areaLineRef = useRef(null);
   const currentLevel = useRef(-1);
   const currentDataSource = useRef(null);
 
   useEffect(() => {
     const cesiumContainer = document.getElementById('cesiumContainer');
 
-    const insertMarker = (item, viewer, cesiumContainer) => {
+    const insertMarker = (item, _viewer, _cesiumContainer) => {
+      const point = wkx.Geometry.parse(item.wktAreaCenter).toGeoJSON();
+
       const position = lngLatToCssPosition({
-        lngLat: item.lngLat,
-        viewer,
+        lngLat: point.coordinates,
+        viewer: _viewer,
       });
 
       const onClick = () => {
@@ -102,72 +102,23 @@ function App() {
       };
 
       const htmlString = buildHTMLString(item.name, item.code, onClick);
-      const label = appendChild(htmlString, cesiumContainer);
+      const label = appendChild(htmlString, _cesiumContainer);
 
       return {
         label,
-        lngLat: item.lngLat,
-        text: item.text,
+        lngLat: point.coordinates,
+        text: item.name,
         position,
+        remove: () => {
+          label.remove();
+        },
       };
     };
 
-    const init = (viewer, cesiumContainer) => {
-      const dataList = [
-        {
-          code: '440309',
-          name: '光明',
-          lngLat: [113.93265657682667, 22.76543620618081],
-        },
-        {
-          code: '440305',
-          name: '南山',
-          lngLat: [113.95347654074698, 22.552659769694785],
-        },
-        {
-          code: '440304',
-          name: '福田',
-          lngLat: [114.04766968954374, 22.537413265112207],
-        },
-        {
-          code: '440310',
-          name: '坪山',
-          lngLat: [114.36812060814862, 22.68173896853149],
-        },
-        {
-          code: '440312',
-          name: '大鹏',
-          lngLat: [114.4885324684609, 22.611836106753188],
-        },
-        {
-          code: '440311',
-          name: '龙华',
-          lngLat: [114.03019054856384, 22.684426829236983],
-        },
-        {
-          code: '440306',
-          name: '宝安',
-          lngLat: [113.85928339195016, 22.661130285974608],
-        },
-        {
-          code: '440307',
-          name: '龙岗',
-          lngLat: [114.23411386040749, 22.67725908358105],
-        },
-        {
-          code: '440303',
-          name: '罗湖',
-          lngLat: [114.1544866624273, 22.56700788212045],
-        },
-        {
-          code: '440308',
-          name: '盐田',
-          lngLat: [114.2681010790252, 22.59659614775933],
-        },
-      ];
-
-      labelList = dataList.map((item) =>
-        insertMarker(item, viewer, cesiumContainer),
+    const drawAreaLabel = (_areaList, _viewer, _cesiumContainer) => {
+      labelListRef.current.forEach((item) => item.remove());
+      labelListRef.current = _areaList.map((item) =>
+        insertMarker(item, _viewer, _cesiumContainer),
       );
     };
 
@@ -192,8 +143,6 @@ function App() {
       destination: createPosition(114.193702, 22.6508, 120000),
     });
 
-    // init(viewer, cesiumContainer);
-
     const lineCollection = [];
     function drawLine(lngLatList, options = {}) {
       const line = viewer.entities.add({
@@ -207,7 +156,7 @@ function App() {
       lineCollection.push(line);
     }
 
-    function drawAreaByCode(code, drawDone = () => {}) {
+    function drillDown(code, drawDone = () => {}) {
       return Api.getAreaData({ id: code }).then((res) => {
         const childrenList = res?.data?.data?.childrenList || [];
 
@@ -261,21 +210,27 @@ function App() {
           },
         );
 
-        drawDone();
+        drawDone(childrenList);
 
         currentLevel.current += 1;
         areaList.current.push(list);
       });
     }
 
+    // 下钻流程
+    drillDown('4403000', (_areaList) => {
+      // 绘制区域label
+      drawAreaLabel(_areaList, viewer, cesiumContainer);
+    });
+
     // 左键双击事件绑定
     viewer.screenSpaceEventHandler.setInputAction((movement) => {
       const { x, y } = movement.position;
       const res = cartesian2ToLngLat(x, y, viewerRef.current);
+      const point = turf.point([res.longitude, res.latitude]);
 
       const list = areaList.current[currentLevel.current];
 
-      const point = turf.point([res.longitude, res.latitude]);
       const matchItem = list.find((item) =>
         turf.booleanPointInPolygon(
           point,
@@ -284,7 +239,9 @@ function App() {
       );
 
       if (matchItem.properties?.code) {
-        drawAreaByCode(matchItem.properties.code, () => {
+        drillDown(matchItem.properties.code, (_areaList) => {
+          // 绘制区域label
+          drawAreaLabel(_areaList, viewer, cesiumContainer);
           viewerRef.current.flyTo(currentDataSource.current, {
             duration: 1,
           });
@@ -293,7 +250,7 @@ function App() {
     }, window.Cesium.ScreenSpaceEventType.LEFT_DOUBLE_CLICK);
 
     viewer.scene.preRender.addEventListener(() => {
-      labelList.forEach((item) => {
+      labelListRef.current.forEach((item) => {
         const { label, lngLat } = item;
 
         const position = lngLatToCssPosition({
@@ -310,55 +267,54 @@ function App() {
       });
     });
 
-    drawAreaByCode('4403000');
+    // 绘制聚合点位
+    // Api.getCarData().then((res) => {
+    //   const points = res?.data[0]?.points;
 
-    Api.getCarData().then((res) => {
-      const points = res?.data[0]?.points;
+    //   const features = points.map((item) => {
+    //     const geometry = wkx.Geometry.parse(item.pointWkt).toGeoJSON();
+    //     const properties = {
+    //       id: item.reportId,
+    //     };
+    //     return {
+    //       type: 'Feature',
+    //       geometry,
+    //       properties,
+    //     };
+    //   });
 
-      const features = points.map((item) => {
-        const geometry = wkx.Geometry.parse(item.pointWkt).toGeoJSON();
-        const properties = {
-          id: item.reportId,
-        };
-        return {
-          type: 'Feature',
-          geometry,
-          properties,
-        };
-      });
+    //   const geojson = geojsonMerge.merge(features);
 
-      const geojson = geojsonMerge.merge(features);
+    //   window.Cesium.GeoJsonDataSource.load(geojson).then((dataSource) => {
+    //     const pixelRange = 15;
+    //     const minimumClusterSize = 2;
+    //     const enabled = true;
 
-      window.Cesium.GeoJsonDataSource.load(geojson).then((dataSource) => {
-        const pixelRange = 15;
-        const minimumClusterSize = 2;
-        const enabled = true;
+    //     dataSource.clustering.enabled = enabled;
+    //     dataSource.clustering.pixelRange = pixelRange;
+    //     dataSource.clustering.minimumClusterSize = minimumClusterSize;
+    //     viewer.dataSources.add(dataSource);
 
-        dataSource.clustering.enabled = enabled;
-        dataSource.clustering.pixelRange = pixelRange;
-        dataSource.clustering.minimumClusterSize = minimumClusterSize;
-        viewer.dataSources.add(dataSource);
+    //     const pinBuilder = new window.Cesium.PinBuilder();
+    //     const pin50 = pinBuilder
+    //       .fromText('50+', window.Cesium.Color.RED, 48)
+    //       .toDataURL();
 
-        const pinBuilder = new window.Cesium.PinBuilder();
-        const pin50 = pinBuilder
-          .fromText('50+', window.Cesium.Color.RED, 48)
-          .toDataURL();
+    //     dataSource.clustering.clusterEvent.addEventListener(
+    //       (clusteredEntities, cluster) => {
+    //         cluster.label.show = false;
+    //         cluster.billboard.show = true;
+    //         cluster.billboard.id = cluster.label.id;
+    //         cluster.billboard.verticalOrigin =
+    //           window.Cesium.VerticalOrigin.BOTTOM;
 
-        dataSource.clustering.clusterEvent.addEventListener(
-          (clusteredEntities, cluster) => {
-            cluster.label.show = false;
-            cluster.billboard.show = true;
-            cluster.billboard.id = cluster.label.id;
-            cluster.billboard.verticalOrigin =
-              window.Cesium.VerticalOrigin.BOTTOM;
+    //         cluster.billboard.image = pin50;
+    //       },
+    //     );
 
-            cluster.billboard.image = pin50;
-          },
-        );
-
-        // viewer.dataSources.remove(dataSource);
-      });
-    });
+    //     // viewer.dataSources.remove(dataSource);
+    //   });
+    // });
 
     // MULTIPOLYGON转geojson
     // var geoJSONObject = wkx.Geometry.parse().toGeoJSON();
