@@ -268,53 +268,54 @@ function App() {
     });
 
     // 绘制聚合点位
-    // Api.getCarData().then((res) => {
-    //   const points = res?.data[0]?.points;
+    Api.getCarData().then((res) => {
+      const points = res?.data[0]?.points;
 
-    //   const features = points.map((item) => {
-    //     const geometry = wkx.Geometry.parse(item.pointWkt).toGeoJSON();
-    //     const properties = {
-    //       id: item.reportId,
-    //     };
-    //     return {
-    //       type: 'Feature',
-    //       geometry,
-    //       properties,
-    //     };
-    //   });
+      const features = points.map((item) => {
+        const geometry = wkx.Geometry.parse(item.pointWkt).toGeoJSON();
+        const properties = {
+          id: item.reportId,
+          name: 'tomcat',
+        };
+        return {
+          type: 'Feature',
+          geometry,
+          properties,
+        };
+      });
 
-    //   const geojson = geojsonMerge.merge(features);
+      const geojson = geojsonMerge.merge(features);
 
-    //   window.Cesium.GeoJsonDataSource.load(geojson).then((dataSource) => {
-    //     const pixelRange = 15;
-    //     const minimumClusterSize = 2;
-    //     const enabled = true;
+      window.Cesium.GeoJsonDataSource.load(geojson).then((dataSource) => {
+        const pixelRange = 15;
+        const minimumClusterSize = 2;
+        const enabled = true;
 
-    //     dataSource.clustering.enabled = enabled;
-    //     dataSource.clustering.pixelRange = pixelRange;
-    //     dataSource.clustering.minimumClusterSize = minimumClusterSize;
-    //     viewer.dataSources.add(dataSource);
+        dataSource.clustering.enabled = enabled;
+        dataSource.clustering.pixelRange = pixelRange;
+        dataSource.clustering.minimumClusterSize = minimumClusterSize;
+        viewer.dataSources.add(dataSource);
 
-    //     const pinBuilder = new window.Cesium.PinBuilder();
-    //     const pin50 = pinBuilder
-    //       .fromText('50+', window.Cesium.Color.RED, 48)
-    //       .toDataURL();
+        const pinBuilder = new window.Cesium.PinBuilder();
+        const pin50 = pinBuilder
+          .fromText('50+', window.Cesium.Color.RED, 48)
+          .toDataURL();
 
-    //     dataSource.clustering.clusterEvent.addEventListener(
-    //       (clusteredEntities, cluster) => {
-    //         cluster.label.show = false;
-    //         cluster.billboard.show = true;
-    //         cluster.billboard.id = cluster.label.id;
-    //         cluster.billboard.verticalOrigin =
-    //           window.Cesium.VerticalOrigin.BOTTOM;
+        dataSource.clustering.clusterEvent.addEventListener(
+          (clusteredEntities, cluster) => {
+            cluster.label.show = false;
+            cluster.billboard.show = true;
+            cluster.billboard.id = cluster.label.id;
+            cluster.billboard.verticalOrigin =
+              window.Cesium.VerticalOrigin.BOTTOM;
 
-    //         cluster.billboard.image = pin50;
-    //       },
-    //     );
+            cluster.billboard.image = pin50;
+          },
+        );
 
-    //     // viewer.dataSources.remove(dataSource);
-    //   });
-    // });
+        // viewer.dataSources.remove(dataSource);
+      });
+    });
 
     // MULTIPOLYGON转geojson
     // var geoJSONObject = wkx.Geometry.parse().toGeoJSON();
@@ -350,6 +351,14 @@ function App() {
       console.log('code', code);
     });
   }, []);
+
+  // 聚合点位的点击事件
+  useEffect(() => {
+    viewerRef.current.screenSpaceEventHandler.setInputAction((movement) => {
+      const pick = viewerRef.current.scene.pick(movement.position);
+      console.log('pick', pick?.id?.name);
+    }, window.Cesium.ScreenSpaceEventType.LEFT_CLICK);
+  });
 
   return (
     <div className="App">
