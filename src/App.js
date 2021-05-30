@@ -1,6 +1,7 @@
 import React, { useRef, useEffect } from 'react';
 import * as turf from '@turf/turf';
 import wkx from 'wkx';
+import geojsonMerge from '@mapbox/geojson-merge';
 
 import './App.css';
 import Api from './Api';
@@ -83,6 +84,9 @@ let labelList = [];
 function App() {
   const areaList = useRef([]);
   const viewerRef = useRef(null);
+  const areaLineRef = useRef(null);
+  const currentLevel = useRef(-1);
+  const currentDataSource = useRef(null);
 
   useEffect(() => {
     const cesiumContainer = document.getElementById('cesiumContainer');
@@ -205,24 +209,7 @@ function App() {
 
     function drawAreaByCode(code, drawDone = () => {}) {
       return Api.getAreaData({ id: code }).then((res) => {
-        const areaInfo = res?.data?.data?.areaInfo;
         const childrenList = res?.data?.data?.childrenList || [];
-
-        // const geometry = wkx.Geometry.parse(areaInfo.wktPoly);
-        // const geojson = geometry.toGeoJSON();
-        // const multiLineString = turf.polygonToLine(geojson);
-        // window.Cesium.GeoJsonDataSource.load(multiLineString).then(
-        //   (dataSource) => {
-        //     const entities = dataSource.entities.values;
-
-        //     entities.forEach((entity) => {
-        //       entity.polyline.material = window.Cesium.Color.RED;
-        //       entity.polyline.width = 2;
-        //     });
-
-        //     viewer.dataSources.add(dataSource);
-        //   },
-        // );
 
         // 获取到了下一级数据，清理已存在的覆盖物
         if (!childrenList?.length) {
@@ -230,35 +217,54 @@ function App() {
         }
 
         // 清理已存的区划线
-        viewer.dataSources.removeAll();
+        viewer.dataSources.remove(currentDataSource.current);
 
         // 各个区域
-        const temp = childrenList.map((area) => {
+        const features = [];
+        const list = childrenList.map((area) => {
           const geometry = wkx.Geometry.parse(area.wktPoly);
-          const geojson = geometry.toGeoJSON();
+          const areaGeojson = geometry.toGeoJSON();
 
-          const multiLineString = turf.polygonToLine(geojson);
-          window.Cesium.GeoJsonDataSource.load(multiLineString).then(
-            (dataSource) => {
-              dataSource.entities.values.forEach((entity) => {
-                entity.polyline.material = window.Cesium.Color.RED;
-                entity.polyline.width = 2;
-              });
-
-              viewer.dataSources.add(dataSource);
+          const featureCollection = turf.polygonToLine(areaGeojson, {
+            properties: {
+              name: area.name,
+              code: area.code,
             },
-          );
+          });
+
+          // 需要将featureCollection里面的feature整理取出来，然后使用
+          featureCollection.features.forEach((feature) => {
+            features.push(feature);
+          });
 
           return {
-            name: area.name,
-            code: area.code,
-            geojson,
+            type: 'Feature',
+            featureCollection,
+            properties: {
+              name: area.name,
+              code: area.code,
+              geojson: areaGeojson,
+            },
           };
         });
 
+        const featuresCollection = geojsonMerge.merge(features);
+        window.Cesium.GeoJsonDataSource.load(featuresCollection).then(
+          (dataSource) => {
+            dataSource.entities.values.forEach((entity) => {
+              entity.polyline.material = window.Cesium.Color.RED;
+              entity.polyline.width = 2;
+            });
+
+            viewer.dataSources.add(dataSource);
+            currentDataSource.current = dataSource;
+          },
+        );
+
         drawDone();
 
-        areaList.current = temp;
+        currentLevel.current += 1;
+        areaList.current.push(list);
       });
     }
 
@@ -267,17 +273,19 @@ function App() {
       const { x, y } = movement.position;
       const res = cartesian2ToLngLat(x, y, viewerRef.current);
 
-      const pointData = turf.point([res.longitude, res.latitude]);
-      const matchItem = areaList.current.find((item) =>
+      const list = areaList.current[currentLevel.current];
+
+      const point = turf.point([res.longitude, res.latitude]);
+      const matchItem = list.find((item) =>
         turf.booleanPointInPolygon(
-          pointData,
-          turf.multiPolygon(item.geojson.coordinates),
+          point,
+          turf.multiPolygon(item.properties.geojson.coordinates),
         ),
       );
 
-      if (matchItem?.code) {
-        drawAreaByCode(matchItem.code, () => {
-          viewerRef.current.flyTo(lineCollection, {
+      if (matchItem.properties?.code) {
+        drawAreaByCode(matchItem.properties.code, () => {
+          viewerRef.current.flyTo(currentDataSource.current, {
             duration: 1,
           });
         });
@@ -302,7 +310,7 @@ function App() {
       });
     });
 
-    // drawAreaByCode('4403000');
+    drawAreaByCode('4403000');
 
     Api.getCarData().then((res) => {
       const points = res?.data[0]?.points;
@@ -319,17 +327,14 @@ function App() {
         };
       });
 
-      const geojson = {
-        type: 'FeatureCollection',
-        features,
-      };
+      const geojson = geojsonMerge.merge(features);
 
       window.Cesium.GeoJsonDataSource.load(geojson).then((dataSource) => {
         const pixelRange = 15;
         const minimumClusterSize = 2;
         const enabled = true;
 
-        dataSource.clustering.enabled = true;
+        dataSource.clustering.enabled = enabled;
         dataSource.clustering.pixelRange = pixelRange;
         dataSource.clustering.minimumClusterSize = minimumClusterSize;
         viewer.dataSources.add(dataSource);
@@ -350,6 +355,8 @@ function App() {
             cluster.billboard.image = pin50;
           },
         );
+
+        // viewer.dataSources.remove(dataSource);
       });
     });
 
