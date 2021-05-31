@@ -3,6 +3,9 @@ import * as turf from '@turf/turf';
 import wkx from 'wkx';
 import geojsonMerge from '@mapbox/geojson-merge';
 
+import buildingIcon from '@/assets/building_icon.png';
+import buildingClusterIcon from '@/assets/building_cluster_icon.png';
+
 import './App.css';
 import Api from './Api';
 import { formatWktData } from './utils';
@@ -291,28 +294,37 @@ function App() {
         const minimumClusterSize = 2;
         const enabled = true;
 
+        // 指定默认图标
+        dataSource.entities.values.forEach((entity) => {
+          entity.billboard.image = buildingIcon;
+        });
+
         dataSource.clustering.enabled = enabled;
         dataSource.clustering.pixelRange = pixelRange;
         dataSource.clustering.minimumClusterSize = minimumClusterSize;
-        viewer.dataSources.add(dataSource);
 
-        const pinBuilder = new window.Cesium.PinBuilder();
-        const pin50 = pinBuilder
-          .fromText('50+', window.Cesium.Color.RED, 48)
-          .toDataURL();
-
+        // 指定聚合图标
         dataSource.clustering.clusterEvent.addEventListener(
           (clusteredEntities, cluster) => {
-            cluster.label.show = false;
+            cluster.label.show = true;
+            cluster.label.text = String(clusteredEntities.length);
+            cluster.label.fillColor = window.Cesium.Color.RED;
+            cluster.label.scale = 0.5;
+            cluster.label.horizontalOrigin =
+              window.Cesium.HorizontalOrigin.CENTER;
+            cluster.label.pixelOffset = new window.Cesium.Cartesian2(0, -30);
+
             cluster.billboard.show = true;
             cluster.billboard.id = cluster.label.id;
             cluster.billboard.verticalOrigin =
               window.Cesium.VerticalOrigin.BOTTOM;
-
-            cluster.billboard.image = pin50;
+            cluster.billboard.image = buildingClusterIcon;
           },
         );
 
+        viewer.dataSources.add(dataSource);
+
+        // 删除点位
         // viewer.dataSources.remove(dataSource);
       });
     });
