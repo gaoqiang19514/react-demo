@@ -31,6 +31,7 @@ function getConfig({
 
         return "未整改";
       },
+      //   至于为什么要添加customRender，是由于render在内部执行了，只能拿到结果，无法控制渲染结果
       customRender: ({ record, dataIndex, form }) => {
         const { getFieldDecorator } = form;
 
