@@ -1,0 +1,11 @@
+{
+  "description" :"地楼房模块WMS服务配置",
+  "land":{
+    "url": "/geoserver/jclAndJcd/wms",
+    "layers": "jclAndJcd:jcd"
+  },
+  "building":{
+    "url": "/geoserver/jclAndJcd/wms",
+    "layers": "jclAndJcd:jcl"
+  }
+}

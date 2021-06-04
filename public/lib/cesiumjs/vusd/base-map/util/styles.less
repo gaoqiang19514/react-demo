@@ -1,0 +1,117 @@
+.box {
+  position: relative;
+  width: 194px;
+  height: 36px;
+  background: #293345;
+  border: 1px solid rgba(142,224,248,0.40);
+  .btn {
+    position: relative;
+    padding: 6px 10px;
+    font-size: 16px;
+   color: #E0E9F6;
+    cursor: pointer;
+    span{
+      &:not(:last-child){
+        margin-right: 8px;
+      }
+      &:last-child{
+        margin-right: 16px;
+      }
+    }
+    &::after{
+      content: '';/*伪类下的属性*/
+      display:block;
+      width:0;
+      height:0;
+      overflow:hidden;
+      font-size: 0;     /*是因为, 虽然宽高度为0, 但在IE6下会具有默认的 */
+      line-height: 0;  /* 字体大小和行高, 导致盒子呈现被撑开的长矩形 */
+      border:5px;
+      border-style:dashed dashed solid dashed;
+      border-color:#fff transparent  transparent  transparent;
+      position:absolute;
+      left:72px;
+      top:14px;
+    }
+
+
+  }
+  &.select{
+    .btn{
+      color: #569EEB;
+      &::after{
+        border-color:#569EEB transparent  transparent  transparent;
+        transform: rotate(180deg) translateY(6px) ;
+      }
+    }
+  }
+
+}
+
+.pannel{
+  display: none;
+  position: fixed;
+  top: 60px;
+  right: 230px;
+  width: 200px;
+  padding: 24px;
+  background: rgba(3, 32, 64,0.6);
+  z-index: 9;
+  .item{
+    display: flex;
+    justify-content: center;
+    flex-direction: column;
+    font-size: 14px;
+    color: #FFFFFF;
+    text-align: center;
+    width: 70px;
+    .img{
+      width: 64px;
+      height: 64px;
+      margin-bottom: 8px;
+      cursor: pointer;
+
+    }
+    &.active {
+      .img{
+        border: 2px solid #17E8FB;
+      }
+
+    }
+  }
+
+  &.select{
+    display: flex;
+    flex-direction: column;
+  }
+}
+//div 气泡 样式
+.divpointtheme .title {
+  text-align: center;
+  line-height: 35px;
+  height: 50px;
+  width: 88px;
+  position: relative;
+  cursor: pointer;
+}
+
+.divpointtheme .title::before {
+  position: absolute;
+  bottom: -4px;
+  left: 0;
+  right: 0;
+  z-index: 10;
+  height: 2px;
+}
+
+
+.divpointtheme .title {
+  background-image: url("./img/board_default.png");
+  background-repeat: no-repeat;
+}
+.divpointtheme .title:hover {
+  background-image: url("./img/board_hover.png");
+  background-repeat: no-repeat;
+}
+
+

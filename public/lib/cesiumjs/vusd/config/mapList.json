@@ -1,0 +1,77 @@
+[{
+  name:"谷歌卫星",
+  key:"google_img",
+  img:'$#$config/images/google_img.png',
+  imageryLayer:new Cesium.UrlTemplateImageryProvider({
+  url: 'http://mt1.google.cn/vt/lyrs=s&hl=zh-CN&x={x}&y={y}&z={z}',
+  maximumLevel: 22
+})
+  },{
+  name:"Arcgis卫星",
+  key:"arcgis_img",
+  img:'$#$config/images/esriWorldImagery.png',
+  imageryLayer :new Cesium.ArcGisMapServerImageryProvider({
+  url: 'http://server.arcgisonline.com/arcgis/rest/services/World_Imagery/MapServer'
+})
+  },{
+  name:"微软卫星",
+  key:"bing_img",
+  img:'$#$config/images/bingAerial.png',
+  imageryLayer:new Cesium.UrlTemplateImageryProvider({
+  url: 'http://mt1.google.cn/vt/lyrs=s&hl=zh-CN&x={x}&y={y}&z={z}',
+  maximumLevel: 22
+})
+  },{
+  name:"天地图卫星",
+  key:"tdt_img",
+  img:'$#$config/images/tdt_img.png',
+  imageryLayer:new Cesium.WebMapTileServiceImageryProvider({
+  url: 'http://t1.tianditu.com/img_c/wmts?service=WMTS&version=1.0.0&request=GetTile&tilematrix={TileMatrix}&layer=img&style=default&tilerow={TileRow}&tilecol={TileCol}&tilematrixset=c&format=tiles&tk=4a00a1dc5387b8ed8adba3374bd87e5e',
+  layer: 'img',
+  style: 'default',
+  format: 'tiles',
+  tileMatrixSetID: 'c',
+  subdomains: ['t0', 't1', 't2', 't3', 't4', 't5', 't6', 't7'],
+  maximumLevel: 17,
+  tilingScheme: new Cesium.GeographicTilingScheme(),
+  tileMatrixLabels: ['1', '2', '3', '4', '5', '6', '7', '8', '9', '10', '11', '12', '13', '14', '15', '16', '17', '18']
+})
+  },{
+  name:"天地图电子",
+  key:"tdt_vec",
+  img:'$#$config/images/tdt_vec.png',
+  imageryLayer: new Cesium.WebMapTileServiceImageryProvider({
+  url: 'http://t0.tianditu.com/vec_c/wmts?service=WMTS&version=1.0.0&request=GetTile&tilematrix={TileMatrix}&layer=vec&style=default&tilerow={TileRow}&tilecol={TileCol}&tilematrixset=c&format=tiles&tk=8c1233cf7a88f345e704a0129fa5f7ed',
+  layer: 'vec',
+  style: 'default',
+  format: 'tiles',
+  tileMatrixSetID: 'c',
+  subdomains: ['t0', 't1', 't2', 't3', 't4', 't5', 't6', 't7'],
+  maximumLevel: 17,
+  tilingScheme: new Cesium.GeographicTilingScheme(),
+  tileMatrixLabels: ['1', '2', '3', '4', '5', '6', '7', '8', '9', '10', '11', '12', '13', '14', '15', '16', '17', '18']
+})
+  },{
+  name:"OSM地图",
+  key:"osm_vec",
+  img:'$#$config/images/osm.png',
+  imageryLayer:new Cesium.createOpenStreetMapImageryProvider({
+  url : 'https://a.tile.openstreetmap.org/'
+})
+  },{
+  name:"黑色底图",
+  key:"dark_vec",
+  img:'$#$config/images/bd-c-dark.png',
+  imageryLayer: new Cesium.MapboxImageryProvider({
+  mapId: 'mapbox.dark',
+  accessToken: 'pk.eyJ1IjoibWFwYm94IiwiYSI6ImNpejY4M29iazA2Z2gycXA4N2pmbDZmangifQ.-g_vE53SD2WrJ6tFX7QHmA'
+})
+  },{
+  name:"灰色底图",
+  key:"gray_vec",
+  img:'$#$config/images/bd-c-midnight.png',
+  imageryLayer: new Cesium.MapboxImageryProvider({
+  mapId: 'mapbox.light',
+  accessToken: 'pk.eyJ1IjoibWFwYm94IiwiYSI6ImNpejY4M29iazA2Z2gycXA4N2pmbDZmangifQ.-g_vE53SD2WrJ6tFX7QHmA'
+}),
+  }]

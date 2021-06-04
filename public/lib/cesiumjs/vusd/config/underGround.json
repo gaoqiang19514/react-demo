@@ -1,0 +1,957 @@
+{
+    "layers": [
+        {
+            "id": 10,
+            "title": "管线",
+            "key": "10",
+            "type": null,
+            "url": null,
+            "parentId": 0,
+            "custom": null,
+            "children": [
+                {
+                    "id": 101,
+                    "title": "福田",
+                    "key": "101",
+                    "type": null,
+                    "url": null,
+                    "parentId": 10,
+                    "custom": null,
+                    "children": [
+                        {
+                            "id": 1011,
+                            "title": "华富",
+                            "key": "1011",
+                            "type": null,
+                            "url": null,
+                            "view":{"y":22.55775,"x":114.074779,"z":5919.36,"heading":360,"pitch":-90,"roll":0},
+                            "parentId": 101,
+                            "custom": null
+                        },
+                        {
+                            "id": 1012,
+                            "title": "华强北",
+                            "key": "1012",
+                            "type": null,
+                            "url": null,
+                            "view":{"y":22.550648,"x":114.087834,"z":2991.3,"heading":360,"pitch":-90,"roll":0},
+                            "parentId": 101,
+                            "custom": null
+                        },
+                        {
+                            "id": 1013,
+                            "title": "南园",
+                            "key": "1013",
+                            "type": null,
+                            "url": null,
+                            "view":{"y":22.535048,"x":114.087248,"z":3331.64,"heading":360,"pitch":-90,"roll":0},
+                            "parentId": 101,
+                            "custom": null
+                        },
+                        {
+                            "id": 1014,
+                            "title": "园岭",
+                            "key": "1014",
+                            "type": null,
+                            "url": null,
+                            "view":{"y":22.560519,"x":114.091611,"z":5220.19,"heading":0,"pitch":-90,"roll":0},
+                            "parentId": 101,
+                            "custom": null
+                        },
+                        {
+                            "id": 1015,
+                            "title": "梅林",
+                            "key": "1015",
+                            "type": null,
+                            "url": null,
+                            "view":{"y":22.573175,"x":114.033982,"z":7228.29,"heading":360,"pitch":-90,"roll":0},
+                            "parentId": 101,
+                            "custom": null
+                        },
+                        {
+                            "id": 1016,
+                            "title": "沙头",
+                            "key": "1016",
+                            "type": null,
+                            "url": null,
+                            "view":{"y":22.526933,"x":114.018552,"z":6098.51,"heading":360,"pitch":-90,"roll":0},
+                            "parentId": 101,
+                            "custom": null
+                        },
+                        {
+                            "id": 1017,
+                            "title": "福保",
+                            "key": "1017",
+                            "type": null,
+                            "url": null,
+                            "view":{"y":22.511671,"x":114.045983,"z":3674.38,"heading":360,"pitch":-90,"roll":0},
+                            "parentId": 101,
+                            "custom": null
+                        },
+                        {
+                            "id": 1018,
+                            "title": "福田",
+                            "key": "1018",
+                            "type": null,
+                            "url": null,
+                            "view":{"y":22.529376,"x":114.065549,"z":6479.31,"heading":360,"pitch":-90,"roll":0},
+                            "parentId": 101,
+                            "custom": null
+                        },
+                        {
+                            "id": 1019,
+                            "title": "莲花",
+                            "key": "1019",
+                            "type": null,
+                            "url": null,
+                            "view":{"y":22.554934,"x":114.046999,"z":5268.24,"heading":360,"pitch":-90,"roll":0},
+                            "parentId": 101,
+                            "custom": null
+                        },
+                        {
+                            "id": 1020,
+                            "title": "香蜜湖",
+                            "key": "1020",
+                            "type": null,
+                            "url": null,
+                            "view":{"y":22.5478,"x":114.012884,"z":5132.92,"heading":360,"pitch":-90,"roll":0},
+                            "parentId": 101,
+                            "custom": null
+                        }
+                    ]
+                },
+                {
+                    "id": 102,
+                    "title": "南山",
+                    "key": "102",
+                    "type": null,
+                    "url": null,
+                    "parentId": 10,
+                    "custom": null,
+                    "children": [
+                        {
+                            "id": 1021,
+                            "title": "前海",
+                            "key": "1021",
+                            "type": null,
+                            "url": null,
+                            "view":{"y":22.512501,"x":113.88344,"z":14832.21,"heading":360,"pitch":-90,"roll":0},
+                            "parentId": 102,
+                            "custom": null
+                        },
+                        {
+                            "id": 1022,
+                            "title": "南头",
+                            "key": "1022",
+                            "type": null,
+                            "url": null,
+                            "view":{"y":22.551905,"x":113.913897,"z":8787.02,"heading":360,"pitch":-90,"roll":0},
+                            "parentId": 102,
+                            "custom": null
+                        },
+                        {
+                            "id": 1023,
+                            "title": "南山",
+                            "key": "1023",
+                            "type": null,
+                            "url": null,
+                            "view":{"y":22.50957,"x":113.893555,"z":18182.23,"heading":360,"pitch":-90,"roll":0},
+                            "parentId": 102,
+                            "custom": null
+                        },
+                        {
+                            "id": 1024,
+                            "title": "招商",
+                            "key": "1024",
+                            "type": null,
+                            "url": null,
+                            "view":{"y":22.477451,"x":113.911099,"z":12159.51,"heading":360,"pitch":-90,"roll":0},
+                            "parentId": 102,
+                            "custom": null
+                        },
+                        {
+                            "id": 1025,
+                            "title": "桃源",
+                            "key": "1025",
+                            "type": null,
+                            "url": null,
+                            "view":{"y":22.593117,"x":113.985601,"z":14452.31,"heading":360,"pitch":-90,"roll":0},
+                            "parentId": 102,
+                            "custom": null
+                        },
+                        {
+                            "id": 1026,
+                            "title": "沙河",
+                            "key": "1026",
+                            "type": null,
+                            "url": null,
+                            "view":{"y":22.539843,"x":113.972784,"z":7611.7,"heading":360,"pitch":-90,"roll":0},
+                            "parentId": 102,
+                            "custom": null
+                        },
+                        {
+                            "id": 1027,
+                            "title": "粤海",
+                            "key": "1027",
+                            "type": null,
+                            "url": null,
+                            "view":{"y":22.532057,"x":113.937388,"z":9544.7,"heading":360,"pitch":-90,"roll":0},
+                            "parentId": 102,
+                            "custom": null
+                        },
+                        {
+                            "id": 1028,
+                            "title": "蛇口",
+                            "key": "1028",
+                            "type": null,
+                            "url": null,
+                            "view":{"y":22.494553,"x":113.933657,"z":5830.23,"heading":360,"pitch":-90,"roll":0},
+                            "parentId": 102,
+                            "custom": null
+                        },
+                        {
+                            "id": 1029,
+                            "title": "西丽",
+                            "key": "1029",
+                            "type": null,
+                            "url": null,
+                            "view":{"y":22.605556,"x":113.953048,"z":19827.36,"heading":360,"pitch":-90,"roll":0},
+                            "parentId": 102,
+                            "custom": null
+                        }
+                    ]
+                },
+                {
+                    "id": 103,
+                    "title": "罗湖",
+                    "key": "103",
+                    "type": null,
+                    "url": null,
+                    "parentId": 10,
+                    "custom": null,
+                    "children": [
+                        {
+                            "id": 1031,
+                            "title": "笋岗",
+                            "key": "1031",
+                            "type": null,
+                            "url": null,
+                            "view":{"y":22.567488,"x":114.109702,"z":3562.33,"heading":360,"pitch":-90,"roll":0},
+                            "parentId": 103,
+                            "custom": null
+                        },
+                        {
+                            "id": 1032,
+                            "title": "翠竹",
+                            "key": "1032",
+                            "type": null,
+                            "url": null,
+                            "view":{"y":22.565302,"x":114.12707,"z":4848.43,"heading":360,"pitch":-90,"roll":0},
+                            "parentId": 103,
+                            "custom": null
+                        },
+                        {
+                            "id": 1033,
+                            "title": "莲塘",
+                            "key": "1033",
+                            "type": null,
+                            "url": null,
+                            "view":{"y":22.572835,"x":114.176494,"z":7462.07,"heading":360,"pitch":-90,"roll":0},
+                            "parentId": 103,
+                            "custom": null
+                        },
+                        {
+                            "id": 1034,
+                            "title": "黄贝",
+                            "key": "1034",
+                            "type": null,
+                            "url": null,
+                            "view":{"y":22.559959,"x":114.14112,"z":8151.38,"heading":360,"pitch":-90,"roll":0},
+                            "parentId": 103,
+                            "custom": null
+                        },
+                        {
+                            "id": 1035,
+                            "title": "东晓",
+                            "key": "1035",
+                            "type": null,
+                            "url": null,
+                            "view":{"y":22.585432,"x":114.120275,"z":3514.41,"heading":360,"pitch":-90,"roll":0},
+                            "parentId": 103,
+                            "custom": null
+                        },
+                        {
+                            "id": 1036,
+                            "title": "东湖",
+                            "key": "1036",
+                            "type": null,
+                            "url": null,
+                            "view":{"y":22.593916,"x":114.170493,"z":9973.96,"heading":360,"pitch":-90,"roll":0},
+                            "parentId": 103,
+                            "custom": null
+                        },
+                        {
+                            "id": 1037,
+                            "title": "东门",
+                            "key": "1037",
+                            "type": null,
+                            "url": null,
+                            "view":{"y":22.552286,"x":114.117695,"z":2839.77,"heading":360,"pitch":-90,"roll":0},
+                            "parentId": 103,
+                            "custom": null
+                        },
+                        {
+                            "id": 1038,
+                            "title": "南湖",
+                            "key": "1038",
+                            "type": null,
+                            "url": null,
+                            "view":{"y":22.538715,"x":114.11549,"z":3620.5,"heading":360,"pitch":-90,"roll":0},
+                            "parentId": 103,
+                            "custom": null
+                        },
+                        {
+                            "id": 1039,
+                            "title": "桂园",
+                            "key": "1039",
+                            "type": null,
+                            "url": null,
+                            "view":{"y":22.546543,"x":114.104809,"z":4775.88,"heading":360,"pitch":-90,"roll":0},
+                            "parentId": 103,
+                            "custom": null
+                        },
+                        {
+                            "id": 1040,
+                            "title": "清水河",
+                            "key": "1040",
+                            "type": null,
+                            "url": null,
+                            "view":{"y":22.585121,"x":114.086623,"z":7355.18,"heading":360,"pitch":-90,"roll":0},
+                            "parentId": 103,
+                            "custom": null
+                        }
+                    ]
+                },
+                {
+                    "id": 104,
+                    "title": "宝安",
+                    "key": "104",
+                    "type": null,
+                    "url": null,
+                    "parentId": 10,
+                    "custom": null,
+                    "children": [
+                        {
+                            "id": 1041,
+                            "title": "新安",
+                            "key": "1041",
+                            "type": null,
+                            "url": null,
+                            "view":{"y":22.57467,"x":113.893493,"z":12563.66,"heading":360,"pitch":-90,"roll":0},
+                            "parentId": 104,
+                            "custom": null
+                        },
+                        {
+                            "id": 1042,
+                            "title": "新桥",
+                            "key": "1042",
+                            "type": null,
+                            "url": null,
+                            "view":{"y":22.723721,"x":113.844243,"z":11370.42,"heading":360,"pitch":-90,"roll":0},
+                            "parentId": 104,
+                            "custom": null
+                        },
+                        {
+                            "id": 1043,
+                            "title": "松岗",
+                            "key": "1043",
+                            "type": null,
+                            "url": null,
+                            "view":{"y":22.766323,"x":113.832869,"z":12684.42,"heading":360,"pitch":-90,"roll":0},
+                            "parentId": 104,
+                            "custom": null
+                        },
+                        {
+                            "id": 1044,
+                            "title": "沙井",
+                            "key": "1044",
+                            "type": null,
+                            "url": null,
+                            "view":{"y":22.738029,"x":113.788422,"z":13423.43,"heading":360,"pitch":-90,"roll":0},
+                            "parentId": 104,
+                            "custom": null
+                        },
+                        {
+                            "id": 1045,
+                            "title": "燕罗",
+                            "key": "1045",
+                            "type": null,
+                            "url": null,
+                            "view":{"y":22.817635,"x":113.876218,"z":17139.05,"heading":360,"pitch":-90,"roll":0},
+                            "parentId": 104,
+                            "custom": null
+                        },
+                        {
+                            "id": 1046,
+                            "title": "石岩",
+                            "key": "1046",
+                            "type": null,
+                            "url": null,
+                            "view":{"y":22.663599,"x":113.926655,"z":22620.26,"heading":360,"pitch":-90,"roll":0},
+                            "parentId": 104,
+                            "custom": null
+                        },
+                        {
+                            "id": 1047,
+                            "title": "福永",
+                            "key": "1047",
+                            "type": null,
+                            "url": null,
+                            "view":{"y":22.664259,"x":113.824427,"z":16239.11,"heading":360,"pitch":-90,"roll":0},
+                            "parentId": 104,
+                            "custom": null
+                        },
+                        {
+                            "id": 1048,
+                            "title": "福海",
+                            "key": "1048",
+                            "type": null,
+                            "url": null,
+                            "view":{"y":22.683088,"x":113.790322,"z":12281.37,"heading":360,"pitch":-90,"roll":0},
+                            "parentId": 104,
+                            "custom": null
+                        },
+                        {
+                            "id": 1049,
+                            "title": "航城",
+                            "key": "1049",
+                            "type": null,
+                            "url": null,
+                            "view":{"y":22.650593,"x":113.847477,"z":23124.07,"heading":360,"pitch":-90,"roll":0},
+                            "parentId": 104,
+                            "custom": null
+                        },
+                        {
+                            "id": 1050,
+                            "title": "西乡",
+                            "key": "1050",
+                            "type": null,
+                            "url": null,
+                            "view":{"y":22.588331,"x":113.873524,"z":25026.36,"heading":360,"pitch":-90,"roll":0},
+                            "parentId": 104,
+                            "custom": null
+                        }
+                    ]
+                },
+                {
+                    "id": 105,
+                    "title": "龙华",
+                    "key": "105",
+                    "type": null,
+                    "url": null,
+                    "parentId": 10,
+                    "custom": null,
+                    "children": [
+                        {
+                            "id": 1051,
+                            "title": "大浪",
+                            "key": "1051",
+                            "type": null,
+                            "url": null,
+                            "view":{"y":22.675727,"x":113.98946,"z":17455.39,"heading":360,"pitch":-90,"roll":0},
+                            "parentId": 105,
+                            "custom": null
+                        },
+                        {
+                            "id": 1052,
+                            "title": "民治",
+                            "key": "1052",
+                            "type": null,
+                            "url": null,
+                            "view":{"y":22.616032,"x":114.027322,"z":12688.85,"heading":360,"pitch":-90,"roll":0},
+                            "parentId": 105,
+                            "custom": null
+                        },
+                        {
+                            "id": 1053,
+                            "title": "福城",
+                            "key": "1053",
+                            "type": null,
+                            "url": null,
+                            "view":{"y":22.719105,"x":114.01151,"z":18693.57,"heading":360,"pitch":-90,"roll":0},
+                            "parentId": 105,
+                            "custom": null
+                        },
+                        {
+                            "id": 1054,
+                            "title": "观湖",
+                            "key": "1054",
+                            "type": null,
+                            "url": null,
+                            "view":{"y":22.692457,"x":114.066188,"z":12274.31,"heading":360,"pitch":-90,"roll":0},
+                            "parentId": 105,
+                            "custom": null
+                        },
+                        {
+                            "id": 1055,
+                            "title": "观澜",
+                            "key": "1055",
+                            "type": null,
+                            "url": null,
+                            "view":{"y":22.740607,"x":114.061414,"z":13226.28,"heading":360,"pitch":-90,"roll":0},
+                            "parentId": 105,
+                            "custom": null
+                        },
+                        {
+                            "id": 1056,
+                            "title": "龙华",
+                            "key": "1056",
+                            "type": null,
+                            "url": null,
+                            "view":{"y":22.657618,"x":114.030183,"z":9986.41,"heading":360,"pitch":-90,"roll":0},
+                            "parentId": 105,
+                            "custom": null
+                        }
+                    ]
+                },
+                {
+                    "id": 106,
+                    "title": "光明",
+                    "key": "106",
+                    "type": null,
+                    "url": null,
+                    "parentId": 10,
+                    "custom": null,
+                    "children": [
+                        {
+                            "id": 1061,
+                            "title": "光明",
+                            "key": "1061",
+                            "type": null,
+                            "url": null,
+                            "view":{"y":22.747347,"x":113.955897,"z":10865.26,"heading":360,"pitch":-90,"roll":0},
+                            "parentId": 106,
+                            "custom": null
+                        },
+                        {
+                            "id": 1062,
+                            "title": "公明",
+                            "key": "1062",
+                            "type": null,
+                            "url": null,
+                            "view":{"y":22.801984,"x":113.898647,"z":12590.24,"heading":360,"pitch":-90,"roll":0},
+                            "parentId": 106,
+                            "custom": null
+                        },
+                        {
+                            "id": 1063,
+                            "title": "新湖",
+                            "key": "1063",
+                            "type": null,
+                            "url": null,
+                            "view":{"y":22.798295,"x":113.952462,"z":14458.26,"heading":360,"pitch":-90,"roll":0},
+                            "parentId": 106,
+                            "custom": null
+                        },
+                        {
+                            "id": 1064,
+                            "title": "玉塘",
+                            "key": "1064",
+                            "type": null,
+                            "url": null,
+                            "view":{"y":22.714653,"x":113.902617,"z":9997.15,"heading":360,"pitch":-90,"roll":0},
+                            "parentId": 106,
+                            "custom": null
+                        },
+                        {
+                            "id": 1065,
+                            "title": "马田",
+                            "key": "1065",
+                            "type": null,
+                            "url": null,
+                            "view":{"y":22.768221,"x":113.883985,"z":12253.44,"heading":360,"pitch":-90,"roll":0},
+                            "parentId": 106,
+                            "custom": null
+                        },
+                        {
+                            "id": 1066,
+                            "title": "凤凰",
+                            "key": "1066",
+                            "type": null,
+                            "url": null,
+                            "view":{"y":22.738054,"x":113.930587,"z":10334.97,"heading":360,"pitch":-90,"roll":0},
+                            "parentId": 106,
+                            "custom": null
+                        }
+                    ]
+                },
+                {
+                    "id": 107,
+                    "title": "大鹏",
+                    "key": "107",
+                    "type": null,
+                    "url": null,
+                    "parentId": 10,
+                    "custom": null,
+                    "children": [
+                        {
+                            "id": 1071,
+                            "title": "南澳",
+                            "key": "1071",
+                            "type": null,
+                            "url": null,
+                            "view":{"y":22.510765,"x":114.544603,"z":23881.35,"heading":360,"pitch":-90,"roll":0},
+                            "parentId": 107,
+                            "custom": null
+                        },
+                        {
+                            "id": 1072,
+                            "title": "大鹏",
+                            "key": "1072",
+                            "type": null,
+                            "url": null,
+                            "view":{"y":22.600573,"x":114.512399,"z":23732.44,"heading":360,"pitch":-90,"roll":0},
+                            "parentId": 107,
+                            "custom": null
+                        },
+                        {
+                            "id": 1073,
+                            "title": "葵涌",
+                            "key": "1073",
+                            "type": null,
+                            "url": null,
+                            "view":{"y":22.634199,"x":114.454168,"z":21568.1,"heading":360,"pitch":-90,"roll":0},
+                            "parentId": 107,
+                            "custom": null
+                        }
+                    ]
+                },
+                {
+                    "id": 108,
+                    "title": "坪山",
+                    "key": "108",
+                    "type": null,
+                    "url": null,
+                    "parentId": 10,
+                    "custom": null,
+                    "children": [
+                        {
+                            "id": 1081,
+                            "title": "碧玲",
+                            "key": "1081",
+                            "type": null,
+                            "url": null,
+                            "view":{"y":22.65545,"x":114.296331,"z":13506.91,"heading":360,"pitch":-90,"roll":0},
+                            "parentId": 108,
+                            "custom": null
+                        },
+                        {
+                            "id": 1082,
+                            "title": "马峦",
+                            "key": "1082",
+                            "type": null,
+                            "url": null,
+                            "view":{"y":22.657438,"x":114.340482,"z":12931.25,"heading":360,"pitch":-90,"roll":0},
+                            "parentId": 108,
+                            "custom": null
+                        },
+                        {
+                            "id": 1083,
+                            "title": "龙田",
+                            "key": "1083",
+                            "type": null,
+                            "url": null,
+                            "view":{"y":22.741381,"x":114.351254,"z":11620.71,"heading":360,"pitch":-90,"roll":0},
+                            "parentId": 108,
+                            "custom": null
+                        },
+                        {
+                            "id": 1084,
+                            "title": "坑梓",
+                            "key": "1084",
+                            "type": null,
+                            "url": null,
+                            "view":{"y":22.757072,"x":114.388609,"z":10569.68,"heading":360,"pitch":-90,"roll":0},
+                            "parentId": 108,
+                            "custom": null
+                        },
+                        {
+                            "id": 1085,
+                            "title": "坪山",
+                            "key": "1085",
+                            "type": null,
+                            "url": null,
+                            "view":{"y":22.69594,"x":114.33603,"z":7809.07,"heading":360,"pitch":-90,"roll":0},
+                            "parentId": 108,
+                            "custom": null
+                        },
+                        {
+                            "id": 1086,
+                            "title": "深圳市大工业区管委会",
+                            "key": "1086",
+                            "type": null,
+                            "url": null,
+                            "view":{"y":22.717568,"x":114.384456,"z":14625.92,"heading":360,"pitch":-90,"roll":0},
+                            "parentId": 108,
+                            "custom": null
+                        },
+                        {
+                            "id": 1087,
+                            "title": "石井街道",
+                            "key": "1087",
+                            "type": null,
+                            "url": null,
+                            "view":{"y":22.667252,"x":114.406106,"z":11281.76,"heading":360,"pitch":-90,"roll":0},
+                            "parentId": 108,
+                            "custom": null
+                        }
+                    ]
+                },
+                {
+                    "id": 109,
+                    "title": "盐田",
+                    "key": "109",
+                    "type": null,
+                    "url": null,
+                    "parentId": 10,
+                    "custom": null,
+                    "children": [
+                        {
+                            "id": 1091,
+                            "title": "梅沙",
+                            "key": "1091",
+                            "type": null,
+                            "url": null,
+                            "view":{"y":22.608222,"x":114.316454,"z":9843.26,"heading":360,"pitch":-90,"roll":0},
+                            "parentId": 109,
+                            "custom": null
+                        },
+                        {
+                            "id": 1092,
+                            "title": "沙头角",
+                            "key": "1092",
+                            "type": null,
+                            "url": null,
+                            "view":{"y":22.567664,"x":114.210652,"z":5483.76,"heading":360,"pitch":-90,"roll":0},
+                            "parentId": 109,
+                            "custom": null
+                        },
+                        {
+                            "id": 1093,
+                            "title": "海山",
+                            "key": "1093",
+                            "type": null,
+                            "url": null,
+                            "view":{"y":22.570209,"x":114.233015,"z":4486.52,"heading":360,"pitch":-90,"roll":0},
+                            "parentId": 109,
+                            "custom": null
+                        },
+                        {
+                            "id": 1094,
+                            "title": "沙头角保税区",
+                            "key": "1094",
+                            "type": null,
+                            "url": null,
+                            "view":{"y":22.557735,"x":114.230892,"z":5691.87,"heading":360,"pitch":-90,"roll":0},
+                            "parentId": 109,
+                            "custom": null
+                        },
+                        {
+                            "id": 1095,
+                            "title": "盐田港保税区",
+                            "key": "1095",
+                            "type": null,
+                            "url": null,
+                            "view":{"y":22.587737,"x":114.258325,"z":12209.36,"heading":360,"pitch":-90,"roll":0},
+                            "parentId": 109,
+                            "custom": null
+                        },
+                        {
+                            "id": 1096,
+                            "title": "盐田",
+                            "key": "1096",
+                            "type": null,
+                            "url": null,
+                            "view":{"y":22.626569,"x":114.265213,"z":11830.49,"heading":360,"pitch":-90,"roll":0},
+                            "parentId": 109,
+                            "custom": null
+                        }
+                    ]
+                },
+                {
+                    "id": 1010,
+                    "title": "龙岗",
+                    "key": "1010",
+                    "type": null,
+                    "url": null,
+                    "parentId": 10,
+                    "custom": null,
+                    "children": [
+                        {
+                            "id": 10101,
+                            "title": "南湾",
+                            "key": "10101",
+                            "type": null,
+                            "url": null,
+                            "view":{"y":22.629432,"x":114.139514,"z":14109.99,"heading":360,"pitch":-90,"roll":0},
+                            "parentId": 1010,
+                            "custom": null
+                        },
+                        {
+                            "id": 10102,
+                            "title":"吉华",
+                            "key": "10102",
+                            "type": null,
+                            "url": null,
+                            "view":{"y":22.632299,"x":114.100578,"z":15634.89,"heading":360,"pitch":-90,"roll":0},
+                            "parentId": 1010,
+                            "custom": null
+                        },
+                        {
+                            "id": 10103,
+                            "title": "园山",
+                            "key": "10103",
+                            "type": null,
+                            "url": null,
+                            "view":{"y":22.638516,"x":114.227902,"z":21729.71,"heading":360,"pitch":-90,"roll":0},
+                            "parentId": 1010,
+                            "custom": null
+                        },
+                        {
+                            "id": 10104,
+                            "title": "坂田",
+                            "key": "10104",
+                            "type": null,
+                            "url": null,
+                            "view":{"y":22.636606,"x":114.066882,"z":16265.14,"heading":360,"pitch":-90,"roll":0},
+                            "parentId": 1010,
+                            "custom": null
+                        },
+                        {
+                            "id": 10105,
+                            "title": "坪地",
+                            "key": "10105",
+                            "type": null,
+                            "url": null,
+                            "view":{"y":22.775744,"x":114.300767,"z":14323.49,"heading":360,"pitch":-90,"roll":0},
+                            "parentId": 1010,
+                            "custom": null
+                        },
+                        {
+                            "id": 10106,
+                            "title": "宝龙",
+                            "key": "10106",
+                            "type": null,
+                            "url": null,
+                            "view":{"y":22.70925,"x":114.294206,"z":15417.15,"heading":360,"pitch":-90,"roll":0},
+                            "parentId": 1010,
+                            "custom": null
+                        },
+                        {
+                            "id": 10107,
+                            "title": "布吉",
+                            "key": "10107",
+                            "type": null,
+                            "url": null,
+                            "view":{"y":22.609284,"x":114.115951,"z":7819.03,"heading":360,"pitch":-90,"roll":0},
+                            "parentId": 1010,
+                            "custom": null
+                        },
+                        {
+                            "id": 10108,
+                            "title": "平湖",
+                            "key": "10108",
+                            "type": null,
+                            "url": null,
+                            "view":{"y":22.682903,"x":114.131538,"z":16923.2,"heading":360,"pitch":-90,"roll":0},
+                            "parentId": 1010,
+                            "custom": null
+                        },
+                        {
+                            "id": 10109,
+                            "title": "横岗",
+                            "key": "10109",
+                            "type": null,
+                            "url": null,
+                            "view":{"y":22.64119,"x":114.184775,"z":14580.85,"heading":360,"pitch":-90,"roll":0},
+                            "parentId": 1010,
+                            "custom": null
+                        },
+                        {
+                            "id": 101010,
+                            "title": "龙城",
+                            "key": "101010",
+                            "type": null,
+                            "url": null,
+                            "view":{"y":22.709731,"x":114.221775,"z":13344.97,"heading":360,"pitch":-90,"roll":0},
+                            "parentId": 1010,
+                            "custom": null
+                        },
+                        {
+                            "id": 101011,
+                            "title": "龙岗",
+                            "key": "101011",
+                            "type": null,
+                            "url": null,
+                            "view":{"y":22.754104,"x":114.23589,"z":24331.31,"heading":360,"pitch":-90,"roll":0},
+                            "parentId": 1010,
+                            "custom": null
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "id": 20,
+            "title": "地质",
+            "key": "20",
+            "type": null,
+            "url": null,
+            "parentId": 0,
+            "custom": null,
+            "children": [
+               
+                {
+                    "id": 201,
+                    "title": "粤海",
+                    "key": "201",
+                    "type": null,
+                    "url": null,
+                    "view":{"y":22.539257,"x":113.937125,"z":13348.53,"heading":360,"pitch":-90,"roll":0},
+                    "parentId": 20,
+                    "custom": null
+                },
+                {
+                    "id": 202,
+                    "title": "西丽",
+                    "key": "202",
+                    "type": null,
+                    "url": null,
+                    "view":{"y":22.591088,"x":113.954874,"z":14829.58,"heading":360,"pitch":-90,"roll":0},
+                    "parentId": 20,
+                    "custom": null
+                },
+                {
+                    "id": 203,
+                    "title": "龙岗中心城",
+                    "key": "203",
+                    "type": null,
+                    "url": null,
+                    "view":{"y":22.711168,"x":114.235634,"z":16709.87,"heading":360,"pitch":-90,"roll":0},
+                    "parentId": 20,
+                    "custom": null
+                },
+                {
+                    "id": 204,
+                    "title": "莲花",
+                    "key": "204",
+                    "type": null,
+                    "url": null,
+                    "view":{"y":22.547098,"x":114.040403,"z":7625.09,"heading":353.2,"pitch":-84.4,"roll":359.8},
+                    "parentId": 20,
+                    "custom": null
+                }
+            ]
+        }
+    ]
+}

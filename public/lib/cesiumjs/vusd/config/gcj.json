@@ -1,0 +1,92 @@
+﻿{
+    "map3d": {
+        "homeButton": true,
+        "sceneModePicker": true,
+        "navigationHelpButton": true,
+        "infoBox": true,
+        "vrButton": false,
+        "fullscreenButton": true,
+        "geocoder": true,
+        "geocoderConfig": {"key":["ae29a37307840c7ae4a785ac905927e0"], "citycode": "" },
+        "center": { "y": 17.196575, "x": 114.184276, "z": 9377198.4, "heading": 355.1, "pitch": -80.7, "roll": 360 },
+        "minzoom": 1,
+        "maxzoom": 50000000,
+        "style": { "atmosphere": true, "lighting": false, "fog": false, "testTerrain": false },
+        "mouseZoom": true,
+        "location": {
+            "format":"<div>经度:{x}</div> <div>纬度:{y}</div> <div>海拔：{z}米</div> <div>方向：{heading}度</div> <div>视高：{height}米</div>",
+            "crs":""
+        },
+        "navigation": {
+          "compass": { "top": "50px", "right": "5px" }
+        },
+        "terrain": {
+            "url": "http://data.marsgis.cn/terrain",
+            "visible": false
+        },
+        "crs": "gcj",
+        "basemaps": [
+            {
+                "name": "谷歌卫星",
+                "type": "group",
+                "crs": "gcj",
+                "icon": "img/basemaps/google_img.png",
+                "layers": [
+                    { "name": "底图", "type": "www_google", "layer": "img_d" },
+                    { "name": "注记", "type": "www_google", "layer": "img_z" }
+                ],
+                "visible": true
+            },
+            {
+                "name": "谷歌电子",
+                "type": "group",
+                "crs": "gcj",
+                "icon": "img/basemaps/google_vec.png",
+                "layers": [
+                    { "name": "底图", "type": "www_google", "layer": "vec_d" },
+                    { "name": "注记", "type": "www_google", "layer": "vec_z" }
+                ]
+            },
+            {
+                "name": "高德卫星",
+                "type": "group",
+                "icon": "img/basemaps/gaode_img.png",
+                "crs": "gcj",
+                "layers": [
+                    { "name": "底图", "type": "www_gaode", "layer": "img_d" },
+                    { "name": "注记", "type": "www_gaode", "layer": "img_z" }
+                ]
+            },
+            {
+                "name": "高德电子",
+                "type": "group",
+                "icon": "img/basemaps/gaode_vec.png",
+                "crs": "gcj",
+                "layers": [
+                    { "name": "底图", "type": "www_gaode", "layer": "vec_d" },
+                    { "name": "注记", "type": "www_gaode", "layer": "vec_z" }
+                ]
+            }
+        ],
+        "operationallayers": [ 
+            {
+                "id": 50,
+                "name": "辅助图层",
+                "type": "group"
+            },
+            { "pid": 50, "type": "custom_grid", "name": "网格线" },
+            { "pid": 50, "type": "custom_tilecoord", "name": "瓦片信息" },
+            { "pid": 50, "type": "custom_graticule", "name": "经纬网" },
+            {
+                "pid": 50,
+                "name": "实时路况",
+                "type": "www_gaode",
+                "layer": "time",
+                "proxy": "http://data.marsgis.cn/proxy/"
+            }
+
+           
+        ]
+    } 
+
+}
