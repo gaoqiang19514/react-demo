@@ -143,7 +143,7 @@ function getConfig({
   };
 }
 
-function Demo(props) {
+function MultiLineTable(props) {
   const { form } = props;
 
   const [editingKey, setEditingKey] = useState("");
@@ -217,4 +217,4 @@ function Demo(props) {
   );
 }
 
-export default Form.create()(Demo);
+export default Form.create()(MultiLineTable);

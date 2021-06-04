@@ -2,7 +2,6 @@
   "name": "react-temp",
   "version": "0.1.0",
   "private": true,
-  "proxy": "http://localhost:3000",
   "dependencies": {
     "antd": "^3.26.13",
     "axios": "^0.19.2",
@@ -32,5 +31,6 @@
       "last 1 firefox version",
       "last 1 safari version"
     ]
-  }
+  },
+  "proxy": "http://gateway.szmz.zw-dev.com"
 }

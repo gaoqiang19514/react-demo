@@ -1,16 +1,17 @@
 import React from "react";
 import styled from "styled-components";
 
-import TreeExample from "./components/TreeExample";
+
+// import TreeExample from "./components/TreeExample";
 // import ListViewExample from "./components/ListViewExample";
 // import TableExample from "./components/TableExample";
 // import FormExample from "./components/FormExample";
 // import TreeSelectExample from "./components/TreeSelectExample";
 // import DatePickerExample from "./components/DatePickerExample";
 // import RangePickerExample from "./components/RangePickerExample";
-import EditableTable from "./components/EditableTable";
-import CalendarDemo from "./components/CalendarDemo";
-import Demo from './components/Demo'
+// import EditableTable from "./components/EditableTable";
+// import CalendarDemo from "./components/CalendarDemo";
+// import MultiLineTable from './components/MultiLineTable'
 
 const PageContainer = styled.div`
   padding: 30px;
@@ -68,7 +69,7 @@ function App() {
       {/* <h2>TreeExample</h2> */}
       {/* <TreeExample /> */}
       {/* <CalendarDemo /> */}
-	  <Demo />
+	  {/* <MultiLineTable /> */}
     </PageContainer>
   );
 }
